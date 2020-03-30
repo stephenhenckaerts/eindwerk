@@ -1,0 +1,1 @@
+export { setTileLayer } from "./MapDetails";

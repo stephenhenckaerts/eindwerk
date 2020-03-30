@@ -15,10 +15,11 @@
   color: $yellow;
   text-align: center;
   cursor: pointer;
+  padding: 5px 0px;
 }
 
 .SidebarItem:hover {
-  background-color: $dark-green;
+  background-color: $dark-green-hover;
 }
 
 .SidebarTitle {

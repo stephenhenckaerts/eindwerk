@@ -6,7 +6,7 @@
   top: 0;
   background-color: $yellow;
   border-radius: 0px 0px 0px 10px;
-  border: 1px solid cadetblue;
+  border: 1px solid $dark-green;
   opacity: 0.7;
   min-height: 85px;
   height: fit-content;
@@ -14,6 +14,7 @@
 
 .MapEditorMenuItem {
   margin: 5px 10px 0px;
+  padding-bottom: 5px;
   border-bottom: 1px $dark-green solid;
   display: flex;
   align-items: center;
@@ -41,7 +42,7 @@
 
 .MapPickerMenuItem {
   text-align: center;
-  color: #1e744c;
+  color: $dark-green;
   cursor: pointer;
 }
 .MapPickerMenuItem:hover {
