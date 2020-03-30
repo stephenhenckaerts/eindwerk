@@ -1,8 +1,8 @@
 import React from "react";
 
-import classes from "./Viewer.css";
 import Map from "../Map/Map";
 import "ol/ol.css";
+import styles from "./Viewer.module.css";
 
 const Viewer = () => {
   React.useEffect(() => {
@@ -10,11 +10,9 @@ const Viewer = () => {
   }, []);
 
   return (
-    <div
-      id="map"
-      className={classes.Map}
-      style={{ width: "100%", height: "800px" }}
-    ></div>
+    <div>
+      <div id="map" className={styles.Map}></div>
+    </div>
   );
 };
 
