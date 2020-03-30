@@ -1,9 +1,10 @@
 import React from "react";
+import HomeMap from "./containers/HomeMap/HomeMap";
 
 function App() {
   return (
     <div className="App">
-      <p>Hello World</p>
+      <HomeMap />
     </div>
   );
 }
