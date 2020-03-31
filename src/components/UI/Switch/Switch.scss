@@ -1,3 +1,5 @@
+@import "../../../styles//colours.scss";
+
 .react-switch-checkbox {
   height: 0;
   width: 0;
@@ -11,7 +13,7 @@
   cursor: pointer;
   width: 60px;
   height: 30px;
-  background: #9c1616;
+  background: $dark-red;
   border-radius: 100px;
   position: relative;
   transition: background-color 0.2s;
@@ -26,7 +28,7 @@
   height: 25px;
   border-radius: 45px;
   transition: 0.2s;
-  background: #d4cb92;
+  background: $yellow;
   box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
 }
 
@@ -36,7 +38,7 @@
 }
 
 .react-switch-checkbox:checked + .react-switch-label {
-  background: #1e744c;
+  background: $dark-green;
 }
 
 .react-switch-label:active .react-switch-button {
