@@ -45,12 +45,14 @@ class Viewer extends Component {
     Map.setBackgroundTileLayer(this.props.type);
     if (this.props.plotBoundriesState) {
       Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
-
-      this.select = new Select({});
-      this.select.on("select", event => this.featureSelected(event));
-      Map.map.addInteraction(this.select);
+      if (this.select == null) {
+        this.select = new Select({});
+        this.select.on("select", event => this.featureSelected(event));
+        Map.map.addInteraction(this.select);
+      }
     } else {
       Map.map.removeInteraction(this.select);
+      this.select = null;
     }
     return (
       <div>
