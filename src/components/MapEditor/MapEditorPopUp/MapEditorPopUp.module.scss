@@ -1,0 +1,50 @@
+@import "../../../styles/colours.scss";
+
+.MapEditorMenu {
+  position: absolute;
+  right: 84px;
+  top: 0;
+  background-color: $yellow;
+  border-radius: 0px 0px 0px 10px;
+  border: 1px solid $dark-green;
+  opacity: 0.7;
+  min-height: 85px;
+  height: fit-content;
+}
+
+.MapEditorMenuItem {
+  margin: 5px 10px 0px;
+  padding-bottom: 5px;
+  border-bottom: 1px $dark-green solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.MapEditorMenuItem.MapPickerTitle {
+  border-bottom: none;
+  cursor: pointer;
+}
+
+.MapEditorMenuItem > p {
+  margin: 0;
+  color: $dark-green;
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 5px;
+  margin-left: 20px;
+}
+
+.MapEditorMenuItem > img {
+  height: 24px;
+  margin-left: 10px;
+}
+
+.MapPickerMenuItem {
+  text-align: center;
+  color: $dark-green;
+  cursor: pointer;
+}
+.MapPickerMenuItem:hover {
+  text-decoration: underline;
+}
