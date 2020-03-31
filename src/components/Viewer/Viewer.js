@@ -11,7 +11,11 @@ class Viewer extends Component {
   }
 
   render() {
+    Map.removeAllLayers();
     Map.setBackgroundTileLayer(this.props.type);
+    if (this.props.plotBoundriesState) {
+      Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
+    }
     return (
       <div>
         <div id="map" className={styles.Map}></div>
@@ -22,7 +26,8 @@ class Viewer extends Component {
 
 const mapStateToProps = state => {
   return {
-    type: state.type
+    type: state.type,
+    plotBoundriesState: state.state
   };
 };
 

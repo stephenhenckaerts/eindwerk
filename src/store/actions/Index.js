@@ -1,1 +1,1 @@
-export { setTileLayer } from "./MapDetails";
+export { setTileLayer, setPlotBoundries } from "./MapDetails";

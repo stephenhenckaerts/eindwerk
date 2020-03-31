@@ -2,7 +2,8 @@ import * as actionTypes from "../actions/ActionTypes";
 import { updateObject } from "../Utility";
 
 const initialState = {
-  type: "OPENSTREETMAP"
+  type: "OPENSTREETMAP",
+  state: true
 };
 
 export const setTileLayer = (state, action) => {
@@ -11,10 +12,18 @@ export const setTileLayer = (state, action) => {
   });
 };
 
+export const setPlotBoundries = (state, action) => {
+  return updateObject(state, {
+    state: action.state
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_TILELAYER:
       return setTileLayer(state, action);
+    case actionTypes.SET_PLOTBOUNDRIES:
+      return setPlotBoundries(state, action);
     default:
       return state;
   }

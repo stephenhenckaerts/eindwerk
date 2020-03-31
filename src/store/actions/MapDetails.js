@@ -6,3 +6,10 @@ export const setTileLayer = layer => {
     layer: layer
   };
 };
+
+export const setPlotBoundries = state => {
+  return {
+    type: actionTypes.SET_PLOTBOUNDRIES,
+    state: state
+  };
+};
