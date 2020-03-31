@@ -55,7 +55,6 @@ class OlMap {
 
   togglePlotBoundriesLayers(state) {
     var vectorSource = null;
-    debugger;
     if (state) {
       vectorSource = new VectorSource({
         format: new GeoJSON(),
