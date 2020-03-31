@@ -77,7 +77,6 @@ class OlMap {
           };
           xhr.onerror = onError;
           xhr.onload = function() {
-            console.log(extent);
             if (xhr.status === 200) {
               var features = vectorSource
                 .getFormat()
