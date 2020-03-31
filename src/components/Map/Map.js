@@ -95,12 +95,11 @@ class OlMap {
         },
         strategy: bboxStrategy
       });
-    } else {
+      var vector = new Vector({
+        source: vectorSource
+      });
+      this.map.addLayer(vector);
     }
-    var vector = new Vector({
-      source: vectorSource
-    });
-    this.map.addLayer(vector);
   }
 
   addTileLayer(url) {
