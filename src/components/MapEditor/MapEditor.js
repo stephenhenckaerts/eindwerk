@@ -5,7 +5,7 @@ import cogLogo from "../../assets/MapEditor/cog.png";
 import MapEditorPopUp from "./MapEditorPopUp/MapEditorPopUp";
 
 const MapEditor = () => {
-  const [menuOpened, setMenuOpened] = useState(true);
+  const [menuOpened, setMenuOpened] = useState(false);
 
   const switchMenuOpened = () => {
     setMenuOpened(!menuOpened);

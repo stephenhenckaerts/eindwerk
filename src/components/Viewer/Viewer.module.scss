@@ -54,37 +54,3 @@
 .OlPopup-closer:after {
   content: "✖";
 }
-
-.OlPopupButtonsDiv {
-  display: flex;
-}
-
-.PopupButton {
-  width: 100px;
-  height: 50px;
-  margin: 10px;
-  padding: 0px;
-  cursor: pointer;
-  border-radius: 10px;
-}
-
-.AddPopupButton {
-  background-color: $dark-green;
-  color: $yellow;
-}
-
-.AddPopupButton:hover {
-  opacity: 1;
-  background-color: $dark-green-hover;
-  color: $yellow;
-}
-
-.ClosePopupButton {
-  background-color: $dark-red;
-  color: $yellow;
-}
-
-.ClosePopupButton:hover {
-  background-color: $dark-red-hover;
-  color: $yellow;
-}

@@ -1,0 +1,34 @@
+@import "../../../styles/colours.scss";
+
+.Button {
+  border: none;
+  color: white;
+  outline: none;
+  cursor: pointer;
+  font: inherit;
+  padding: 0px;
+  margin: 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  text-align: center;
+  min-width: 120px;
+  min-height: 40px;
+}
+
+.Button:first-of-type {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.Button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.Success {
+  background-color: $dark-green;
+}
+
+.Danger {
+  background-color: $dark-red;
+}

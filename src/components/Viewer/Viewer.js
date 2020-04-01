@@ -7,6 +7,7 @@ import styles from "./Viewer.module.scss";
 import Select from "ol/interaction/Select";
 import Overlay from "ol/Overlay";
 import Snackbar from "@material-ui/core/Snackbar";
+import Button from "../UI/Button/Button";
 
 class Viewer extends Component {
   componentDidMount() {
@@ -60,7 +61,7 @@ class Viewer extends Component {
   addFeature() {
     this.overlay.setPosition(undefined);
     this.select.getFeatures().clear();
-    return false;
+    this.props.featureAddedHandler(this.selectedFeature);
   }
 
   render() {
@@ -82,20 +83,22 @@ class Viewer extends Component {
         <div id="map" className={styles.Map}></div>
         <div id="popup" className={styles.OlPopup}>
           <div className={styles.OlPopupButtonsDiv}>
-            <button
+            <Button
+              btnType="Danger"
               className={[styles.PopupButton, styles.ClosePopupButton].join(
                 " "
               )}
-              onClick={() => this.closePopup()}
+              clicked={() => this.closePopup()}
             >
               Annuleer
-            </button>
-            <button
+            </Button>
+            <Button
+              btnType="Success"
               className={[styles.PopupButton, styles.AddPopupButton].join(" ")}
-              onClick={() => this.addFeature()}
+              clicked={() => this.addFeature()}
             >
               Voeg Toe
-            </button>
+            </Button>
           </div>
           <div id="popup-content"></div>
         </div>

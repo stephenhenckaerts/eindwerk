@@ -9,7 +9,7 @@ import upArrowLogo from "../../../assets/MapEditor/up-arrow.png";
 
 class MapEditorPopUp extends Component {
   state = {
-    mapPickerMenu: true
+    mapPickerMenu: false
   };
 
   mapPickerMenuChangeHandler = () => {
