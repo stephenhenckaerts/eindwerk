@@ -5,8 +5,18 @@
   width: 100%;
   padding: 10px;
   box-sizing: border-box;
-  max-height: 500px;
+  max-height: 400px;
   overflow: auto;
+}
+
+.ContactData::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ContactData::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: $dark-green;
 }
 
 .FormTitle {

@@ -8,6 +8,12 @@ export const setSelectedFeature = feature => {
   };
 };
 
+export const addFeatureInit = () => {
+  return {
+    type: actionTypes.ADD_FEATURE_INIT
+  };
+};
+
 export const addFeatureStart = () => {
   return {
     type: actionTypes.ADD_FEATURE_START
@@ -20,9 +26,10 @@ export const addFeatureSucces = error => {
   };
 };
 
-export const addFeatureFail = () => {
+export const addFeatureFail = error => {
   return {
-    type: actionTypes.ADD_FEATURE_FAIL
+    type: actionTypes.ADD_FEATURE_FAIL,
+    error: error
   };
 };
 

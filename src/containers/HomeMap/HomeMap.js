@@ -26,6 +26,7 @@ class HomeMap extends Component {
 
   addFeatureToUserHadler = feature => {
     this.setState({ addingFeature: false, selectedFeature: null });
+    this.props.onAddFeatureInit();
     this.props.onAddFeature(feature);
   };
 
@@ -64,7 +65,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddFeature: feature => dispatch(actions.addFeature(feature))
+    onAddFeature: feature => dispatch(actions.addFeature(feature)),
+    onAddFeatureInit: () => dispatch(actions.addFeatureInit())
   };
 };
 
