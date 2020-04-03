@@ -105,6 +105,7 @@ class OlMap {
         strategy: bboxStrategy
       });
       var vector = new Vector({
+        minZoom: 13,
         source: vectorSource
       });
       this.map.addLayer(vector);
