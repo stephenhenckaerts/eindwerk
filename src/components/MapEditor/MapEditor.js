@@ -11,10 +11,6 @@ const MapEditor = () => {
     setMenuOpened(!menuOpened);
   };
 
-  const switchTileLayer = selectedLayer => {
-    this.props.onTileLayerSelected(selectedLayer);
-  };
-
   var mapEditorPopUp = null;
   if (menuOpened) {
     mapEditorPopUp = <MapEditorPopUp></MapEditorPopUp>;
@@ -28,7 +24,7 @@ const MapEditor = () => {
         ].join(" ")}
         onClick={switchMenuOpened}
       >
-        <img src={cogLogo} tag="Map Editor Logo" />
+        <img src={cogLogo} alt="Map Editor Logo" tag="Map Editor Logo" />
       </div>
       {mapEditorPopUp}
     </div>

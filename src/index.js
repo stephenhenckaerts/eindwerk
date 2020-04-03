@@ -8,11 +8,17 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import thunk from "redux-thunk";
 import mapDetailsReducer from "./store/reducer/MapDetails";
+import featuresReducer from "./store/reducer/Features";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+const rootReducer = combineReducers({
+  mapDetails: mapDetailsReducer,
+  features: featuresReducer
+});
+
 const store = createStore(
-  mapDetailsReducer,
+  rootReducer,
   composeEnhancers(applyMiddleware(thunk))
 );
 

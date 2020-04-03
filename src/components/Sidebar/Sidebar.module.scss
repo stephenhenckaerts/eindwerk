@@ -3,34 +3,10 @@
 .Sidebar {
   margin: 0;
   padding: 0;
-  width: 5em;
+  width: fit-content;
   background-color: $dark-green;
   position: fixed;
   height: 100%;
   overflow: auto;
   z-index: 1;
-}
-
-.SidebarItem {
-  color: $yellow;
-  text-align: center;
-  cursor: pointer;
-  padding: 5px 0px;
-}
-
-.SidebarItem:hover {
-  background-color: $dark-green-hover;
-}
-
-.SidebarTitle {
-  margin: 5px 0px 10px;
-}
-.SidebarTitle > p {
-  margin: 0;
-}
-
-.SidebarBottom {
-  width: 100%;
-  position: absolute;
-  bottom: 0;
 }

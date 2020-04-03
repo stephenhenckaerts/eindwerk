@@ -1,0 +1,89 @@
+@import "../../../styles/colours.scss";
+
+.Sidebar {
+  width: 12em;
+  overflow: hidden;
+  height: 100%;
+}
+
+.SidebarHeaderItem {
+  color: $yellow;
+  align-items: center;
+  justify-content: space-around;
+  display: flex;
+  padding-bottom: 10px;
+  margin: 5px 10px;
+  border-bottom: 1px solid $yellow;
+}
+
+.SidebarItem {
+  color: $yellow;
+  text-align: center;
+  cursor: pointer;
+  padding: 5px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0px 20px;
+  height: 40px;
+}
+
+.SidebarItem > img {
+  width: 40px;
+}
+
+.SidebarItem:hover {
+  background-color: $dark-green-hover;
+}
+
+.SearchBar {
+  margin: 10px 12px;
+}
+
+.InputElementSearchBar {
+  width: 100%;
+  outline: none;
+  height: 20px;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 3px;
+}
+
+.PlotsDiv {
+  height: max-content;
+  overflow-y: scroll;
+}
+
+.InputElementSearchBar:focus {
+  outline: none;
+  background-color: #ccc;
+}
+
+.PlotDiv {
+  margin: 0;
+  padding: 0 10px 5px;
+  overflow: hidden;
+  border-bottom: 1px solid $yellow;
+  cursor: pointer;
+}
+
+.PlotDiv:hover {
+  background-color: $dark-green-hover;
+}
+
+.PlotDiv > h3 {
+  color: $yellow;
+  font-size: 18px;
+  margin: 10px 0 0;
+}
+
+.PlotDiv > h4 {
+  color: $yellow;
+  font-size: 14px;
+  margin: 5px 0 0;
+}
+
+.PlotDiv > p {
+  font-size: 14px;
+  margin: 5px 0;
+}

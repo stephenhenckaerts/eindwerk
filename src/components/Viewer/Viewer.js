@@ -6,10 +6,14 @@ import "ol/ol.css";
 import styles from "./Viewer.module.scss";
 import Select from "ol/interaction/Select";
 import Overlay from "ol/Overlay";
-import Snackbar from "@material-ui/core/Snackbar";
 import Button from "../UI/Button/Button";
 
 class Viewer extends Component {
+  constructor(props) {
+    super(props);
+    Map.createNewMap();
+  }
+
   componentDidMount() {
     Map.map.setTarget("map");
     var container = document.getElementById("popup");
@@ -109,8 +113,8 @@ class Viewer extends Component {
 
 const mapStateToProps = state => {
   return {
-    type: state.type,
-    plotBoundriesState: state.state
+    type: state.mapDetails.type,
+    plotBoundriesState: state.mapDetails.state
   };
 };
 

@@ -67,8 +67,8 @@ class MapEditorPopUp extends Component {
 
 const mapStateToProps = state => {
   return {
-    selectedLayer: state.type,
-    plotBoundriesState: state.state
+    selectedLayer: state.mapDetails.type,
+    plotBoundriesState: state.mapDetails.state
   };
 };
 

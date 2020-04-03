@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import styles from "./HomeMap.module.css";
 import Viewer from "../../components/Viewer/Viewer";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import MapEditor from "../../components/MapEditor/MapEditor";
@@ -9,6 +8,7 @@ import Aux from "../../hoc/Aux/Aux";
 import Modal from "../../components/UI/Modal/Modal";
 import FeatureForm from "../../components/FeatureForm/FeatureForm";
 import * as actions from "../../store/actions/Index";
+import HomeSideBar from "../../components/Sidebar/HomeSideBar/HomeSideBar";
 
 class HomeMap extends Component {
   state = {
@@ -42,19 +42,19 @@ class HomeMap extends Component {
       );
     }
     return (
-      <div>
-        <Aux>
-          <Modal
-            show={this.state.addingFeature}
-            modalClosed={this.addingFeatureCancelHandler}
-          >
-            {featureSummary}
-          </Modal>
-          <Sidebar></Sidebar>
-          <Viewer featureAddedHandler={this.featureAddedHandler}></Viewer>
-          <MapEditor></MapEditor>
-        </Aux>
-      </div>
+      <Aux>
+        <Modal
+          show={this.state.addingFeature}
+          modalClosed={this.addingFeatureCancelHandler}
+        >
+          {featureSummary}
+        </Modal>
+        <Sidebar>
+          <HomeSideBar />
+        </Sidebar>
+        <Viewer featureAddedHandler={this.featureAddedHandler}></Viewer>
+        <MapEditor></MapEditor>
+      </Aux>
     );
   }
 }

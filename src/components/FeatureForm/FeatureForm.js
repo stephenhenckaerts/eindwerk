@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 import styles from "./FeatureForm.module.scss";
-import Aux from "../../hoc/Aux/Aux";
 import Input from "../UI/Input/Input";
 import Button from "../UI/Button/Button";
 

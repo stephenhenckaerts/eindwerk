@@ -11,6 +11,10 @@ import { Vector, Group } from "ol/layer";
 
 class OlMap {
   constructor() {
+    this.createNewMap();
+  }
+
+  createNewMap() {
     this.map = this.createMap();
   }
 
@@ -46,6 +50,12 @@ class OlMap {
             key:
               "AsVf4lj-tiANM5N4_P56DC_oQQM9fjb0lMosBxFtgovzGEgcMnQuqYpeKpX-1KL2"
           })
+        });
+        break;
+      }
+      default: {
+        raster = new TileLayer({
+          source: new OSM({})
         });
         break;
       }

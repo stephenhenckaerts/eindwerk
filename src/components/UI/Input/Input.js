@@ -1,7 +1,6 @@
 import React from "react";
 
 import classes from "./Input.module.css";
-import Aux from "../../../hoc/Aux/Aux";
 
 const input = props => {
   let inputElement = null;
