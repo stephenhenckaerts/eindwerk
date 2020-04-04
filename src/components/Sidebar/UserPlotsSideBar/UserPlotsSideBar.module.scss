@@ -50,7 +50,7 @@
 
 .PlotsDiv {
   height: calc(100% - 190px);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .PlotsDiv::-webkit-scrollbar {
@@ -59,7 +59,7 @@
 
 .PlotsDiv::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
   background-color: $yellow;
 }
 

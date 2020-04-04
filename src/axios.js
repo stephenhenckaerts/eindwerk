@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://percelen-9c13a.firebaseio.com/"
+  baseURL: "http://localhost:3030/api/"
 });
 
 export default instance;

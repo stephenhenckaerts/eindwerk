@@ -17,8 +17,8 @@ class MapEditorPopUp extends Component {
   };
 
   render() {
-    var mapPicker = null;
-    var arrowLogo = downArrowLogo;
+    let mapPicker = null;
+    let arrowLogo = downArrowLogo;
     if (this.state.mapPickerMenu) {
       arrowLogo = upArrowLogo;
       mapPicker = (

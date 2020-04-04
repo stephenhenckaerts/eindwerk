@@ -37,7 +37,7 @@ export const addFeature = feature => {
   return dispatch => {
     dispatch(addFeatureStart());
     axios
-      .post("/percelen.json", feature)
+      .post("/percelen", feature)
       .then(response => {
         console.log(response.data);
         dispatch(addFeatureSucces());

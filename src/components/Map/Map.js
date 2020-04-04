@@ -35,7 +35,7 @@ class OlMap {
   }
 
   setBackgroundTileLayer(type) {
-    var raster = null;
+    let raster = null;
     switch (type) {
       case "OPENSTREETMAP": {
         raster = new TileLayer({
@@ -64,34 +64,36 @@ class OlMap {
   }
 
   togglePlotBoundriesLayers(state) {
-    var vectorSource = null;
+    let vectorSource = null;
     if (state) {
       vectorSource = new VectorSource({
         format: new GeoJSON(),
         minScale: 15000000,
         loader: function(extent, resolution, projection) {
           /*
-          var url =
+          Link for the DLV
+          let url =
             "http://localhost:3030/map/https://geoservices.landbouwvlaanderen.be/PUBLIC/wfs?service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:LBGEBRPERC2019&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=" +
             extent.join(",") +
             ",EPSG:3857";
-          */ var url =
-            "http://localhost:3030/map/http://localhost:8080/geoserver/lbgbrprc18/wfs?service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:Lbgbrprc18&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=" +
+          */ let url =
+            "http://localhost:3030/maps/map/http://localhost:8080/geoserver/lbgbrprc18/wfs?service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:Lbgbrprc18&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=" +
             extent.join(",") +
             ",EPSG:3857";
           // */
-          var xhr = new XMLHttpRequest();
+          let xhr = new XMLHttpRequest();
           xhr.open("GET", url);
-          var onError = function() {
+          let onError = function() {
             vectorSource.removeLoadedExtent(extent);
           };
           xhr.onerror = onError;
           xhr.onload = function() {
             if (xhr.status === 200) {
-              var features = vectorSource
+              let features = vectorSource
                 .getFormat()
                 .readFeatures(xhr.responseText);
               features.forEach(function(feature) {
+                //ID for the DLV
                 //feature.setId(feature.get("OBJ_ID"));
                 feature.setId(feature.get("OIDN"));
               });
@@ -104,8 +106,8 @@ class OlMap {
         },
         strategy: bboxStrategy
       });
-      var vector = new Vector({
-        minZoom: 13,
+      let vector = new Vector({
+        //minZoom: 13,
         source: vectorSource
       });
       this.map.addLayer(vector);

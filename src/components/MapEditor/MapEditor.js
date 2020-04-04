@@ -11,7 +11,7 @@ const MapEditor = () => {
     setMenuOpened(!menuOpened);
   };
 
-  var mapEditorPopUp = null;
+  let mapEditorPopUp = null;
   if (menuOpened) {
     mapEditorPopUp = <MapEditorPopUp></MapEditorPopUp>;
   }

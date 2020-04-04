@@ -5,7 +5,8 @@ import percelenLogo from "../../../assets/Sidebar/polygon.png";
 import backLogo from "../../../assets/Sidebar/back.png";
 import { NavLink } from "react-router-dom";
 
-const UserPlotsSideBar = () => {
+const UserPlotsSideBar = props => {
+  const { onLoadedPlots } = props;
   const [enteredFilter, setEnteredFilter] = useState("");
   const [loadedPlots, setLoadedPlots] = useState(null);
   const inputRef = useRef();
@@ -14,10 +15,8 @@ const UserPlotsSideBar = () => {
     const timer = setTimeout(() => {
       if (enteredFilter === inputRef.current.value) {
         const query =
-          enteredFilter.length === 0
-            ? ""
-            : `?orderBy="name"&equalTo="${enteredFilter}"`;
-        fetch("https://percelen-9c13a.firebaseio.com//percelen.json" + query)
+          enteredFilter.length === 0 ? "" : `?equalTo=${enteredFilter}`;
+        fetch("http://localhost:3030/api/percelen" + query)
           .then(response => response.json())
           .then(responseData => {
             const loadedPlots = [];
@@ -33,7 +32,7 @@ const UserPlotsSideBar = () => {
               });
             }
             setLoadedPlots(loadedPlots);
-            console.log(loadedPlots);
+            onLoadedPlots(loadedPlots);
           });
       }
     }, 500);
@@ -42,7 +41,7 @@ const UserPlotsSideBar = () => {
     };
   }, [enteredFilter, inputRef]);
 
-  var userPlots = null;
+  let userPlots = null;
   if (loadedPlots != null && loadedPlots.length > 0) {
     userPlots = (
       <div className={styles.PlotsDiv}>

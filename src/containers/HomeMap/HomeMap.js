@@ -24,20 +24,20 @@ class HomeMap extends Component {
     this.setState({ addingFeature: false, selectedFeature: null });
   };
 
-  addFeatureToUserHadler = feature => {
+  addFeatureToUserHandler = feature => {
     this.setState({ addingFeature: false, selectedFeature: null });
     this.props.onAddFeatureInit();
     this.props.onAddFeature(feature);
   };
 
   render() {
-    var featureSummary = null;
+    let featureSummary = null;
     if (this.state.addingFeature) {
       featureSummary = (
         <FeatureForm
           selectedFeature={this.state.selectedFeature}
           formClosed={this.addingFeatureCancelHandler}
-          onAddPlot={this.addFeatureToUserHadler}
+          onAddPlot={this.addFeatureToUserHandler}
         ></FeatureForm>
       );
     }

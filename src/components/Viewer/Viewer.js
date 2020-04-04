@@ -16,8 +16,8 @@ class Viewer extends Component {
 
   componentDidMount() {
     Map.map.setTarget("map");
-    var container = document.getElementById("popup");
-    var overlay = new Overlay({
+    let container = document.getElementById("popup");
+    let overlay = new Overlay({
       element: container,
       autoPan: true,
       autoPanAnimation: {
@@ -31,7 +31,7 @@ class Viewer extends Component {
   featureSelected = event => {
     if (event.selected[0]) {
       this.selectedFeature = event.selected[0];
-      var selectedFeature = {
+      let selectedFeature = {
         id: event.selected[0].id_,
         gewasgroepnaam: event.selected[0].getProperties().GEWASGROEP,
         gewasnaam: event.selected[0].getProperties().LBLHFDTLT,
@@ -41,7 +41,7 @@ class Viewer extends Component {
         coords: event.selected[0].getProperties().geometry.extent_
       };
 
-      var content = document.getElementById("popup-content");
+      let content = document.getElementById("popup-content");
       content.innerHTML =
         "<p><strong>Gewasgroepnaam: </strong>" +
         selectedFeature.gewasgroepnaam +
@@ -69,6 +69,7 @@ class Viewer extends Component {
   }
 
   render() {
+    console.log(this.props.loadedPlots);
     Map.removeAllLayers();
     Map.setBackgroundTileLayer(this.props.type);
     if (this.props.plotBoundriesState) {
