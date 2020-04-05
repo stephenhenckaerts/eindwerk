@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useMemo } from "react";
 
-import styles from "./UserPlotsMap.module.scss";
 import Aux from "../../hoc/Aux/Aux";
 import Viewer from "../../components/Viewer/Viewer";
 import Sidebar from "../../components/Sidebar/Sidebar";

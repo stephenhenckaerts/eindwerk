@@ -1,10 +1,9 @@
-import React, { Component, useEffect } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import Map from "../Map/Map";
 import "ol/ol.css";
 import styles from "./Viewer.module.scss";
-import Select from "ol/interaction/Select";
 import Overlay from "ol/Overlay";
 import Button from "../UI/Button/Button";
 
@@ -12,7 +11,6 @@ class Viewer extends Component {
   constructor(props) {
     super(props);
     Map.createNewMap();
-    Map.removeAllLayers();
 
     this.popup = React.createRef();
     this.popupContent = React.createRef();
@@ -29,8 +27,8 @@ class Viewer extends Component {
       element: container,
       autoPan: true,
       autoPanAnimation: {
-        duration: 250
-      }
+        duration: 250,
+      },
     });
     this.overlay = overlay;
     Map.map.addOverlay(overlay);
@@ -51,7 +49,7 @@ class Viewer extends Component {
         oppervlak: (event.selected[0].getProperties().OPPERVL / 10000).toFixed(
           2
         ),
-        coords: event.selected[0].getProperties().geometry.extent_
+        coords: event.selected[0].getProperties().geometry.extent_,
       };
 
       let content = this.popupContent.current;
@@ -113,10 +111,10 @@ class Viewer extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     type: state.mapDetails.type,
-    plotBoundriesState: state.mapDetails.state
+    plotBoundriesState: state.mapDetails.state,
   };
 };
 

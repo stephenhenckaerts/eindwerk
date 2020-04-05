@@ -35,6 +35,14 @@
   background-color: $dark-green-hover;
 }
 
+.SidebarTitle {
+  text-align: center;
+}
+
+.SidebarTitle > p {
+  margin: 0 auto;
+}
+
 .SearchBar {
   margin: 10px 12px;
 }
@@ -51,6 +59,7 @@
 .PlotsDiv {
   height: calc(100% - 190px);
   overflow-y: auto;
+  overflow-wrap: break-word;
 }
 
 .PlotsDiv::-webkit-scrollbar {
@@ -93,6 +102,7 @@
 }
 
 .PlotDiv > p {
+  color: $Light-gray;
   font-size: 14px;
   margin: 5px 0;
 }
