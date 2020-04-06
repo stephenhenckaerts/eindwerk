@@ -9,6 +9,8 @@ import { bbox as bboxStrategy } from "ol/loadingstrategy";
 import GeoJSON from "ol/format/GeoJSON";
 import { Vector, Group, Tile } from "ol/layer";
 import Select from "ol/interaction/Select";
+import { Feature } from "ol";
+import { Polygon } from "ol/geom";
 
 class OlMap {
   constructor() {
@@ -105,6 +107,48 @@ class OlMap {
     }
   }
 
+  addUsersPlotBoundriesLayer(featureSelected, newFeatures) {
+    let boundriesLayer = null;
+    this.map.getLayers().forEach((layer) => {
+      if (layer.get("name") === "plotBoundriesLayer") {
+        boundriesLayer = layer;
+      }
+    });
+    if (boundriesLayer == null && newFeatures.length > 0) {
+      let vectorSource = new VectorSource({
+        format: new GeoJSON(),
+        minScale: 15000000,
+        strategy: bboxStrategy,
+      });
+      console.log(newFeatures);
+      newFeatures.forEach((newFeature) => {
+        let feature = new Feature({
+          geometry: new Polygon([newFeature.geometry]),
+        });
+        feature.setId(newFeature.plotId);
+        vectorSource.addFeature(feature);
+        console.log(feature.getGeometry().getExtent());
+      });
+      var vector = new Vector({
+        //minZoom: 13,
+        source: vectorSource,
+      });
+      console.log(vectorSource.getExtent());
+      this.setInteractionForPlotBoundriesLayer(vector, featureSelected);
+      vector.set("name", "plotBoundriesLayer");
+      this.plotsExtent = vectorSource.getExtent();
+      this.map.addLayer(vector);
+    } else {
+      this.setInteractionForPlotBoundriesLayer(boundriesLayer, featureSelected);
+    }
+  }
+
+  setExtentOfMapByUserFeaters() {
+    if (this.plotsExtent !== undefined && this.plotsExtent[0] !== Infinity) {
+      this.map.getView().fit(this.plotsExtent);
+    }
+  }
+
   setInteractionForPlotBoundriesLayer(layer, featureSelected) {
     this.select = new Select({
       layers: [layer],
@@ -148,7 +192,6 @@ class OlMap {
       this.map.setLayerGroup(this.layersOSM);
     } else {
       if (this.backgroundTileType !== type) {
-        console.log("ahhahahah");
         this.backgroundTileType = type;
         this.map.getLayers().getArray()[0].setVisible(false);
         this.map.getLayers().getArray()[1].setVisible(false);

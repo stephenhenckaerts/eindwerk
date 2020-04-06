@@ -1,8 +1,10 @@
 @import "../../../styles/colours.scss";
+@import "../../../styles/extends.scss";
 
 .Sidebar {
   width: 12em;
   height: 100%;
+  @extend %unselectable;
 }
 
 .SidebarHeaderItem {
@@ -33,6 +35,16 @@
 
 .SidebarItem:hover {
   background-color: $dark-green-hover;
+}
+
+.SidebarTopTitle {
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.SidebarTopTitle > p {
+  margin: 0 auto;
 }
 
 .SidebarTitle {

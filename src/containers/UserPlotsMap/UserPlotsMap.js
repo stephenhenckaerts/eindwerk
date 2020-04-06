@@ -1,31 +1,65 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
 import Aux from "../../hoc/Aux/Aux";
-import Viewer from "../../components/Viewer/Viewer";
+import UserPlotViewer from "../../components/UserPlotViewer/UserPlotViewer";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import MapEditor from "../../components/MapEditor/MapEditor";
 import HomeSideBar from "../../components/Sidebar/UserPlotsSideBar/UserPlotsSideBar";
+import * as actions from "../../store/actions/Index";
+import Spinner from "../../components/UI/Spinner/Spinner";
 
-const UserPlotsMap = () => {
-  const [loadedPlots, setLoadedPlots] = useState([]);
+class UserPlotsMap extends Component {
+  constructor(props) {
+    super(props);
+    this.props.getUserFeaturesInit();
+  }
 
-  const onLoadedPlots = useCallback(newLoadedPlots => {
-    setLoadedPlots(newLoadedPlots);
-  }, []);
+  componentDidMount() {}
 
-  const viewer = useMemo(() => {
-    return <Viewer loadedPlots={loadedPlots}></Viewer>;
-  }, [loadedPlots]);
+  onLoadedPlots = (input) => {
+    this.props.getUserFeatures(input);
+  };
 
-  return (
-    <Aux>
-      <Sidebar>
-        <HomeSideBar onLoadedPlots={onLoadedPlots} />
-      </Sidebar>
-      {viewer}
-      <MapEditor></MapEditor>
-    </Aux>
-  );
+  render() {
+    let viewer = <Spinner />;
+    if (this.props.added === true) {
+      viewer = (
+        <UserPlotViewer
+          userFeatures={this.props.userFeatures}
+          loading={this.props.loading}
+        ></UserPlotViewer>
+      );
+    }
+    return (
+      <Aux>
+        <Sidebar>
+          <HomeSideBar
+            onLoadedPlots={this.onLoadedPlots}
+            userFeatures={this.props.userFeatures}
+            loading={this.props.loading}
+          />
+        </Sidebar>
+        {viewer}
+        <MapEditor></MapEditor>
+      </Aux>
+    );
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    userFeatures: state.features.userFeatures,
+    loading: state.features.loading,
+    added: state.features.added,
+  };
 };
 
-export default UserPlotsMap;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getUserFeatures: (query) => dispatch(actions.getUserFeatures(query)),
+    getUserFeaturesInit: () => dispatch(actions.getUserFeaturesInit()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserPlotsMap);

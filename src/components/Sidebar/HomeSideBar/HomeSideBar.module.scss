@@ -1,7 +1,9 @@
 @import "../../../styles/colours.scss";
+@import "../../../styles/extends.scss";
 
 .Sidebar {
   width: 5em;
+  @extend %unselectable;
 }
 
 .SidebarItem {

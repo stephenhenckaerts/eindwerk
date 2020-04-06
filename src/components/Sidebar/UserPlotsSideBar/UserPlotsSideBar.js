@@ -4,36 +4,22 @@ import styles from "./UserPlotsSideBar.module.scss";
 import percelenLogo from "../../../assets/Sidebar/polygon.png";
 import backLogo from "../../../assets/Sidebar/back.png";
 import { NavLink } from "react-router-dom";
+import Spinner from "../../UI/Spinner/Spinner";
 
 const UserPlotsSideBar = (props) => {
   const { onLoadedPlots } = props;
   const [enteredFilter, setEnteredFilter] = useState("");
-  const [loadedPlots, setLoadedPlots] = useState(null);
   const inputRef = useRef();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (enteredFilter === inputRef.current.value) {
+      if (
+        inputRef.current !== undefined &&
+        enteredFilter === inputRef.current.value
+      ) {
         const query =
           enteredFilter.length === 0 ? "" : `?equalTo=${enteredFilter}`;
-        fetch("http://localhost:3030/api/percelen" + query)
-          .then((response) => response.json())
-          .then((responseData) => {
-            const loadedPlots = [];
-            for (const key in responseData) {
-              loadedPlots.push({
-                plotId: responseData[key].plotId,
-                name: responseData[key].name,
-                cropName: responseData[key].cropName,
-                cropGroupName: responseData[key].cropGroupName,
-                area: responseData[key].area,
-                comments: responseData[key].comments,
-                coords: responseData[key].coords,
-              });
-            }
-            setLoadedPlots(loadedPlots);
-            onLoadedPlots(loadedPlots);
-          });
+        onLoadedPlots(query);
       }
     }, 500);
     return () => {
@@ -42,25 +28,29 @@ const UserPlotsSideBar = (props) => {
   }, [enteredFilter, inputRef, onLoadedPlots]);
 
   let userPlots = null;
-  if (loadedPlots != null && loadedPlots.length > 0) {
-    userPlots = (
-      <div className={styles.PlotsDiv}>
-        {loadedPlots.map((plot) => (
-          <div key={plot.plotId} className={styles.PlotDiv}>
-            <h3>{plot.name}</h3>
-            <p>{plot.cropName}</p>
-            <p>{(plot.area / 10000).toFixed(2)} ha</p>
-          </div>
-        ))}
-      </div>
-    );
+  if (props.loading && props.userFeatures.length === 0) {
+    userPlots = <Spinner />;
+  } else {
+    if (props.userFeatures != null && props.userFeatures.length > 0) {
+      userPlots = (
+        <div className={styles.PlotsDiv}>
+          {props.userFeatures.map((plot) => (
+            <div key={plot.plotId} className={styles.PlotDiv}>
+              <h3>{plot.name}</h3>
+              <p>{plot.cropName}</p>
+              <p>{(plot.area / 10000).toFixed(2)} ha</p>
+            </div>
+          ))}
+        </div>
+      );
+    }
   }
 
   return (
     <div className={styles.Sidebar}>
       <div className={styles.SidebarHeaderItem}>
         <img src={percelenLogo} alt="Percelen Logo" />
-        <div className={styles.SidebarTitle}>
+        <div className={styles.SidebarTopTitle}>
           <p>MIJN</p>
           <p>PERCELEN</p>
         </div>

@@ -1,2 +1,8 @@
 export { setTileLayer, setPlotBoundries } from "./MapDetails";
-export { setSelectedFeature, addFeature, addFeatureInit } from "./Features";
+export {
+  setSelectedFeature,
+  addFeature,
+  addFeatureInit,
+  getUserFeatures,
+  getUserFeaturesInit,
+} from "./Features";

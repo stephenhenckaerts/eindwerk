@@ -11,79 +11,79 @@ class FeatureForm extends Component {
         elementType: "input",
         elementConfig: {
           type: "text",
-          placeholder: "Perceelsnaam"
+          placeholder: "Perceelsnaam",
         },
         label: "Naam Perceel",
         value: "",
         validation: {
-          required: true
+          required: true,
         },
         valid: false,
-        touched: false
+        touched: false,
       },
       area: {
         elementType: "number",
         elementConfig: {
           type: "number",
-          placeholder: "Oppervlakte"
+          placeholder: "Oppervlakte",
         },
         label: "Grond oppervlakte",
         value: this.props.selectedFeature.getProperties().OPPERVL.toFixed(0),
         metric: "m²",
         validation: {
           required: true,
-          isNumeric: true
+          isNumeric: true,
         },
         valid: true,
-        touched: false
+        touched: false,
       },
       cropGroupName: {
         elementType: "input",
         elementConfig: {
           type: "text",
-          placeholder: "Gewasgroepsnaam"
+          placeholder: "Gewasgroepsnaam",
         },
         label: "Gewasgroepsnaam",
         value: this.props.selectedFeature.getProperties().GEWASGROEP,
         validation: {
-          required: true
+          required: true,
         },
         valid: true,
-        touched: false
+        touched: false,
       },
       cropName: {
         elementType: "input",
         elementConfig: {
           type: "text",
-          placeholder: "Gewasnaam"
+          placeholder: "Gewasnaam",
         },
         label: "Gewasnaam",
         value: this.props.selectedFeature.getProperties().LBLHFDTLT,
         validation: {
-          required: true
+          required: true,
         },
         valid: true,
-        touched: false
+        touched: false,
       },
       comments: {
         elementType: "textarea",
         elementConfig: {
           type: "text",
-          placeholder: ""
+          placeholder: "",
         },
         label: "Opmerkingen",
         value: "",
         validation: {
-          required: false
+          required: false,
         },
         valid: true,
-        touched: false
-      }
+        touched: false,
+      },
     },
-    formIsValid: false
+    formIsValid: false,
   };
 
-  orderHandler = event => {
+  orderHandler = (event) => {
     event.preventDefault();
 
     const formData = {};
@@ -92,16 +92,20 @@ class FeatureForm extends Component {
         formElementIdentifier
       ].value;
     }
+    const geometry = this.props.selectedFeature.getProperties().geometry
+      .flatCoordinates;
+    let geometryArray = [];
+    while (geometry.length) geometryArray.push(geometry.splice(0, 2));
     const plot = {
       plotId: this.props.selectedFeature.id_,
+      geometry: geometryArray,
       coords: this.props.selectedFeature.getProperties().geometry.extent_,
       name: this.state.orderForm.name.value,
       area: this.state.orderForm.area.value,
       cropGroupName: this.state.orderForm.cropGroupName.value,
       cropName: this.state.orderForm.cropName.value,
-      comments: this.state.orderForm.comments.value
+      comments: this.state.orderForm.comments.value,
     };
-
     this.props.onAddPlot(plot);
   };
 
@@ -138,10 +142,10 @@ class FeatureForm extends Component {
 
   inputChangedHandler = (event, inputIdentifier) => {
     const updatedOrderForm = {
-      ...this.state.orderForm
+      ...this.state.orderForm,
     };
     const updatedFormElement = {
-      ...updatedOrderForm[inputIdentifier]
+      ...updatedOrderForm[inputIdentifier],
     };
     updatedFormElement.value = event.target.value;
     updatedFormElement.valid = this.checkValidity(
@@ -163,12 +167,12 @@ class FeatureForm extends Component {
     for (let key in this.state.orderForm) {
       formElementsArray.push({
         id: key,
-        config: this.state.orderForm[key]
+        config: this.state.orderForm[key],
       });
     }
     let form = (
       <form onSubmit={this.orderHandler}>
-        {formElementsArray.map(formElement => (
+        {formElementsArray.map((formElement) => (
           <Input
             key={formElement.id}
             elementType={formElement.config.elementType}
@@ -179,7 +183,7 @@ class FeatureForm extends Component {
             invalid={!formElement.config.valid}
             shouldValidate={formElement.config.validation}
             touched={formElement.config.touched}
-            changed={event => this.inputChangedHandler(event, formElement.id)}
+            changed={(event) => this.inputChangedHandler(event, formElement.id)}
           />
         ))}
         <div className={styles.ButtonDiv}>
