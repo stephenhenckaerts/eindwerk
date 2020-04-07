@@ -112,7 +112,7 @@ class OlMap {
     }
   }
 
-  addUsersPlotBoundriesLayer(featureSelected, newFeatures) {
+  addUsersPlotBoundriesLayer(featureSelected, featureHovered, newFeatures) {
     let boundriesLayer = null;
     this.map.getLayers().forEach((layer) => {
       if (layer.get("name") === "plotUserBoundriesLayer") {
@@ -148,13 +148,13 @@ class OlMap {
         source: vectorSource,
       });
       this.setInteractionForPlotBoundriesLayer(vector, featureSelected);
-      this.setHoverInteractionForUserPlotBoundries(boundriesLayer);
+      this.setHoverInteractionForUserPlotBoundries(vector, featureHovered);
       vector.set("name", "plotUserBoundriesLayer");
       this.plotsExtent = vectorSource.getExtent();
       this.map.addLayer(vector);
     } else {
-      this.setInteractionForPlotBoundriesLayer(boundriesLayer, featureSelected);
-      this.setHoverInteractionForUserPlotBoundries(boundriesLayer);
+      this.setInteractionForPlotBoundriesLayer(vector, featureSelected);
+      this.setHoverInteractionForUserPlotBoundries(vector, featureHovered);
     }
   }
 
@@ -176,13 +176,49 @@ class OlMap {
     this.map.addInteraction(this.select);
   }
 
-  setHoverInteractionForUserPlotBoundries(layer) {
-    let select = new Select({
-      condition: pointerMove,
-      layers: [layer],
+  setHoverInteractionForUserPlotBoundries(layer, featureHovered) {
+    this.hoveredFeature = null;
+    var defaultStyle = new Style({
+      stroke: new Stroke({
+        width: 2,
+        color: "#9c1616",
+      }),
+      fill: new Fill({ color: "#c04e4e" }),
     });
-    select.on(console.log("hahahah"));
-    this.map.addInteraction(this.select);
+    var hoveredStyle = new Style({
+      stroke: new Stroke({
+        width: 2,
+        color: "#9c1616",
+      }),
+      fill: new Fill({ color: "#9c1616" }),
+    });
+    this.map.on("pointermove", (e) => {
+      layer
+        .getSource()
+        .getFeatures()
+        .forEach((feature) => {
+          feature.setStyle(defaultStyle);
+        });
+      let newFeature = null;
+      this.map.forEachFeatureAtPixel(e.pixel, (f) => {
+        newFeature = f;
+
+        newFeature.setStyle(hoveredStyle);
+        return true;
+      });
+
+      if (newFeature) {
+        if (this.hoveredFeature === null) {
+          this.hoveredFeature = newFeature;
+          featureHovered(this.hoveredFeature.id_);
+        }
+      } else {
+        if (this.hoveredFeature !== null) {
+          this.hoveredFeature = null;
+          featureHovered(null);
+        }
+      }
+    });
   }
 
   createNewMap() {

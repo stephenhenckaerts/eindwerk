@@ -97,6 +97,10 @@
   cursor: pointer;
 }
 
+.PlotDivHovered {
+  background-color: $dark-green-hover;
+}
+
 .PlotDiv:hover {
   background-color: $dark-green-hover;
 }

@@ -10,6 +10,10 @@ import * as actions from "../../store/actions/Index";
 import MapSpinner from "../../components/UI/MapSpinner/MapSpinner";
 
 class UserPlotsMap extends Component {
+  state = {
+    hoveredFeature: null,
+  };
+
   constructor(props) {
     super(props);
     this.props.getUserFeaturesInit();
@@ -25,6 +29,10 @@ class UserPlotsMap extends Component {
     console.log(featureId);
   };
 
+  featureHoveredHandler = (featureId) => {
+    this.setState({ hoveredFeature: featureId });
+  };
+
   render() {
     let viewer = <MapSpinner />;
     if (this.props.added === true) {
@@ -32,6 +40,7 @@ class UserPlotsMap extends Component {
         <UserPlotViewer
           userFeatures={this.props.userFeatures}
           featureSelected={this.featureSelectedHandler}
+          featureHovered={this.featureHoveredHandler}
           loading={this.props.loading}
         ></UserPlotViewer>
       );
@@ -43,6 +52,7 @@ class UserPlotsMap extends Component {
             onLoadedPlots={this.onLoadedPlots}
             userFeatures={this.props.userFeatures}
             loading={this.props.loading}
+            hoveredFeature={this.state.hoveredFeature}
           />
         </Sidebar>
         {viewer}

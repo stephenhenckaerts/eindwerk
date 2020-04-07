@@ -34,13 +34,28 @@ const UserPlotsSideBar = (props) => {
     if (props.userFeatures != null && props.userFeatures.length > 0) {
       userPlots = (
         <div className={styles.PlotsDiv}>
-          {props.userFeatures.map((plot) => (
-            <div key={plot.plotId} className={styles.PlotDiv}>
-              <h3>{plot.name}</h3>
-              <p>{plot.cropName}</p>
-              <p>{(plot.area / 10000).toFixed(2)} ha</p>
-            </div>
-          ))}
+          {props.userFeatures.map((plot) => {
+            if (plot.plotId === props.hoveredFeature) {
+              return (
+                <div
+                  key={plot.plotId}
+                  className={[styles.PlotDiv, styles.PlotDivHovered].join(" ")}
+                >
+                  <h3>{plot.name}</h3>
+                  <p>{plot.cropName}</p>
+                  <p>{(plot.area / 10000).toFixed(2)} ha</p>
+                </div>
+              );
+            } else {
+              return (
+                <div key={plot.plotId} className={styles.PlotDiv}>
+                  <h3>{plot.name}</h3>
+                  <p>{plot.cropName}</p>
+                  <p>{(plot.area / 10000).toFixed(2)} ha</p>
+                </div>
+              );
+            }
+          })}
         </div>
       );
     }

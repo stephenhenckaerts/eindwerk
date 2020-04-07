@@ -19,6 +19,7 @@ class UserPlotViewer extends Component {
     Map.setBackgroundTileLayer(this.props.type);
     Map.addUsersPlotBoundriesLayer(
       this.featureSelected,
+      this.featureHovered,
       this.props.userFeatures
     );
     Map.map.setTarget("map");
@@ -35,6 +36,10 @@ class UserPlotViewer extends Component {
       let selectedFeature = event.selected[0];
       this.props.featureSelected(event.selected[0].id_);
     }
+  };
+
+  featureHovered = (featureId) => {
+    this.props.featureHovered(featureId);
   };
 
   closePopup() {
