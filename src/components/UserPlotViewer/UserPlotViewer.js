@@ -56,6 +56,9 @@ class UserPlotViewer extends Component {
 
   render() {
     this.resetMapLayers();
+    if (this.props.hoveredSideBarFeature) {
+      Map.hoveredSideBarFeatureHandler(this.props.hoveredSideBarFeature);
+    }
     return (
       <div>
         <div id="map" className={styles.Map}></div>

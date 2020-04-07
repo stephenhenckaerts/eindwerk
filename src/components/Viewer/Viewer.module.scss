@@ -1,7 +1,7 @@
 @import "../../styles/colours.scss";
 
 .Map {
-  width: 96%;
+  width: calc(100vw - 5em);
   height: 100%;
   position: fixed;
   margin-left: 5em;

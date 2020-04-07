@@ -12,6 +12,7 @@ import MapSpinner from "../../components/UI/MapSpinner/MapSpinner";
 class UserPlotsMap extends Component {
   state = {
     hoveredFeature: null,
+    hoveredSideBarFeature: null,
   };
 
   constructor(props) {
@@ -33,6 +34,10 @@ class UserPlotsMap extends Component {
     this.setState({ hoveredFeature: featureId });
   };
 
+  hoveredSideBarFeatureHandler = (featureId) => {
+    this.setState({ hoveredSideBarFeature: featureId });
+  };
+
   render() {
     let viewer = <MapSpinner />;
     if (this.props.added === true) {
@@ -42,6 +47,7 @@ class UserPlotsMap extends Component {
           featureSelected={this.featureSelectedHandler}
           featureHovered={this.featureHoveredHandler}
           loading={this.props.loading}
+          hoveredSideBarFeature={this.state.hoveredSideBarFeature}
         ></UserPlotViewer>
       );
     }
@@ -53,6 +59,7 @@ class UserPlotsMap extends Component {
             userFeatures={this.props.userFeatures}
             loading={this.props.loading}
             hoveredFeature={this.state.hoveredFeature}
+            hoveredSideBarFeature={this.hoveredSideBarFeatureHandler}
           />
         </Sidebar>
         {viewer}

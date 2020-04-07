@@ -221,6 +221,37 @@ class OlMap {
     });
   }
 
+  hoveredSideBarFeatureHandler(hoveredFeatureId) {
+    var defaultStyle = new Style({
+      stroke: new Stroke({
+        width: 2,
+        color: "#9c1616",
+      }),
+      fill: new Fill({ color: "#c04e4e" }),
+    });
+    var hoveredStyle = new Style({
+      stroke: new Stroke({
+        width: 2,
+        color: "#9c1616",
+      }),
+      fill: new Fill({ color: "#9c1616" }),
+    });
+    this.map.getLayers().forEach((layer) => {
+      if (layer.get("name") === "plotUserBoundriesLayer") {
+        layer
+          .getSource()
+          .getFeatures()
+          .forEach((feature) => {
+            if (feature.id_ === hoveredFeatureId) {
+              feature.setStyle(hoveredStyle);
+            } else {
+              feature.setStyle(defaultStyle);
+            }
+          });
+      }
+    });
+  }
+
   createNewMap() {
     this.map = this.createMap();
   }
