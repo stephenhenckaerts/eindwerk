@@ -1,0 +1,9 @@
+@import "../../../styles/colours.scss";
+
+.Background {
+  width: 88%;
+  height: 100%;
+  position: fixed;
+  margin-left: 12em;
+  background-color: $dark-green-hover;
+}

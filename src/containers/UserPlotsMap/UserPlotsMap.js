@@ -7,7 +7,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import MapEditor from "../../components/MapEditor/MapEditor";
 import HomeSideBar from "../../components/Sidebar/UserPlotsSideBar/UserPlotsSideBar";
 import * as actions from "../../store/actions/Index";
-import Spinner from "../../components/UI/Spinner/Spinner";
+import MapSpinner from "../../components/UI/MapSpinner/MapSpinner";
 
 class UserPlotsMap extends Component {
   constructor(props) {
@@ -21,12 +21,17 @@ class UserPlotsMap extends Component {
     this.props.getUserFeatures(input);
   };
 
+  featureSelectedHandler = (featureId) => {
+    console.log(featureId);
+  };
+
   render() {
-    let viewer = <Spinner />;
+    let viewer = <MapSpinner />;
     if (this.props.added === true) {
       viewer = (
         <UserPlotViewer
           userFeatures={this.props.userFeatures}
+          featureSelected={this.featureSelectedHandler}
           loading={this.props.loading}
         ></UserPlotViewer>
       );

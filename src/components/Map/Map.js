@@ -11,6 +11,8 @@ import { Vector, Group, Tile } from "ol/layer";
 import Select from "ol/interaction/Select";
 import { Feature } from "ol";
 import { Polygon } from "ol/geom";
+import { Fill, Stroke, Style } from "ol/style";
+import { pointerMove } from "ol/events/condition";
 
 class OlMap {
   constructor() {
@@ -52,6 +54,9 @@ class OlMap {
     this.map.getLayers().forEach((layer) => {
       if (layer.get("name") === "plotBoundriesLayer") {
         boundriesLayer = layer;
+      }
+      if (layer.get("name") === "plotUserBoundriesLayer") {
+        this.map.removeLayer(layer);
       }
     });
     if (boundriesLayer == null) {
@@ -110,8 +115,11 @@ class OlMap {
   addUsersPlotBoundriesLayer(featureSelected, newFeatures) {
     let boundriesLayer = null;
     this.map.getLayers().forEach((layer) => {
-      if (layer.get("name") === "plotBoundriesLayer") {
+      if (layer.get("name") === "plotUserBoundriesLayer") {
         boundriesLayer = layer;
+      }
+      if (layer.get("name") === "plotBoundriesLayer") {
+        this.map.removeLayer(layer);
       }
     });
     if (boundriesLayer == null && newFeatures.length > 0) {
@@ -120,32 +128,43 @@ class OlMap {
         minScale: 15000000,
         strategy: bboxStrategy,
       });
-      console.log(newFeatures);
       newFeatures.forEach((newFeature) => {
         let feature = new Feature({
           geometry: new Polygon([newFeature.geometry]),
         });
         feature.setId(newFeature.plotId);
+        var selectedStyle = new Style({
+          stroke: new Stroke({
+            width: 2,
+            color: "#9c1616",
+          }),
+          fill: new Fill({ color: "#c04e4e" }),
+        });
+        feature.setStyle(selectedStyle);
         vectorSource.addFeature(feature);
-        console.log(feature.getGeometry().getExtent());
       });
       var vector = new Vector({
         //minZoom: 13,
         source: vectorSource,
       });
-      console.log(vectorSource.getExtent());
       this.setInteractionForPlotBoundriesLayer(vector, featureSelected);
-      vector.set("name", "plotBoundriesLayer");
+      this.setHoverInteractionForUserPlotBoundries(boundriesLayer);
+      vector.set("name", "plotUserBoundriesLayer");
       this.plotsExtent = vectorSource.getExtent();
       this.map.addLayer(vector);
     } else {
       this.setInteractionForPlotBoundriesLayer(boundriesLayer, featureSelected);
+      this.setHoverInteractionForUserPlotBoundries(boundriesLayer);
     }
   }
 
-  setExtentOfMapByUserFeaters() {
-    if (this.plotsExtent !== undefined && this.plotsExtent[0] !== Infinity) {
-      this.map.getView().fit(this.plotsExtent);
+  setExtentOfMapByUserFeaters(extent) {
+    if (extent === undefined) {
+      if (this.plotsExtent !== undefined && this.plotsExtent[0] !== Infinity) {
+        this.map.getView().fit(this.plotsExtent);
+      }
+    } else {
+      this.map.getView().fit(extent);
     }
   }
 
@@ -154,6 +173,15 @@ class OlMap {
       layers: [layer],
     });
     this.select.on("select", (event) => featureSelected(event, this.select));
+    this.map.addInteraction(this.select);
+  }
+
+  setHoverInteractionForUserPlotBoundries(layer) {
+    let select = new Select({
+      condition: pointerMove,
+      layers: [layer],
+    });
+    select.on(console.log("hahahah"));
     this.map.addInteraction(this.select);
   }
 
@@ -212,6 +240,9 @@ class OlMap {
       this.plotBoundriesState = state;
       this.map.getLayers().forEach((layer) => {
         if (layer.get("name") === "plotBoundriesLayer") {
+          layer.setVisible(state);
+        }
+        if (layer.get("name") === "plotUserBoundriesLayer") {
           layer.setVisible(state);
         }
       });

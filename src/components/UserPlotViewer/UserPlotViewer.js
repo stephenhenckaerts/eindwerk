@@ -12,9 +12,6 @@ class UserPlotViewer extends Component {
     super(props);
     Map.createNewMap();
 
-    this.popup = React.createRef();
-    this.popupContent = React.createRef();
-
     this.mapBackgroundType = null;
   }
 
@@ -26,16 +23,6 @@ class UserPlotViewer extends Component {
     );
     Map.map.setTarget("map");
     Map.setExtentOfMapByUserFeaters();
-    let container = this.popup.current;
-    let overlay = new Overlay({
-      element: container,
-      autoPan: true,
-      autoPanAnimation: {
-        duration: 250,
-      },
-    });
-    this.overlay = overlay;
-    Map.map.addOverlay(overlay);
   }
 
   resetMapLayers() {
@@ -45,29 +32,8 @@ class UserPlotViewer extends Component {
 
   featureSelected = (event, select) => {
     if (event.selected[0]) {
-      this.selectedFeature = event.selected[0];
-      let selectedFeature = {
-        id: event.selected[0].id_,
-        gewasgroepnaam: event.selected[0].getProperties().GEWASGROEP,
-        gewasnaam: event.selected[0].getProperties().LBLHFDTLT,
-        oppervlak: (event.selected[0].getProperties().OPPERVL / 10000).toFixed(
-          2
-        ),
-        coords: event.selected[0].getProperties().geometry.extent_,
-      };
-
-      let content = this.popupContent.current;
-      content.innerHTML =
-        "<p><strong>Gewasgroepnaam: </strong>" +
-        selectedFeature.gewasgroepnaam +
-        "</p>" +
-        "<p><strong>Gewasnaam: </strong>" +
-        selectedFeature.gewasnaam +
-        "</p>" +
-        "<p><strong>Oppervlak: </strong>" +
-        selectedFeature.oppervlak +
-        " ha</p>";
-      this.overlay.setPosition(event.mapBrowserEvent.coordinate);
+      let selectedFeature = event.selected[0];
+      this.props.featureSelected(event.selected[0].id_);
     }
   };
 
@@ -88,27 +54,6 @@ class UserPlotViewer extends Component {
     return (
       <div>
         <div id="map" className={styles.Map}></div>
-        <div ref={this.popup} className={styles.OlPopup}>
-          <div className={styles.OlPopupButtonsDiv}>
-            <Button
-              btnType="Danger"
-              className={[styles.PopupButton, styles.ClosePopupButton].join(
-                " "
-              )}
-              clicked={() => this.closePopup()}
-            >
-              Annuleer
-            </Button>
-            <Button
-              btnType="Success"
-              className={[styles.PopupButton, styles.AddPopupButton].join(" ")}
-              clicked={() => this.addFeature()}
-            >
-              Voeg Toe
-            </Button>
-          </div>
-          <div ref={this.popupContent}></div>
-        </div>
       </div>
     );
   }
