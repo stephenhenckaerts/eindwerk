@@ -42,6 +42,7 @@ const UserPlotsSideBar = (props) => {
                   className={[styles.PlotDiv, styles.PlotDivHovered].join(" ")}
                   onMouseEnter={() => props.hoveredSideBarFeature(plot.plotId)}
                   onMouseLeave={() => props.hoveredSideBarFeature(null)}
+                  onClick={() => props.featureSelected(plot.plotId)}
                 >
                   <h3>{plot.name}</h3>
                   <p>{plot.cropName}</p>
@@ -55,6 +56,7 @@ const UserPlotsSideBar = (props) => {
                   className={styles.PlotDiv}
                   onMouseEnter={() => props.hoveredSideBarFeature(plot.plotId)}
                   onMouseLeave={() => props.hoveredSideBarFeature(null)}
+                  onClick={() => props.featureSelected(plot.plotId)}
                 >
                   <h3>{plot.name}</h3>
                   <p>{plot.cropName}</p>

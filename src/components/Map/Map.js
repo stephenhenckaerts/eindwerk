@@ -116,7 +116,7 @@ class OlMap {
     let boundriesLayer = null;
     this.map.getLayers().forEach((layer) => {
       if (layer.get("name") === "plotUserBoundriesLayer") {
-        boundriesLayer = layer;
+        this.map.removeLayer(layer);
       }
       if (layer.get("name") === "plotBoundriesLayer") {
         this.map.removeLayer(layer);
@@ -153,8 +153,11 @@ class OlMap {
       this.plotsExtent = vectorSource.getExtent();
       this.map.addLayer(vector);
     } else {
-      this.setInteractionForPlotBoundriesLayer(vector, featureSelected);
-      this.setHoverInteractionForUserPlotBoundries(vector, featureHovered);
+      this.setInteractionForPlotBoundriesLayer(boundriesLayer, featureSelected);
+      this.setHoverInteractionForUserPlotBoundries(
+        boundriesLayer,
+        featureHovered
+      );
     }
   }
 
@@ -208,7 +211,10 @@ class OlMap {
       });
 
       if (newFeature) {
-        if (this.hoveredFeature === null) {
+        if (
+          this.hoveredFeature === null ||
+          this.hoveredFeature !== newFeature
+        ) {
           this.hoveredFeature = newFeature;
           featureHovered(this.hoveredFeature.id_);
         }

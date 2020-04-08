@@ -60,6 +60,7 @@ class UserPlotsMap extends Component {
             loading={this.props.loading}
             hoveredFeature={this.state.hoveredFeature}
             hoveredSideBarFeature={this.hoveredSideBarFeatureHandler}
+            featureSelected={this.featureSelectedHandler}
           />
         </Sidebar>
         {viewer}
