@@ -10,7 +10,6 @@ import Modal from "../../components/UI/Modal/Modal";
 import FeatureForm from "../../components/FeatureForm/FeatureForm";
 import * as actions from "../../store/actions/Index";
 import PlotSidebar from "../../components/Sidebar/PlotSideBar/PlotSideBar";
-import styles from "./PlotMap.module.scss";
 
 class PlotMap extends Component {
   state = {

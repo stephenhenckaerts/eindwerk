@@ -83,9 +83,6 @@ class FeatureForm extends Component {
     formIsValid: false,
   };
 
-  constructor(props) {
-    super(props);
-  }
   componentDidMount() {
     let feature = null;
     if (this._reactInternalFiber._debugOwner.type.name === "HomeMap") {

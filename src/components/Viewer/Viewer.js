@@ -14,8 +14,6 @@ class Viewer extends Component {
 
     this.popup = React.createRef();
     this.popupContent = React.createRef();
-
-    this.mapBackgroundType = null;
   }
 
   componentDidMount() {
@@ -79,7 +77,6 @@ class Viewer extends Component {
   }
 
   render() {
-    //console.log(this.props.loadedPlots);
     this.resetMapLayers();
     return (
       <div>

@@ -9,8 +9,6 @@ class UserPlotViewer extends Component {
   constructor(props) {
     super(props);
     Map.createNewMap();
-
-    this.mapBackgroundType = null;
   }
 
   componentDidMount() {
