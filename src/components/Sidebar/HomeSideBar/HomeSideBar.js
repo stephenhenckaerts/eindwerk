@@ -22,7 +22,7 @@ const HomeSideBar = () => {
       <div className={styles.SidebarItem}>
         <img src={lagenLogo} alt="Percelen Logo" />
         <div className={styles.SidebarTitle}>
-          <p>PERCELEN</p>
+          <p>LAGEN</p>
         </div>
       </div>
       <div className={styles.SidebarBottom}>

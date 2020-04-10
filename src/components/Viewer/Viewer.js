@@ -19,7 +19,6 @@ class Viewer extends Component {
   }
 
   componentDidMount() {
-    Map.setBackgroundTileLayer(this.props.type);
     Map.addBoundriesLayer(this.featureSelected);
     Map.map.setTarget("map");
     let container = this.popup.current;
@@ -35,6 +34,7 @@ class Viewer extends Component {
   }
 
   resetMapLayers() {
+    Map.removeAllLayers();
     Map.setBackgroundTileLayer(this.props.type);
     Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
   }

@@ -28,7 +28,7 @@ class FeatureForm extends Component {
           placeholder: "Oppervlakte",
         },
         label: "Grond oppervlakte",
-        value: this.props.selectedFeature.getProperties().OPPERVL.toFixed(0),
+        value: "",
         metric: "m²",
         validation: {
           required: true,
@@ -44,7 +44,7 @@ class FeatureForm extends Component {
           placeholder: "Gewasgroepsnaam",
         },
         label: "Gewasgroepsnaam",
-        value: this.props.selectedFeature.getProperties().GEWASGROEP,
+        value: "",
         validation: {
           required: true,
         },
@@ -58,7 +58,7 @@ class FeatureForm extends Component {
           placeholder: "Gewasnaam",
         },
         label: "Gewasnaam",
-        value: this.props.selectedFeature.getProperties().LBLHFDTLT,
+        value: "",
         validation: {
           required: true,
         },
@@ -83,6 +83,79 @@ class FeatureForm extends Component {
     formIsValid: false,
   };
 
+  constructor(props) {
+    super(props);
+  }
+  componentDidMount() {
+    let feature = null;
+    if (this._reactInternalFiber._debugOwner.type.name === "HomeMap") {
+      feature = {
+        name: "",
+        area: this.props.selectedFeature.getProperties().OPPERVL.toFixed(0),
+        cropGroupName: this.props.selectedFeature.getProperties().GEWASGROEP,
+        cropName: this.props.selectedFeature.getProperties().LBLHFDTLT,
+        comments: "",
+      };
+    } else {
+      feature = this.props.selectedFeature;
+    }
+
+    this.setState((prevState) => ({
+      orderForm: {
+        ...prevState.orderForm,
+        name: {
+          ...prevState.orderForm.name,
+          value: feature.name,
+        },
+        area: {
+          ...prevState.orderForm.area,
+          value: feature.area,
+        },
+        cropGroupName: {
+          ...prevState.orderForm.cropGroupName,
+          value: feature.cropGroupName,
+        },
+        cropName: {
+          ...prevState.orderForm.cropName,
+          value: feature.cropName,
+        },
+        comments: {
+          ...prevState.orderForm.comments,
+          value: feature.comments,
+        },
+      },
+    }));
+
+    if (this._reactInternalFiber._debugOwner.type.name === "PlotMap") {
+      this.setState({ formIsValid: true });
+      this.setState((prevState) => ({
+        orderForm: {
+          ...prevState.orderForm,
+          name: {
+            ...prevState.orderForm.name,
+            valid: true,
+          },
+          area: {
+            ...prevState.orderForm.area,
+            valid: true,
+          },
+          cropGroupName: {
+            ...prevState.orderForm.cropGroupName,
+            valid: true,
+          },
+          cropName: {
+            ...prevState.orderForm.cropName,
+            valid: true,
+          },
+          comments: {
+            ...prevState.orderForm.comments,
+            valid: true,
+          },
+        },
+      }));
+    }
+  }
+
   orderHandler = (event) => {
     event.preventDefault();
 
@@ -92,14 +165,26 @@ class FeatureForm extends Component {
         formElementIdentifier
       ].value;
     }
-    const geometry = this.props.selectedFeature.getProperties().geometry
-      .flatCoordinates;
+    let geometry = null;
+    let coords = null;
     let geometryArray = [];
-    while (geometry.length) geometryArray.push(geometry.splice(0, 2));
+    let id = null;
+
+    if (this._reactInternalFiber._debugOwner.type.name === "HomeMap") {
+      geometry = this.props.selectedFeature.getProperties().geometry
+        .flatCoordinates;
+      coords = this.props.selectedFeature.getProperties().geometry.extent_;
+      id = this.props.selectedFeature.id_;
+      while (geometry.length) geometryArray.push(geometry.splice(0, 2));
+    } else if (this._reactInternalFiber._debugOwner.type.name === "PlotMap") {
+      geometryArray = this.props.selectedFeature.geometry;
+      coords = this.props.selectedFeature.coords;
+      id = this.props.selectedFeature.plotId;
+    }
     const plot = {
-      plotId: this.props.selectedFeature.id_,
+      plotId: id,
       geometry: geometryArray,
-      coords: this.props.selectedFeature.getProperties().geometry.extent_,
+      coords: coords,
       name: this.state.orderForm.name.value,
       area: this.state.orderForm.area.value,
       cropGroupName: this.state.orderForm.cropGroupName.value,
@@ -191,14 +276,20 @@ class FeatureForm extends Component {
             ANNULEER
           </Button>
           <Button btnType="Success" disabled={!this.state.formIsValid}>
-            VOEG TOE
+            {this._reactInternalFiber._debugOwner.type.name === "HomeMap"
+              ? "VOEG TOE"
+              : "PAS AAN"}
           </Button>
         </div>
       </form>
     );
     return (
       <div className={styles.ContactData}>
-        <h4 className={styles.FormTitle}>Nieuw Perceel Toevoegen</h4>
+        <h4 className={styles.FormTitle}>
+          {this._reactInternalFiber._debugOwner.type.name === "HomeMap"
+            ? "Nieuw Perceel Toevoegen"
+            : "Perceel Aanpassen"}
+        </h4>
         {form}
       </div>
     );

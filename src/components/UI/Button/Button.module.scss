@@ -16,7 +16,6 @@
 }
 
 .Button:first-of-type {
-  margin-left: 0;
   padding-left: 0;
 }
 
@@ -29,6 +28,14 @@
   background-color: $dark-green;
 }
 
+.SuccessLight {
+  background-color: $light-green;
+}
+
 .Danger {
   background-color: $dark-red;
+}
+
+.Info {
+  background-color: $light-blue;
 }

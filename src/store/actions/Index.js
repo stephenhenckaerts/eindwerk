@@ -5,4 +5,10 @@ export {
   addFeatureInit,
   getUserFeatures,
   getUserFeaturesInit,
+  getFeature,
+  getFeatureInit,
+  deleteFeature,
+  deleteFeatureInit,
+  updateFeature,
+  updateFeatureInit,
 } from "./Features";

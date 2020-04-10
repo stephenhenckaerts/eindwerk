@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import Map from "../Map/Map";
 import "ol/ol.css";
 import styles from "./UserPlotViewer.module.scss";
-import Overlay from "ol/Overlay";
-import Button from "../UI/Button/Button";
 
 class UserPlotViewer extends Component {
   constructor(props) {
@@ -33,7 +31,6 @@ class UserPlotViewer extends Component {
 
   featureSelected = (event, select) => {
     if (event.selected[0]) {
-      let selectedFeature = event.selected[0];
       this.props.featureSelected(event.selected[0].id_);
     }
   };

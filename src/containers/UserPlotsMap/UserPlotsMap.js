@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 import Aux from "../../hoc/Aux/Aux";
 import UserPlotViewer from "../../components/UserPlotViewer/UserPlotViewer";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import MapEditor from "../../components/MapEditor/MapEditor";
-import HomeSideBar from "../../components/Sidebar/UserPlotsSideBar/UserPlotsSideBar";
+import UserPlotsSideBar from "../../components/Sidebar/UserPlotsSideBar/UserPlotsSideBar";
 import * as actions from "../../store/actions/Index";
 import MapSpinner from "../../components/UI/MapSpinner/MapSpinner";
 
@@ -13,6 +14,7 @@ class UserPlotsMap extends Component {
   state = {
     hoveredFeature: null,
     hoveredSideBarFeature: null,
+    redirect: null,
   };
 
   constructor(props) {
@@ -27,7 +29,7 @@ class UserPlotsMap extends Component {
   };
 
   featureSelectedHandler = (featureId) => {
-    console.log(featureId);
+    this.setState({ redirect: featureId });
   };
 
   featureHoveredHandler = (featureId) => {
@@ -39,6 +41,9 @@ class UserPlotsMap extends Component {
   };
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={"/perceel/" + this.state.redirect} />;
+    }
     let viewer = <MapSpinner />;
     if (this.props.added === true) {
       viewer = (
@@ -54,7 +59,7 @@ class UserPlotsMap extends Component {
     return (
       <Aux>
         <Sidebar>
-          <HomeSideBar
+          <UserPlotsSideBar
             onLoadedPlots={this.onLoadedPlots}
             userFeatures={this.props.userFeatures}
             loading={this.props.loading}
