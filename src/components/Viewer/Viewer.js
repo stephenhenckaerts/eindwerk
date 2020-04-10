@@ -34,7 +34,6 @@ class Viewer extends Component {
   }
 
   resetMapLayers() {
-    Map.removeAllLayers();
     Map.setBackgroundTileLayer(this.props.type);
     Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
   }

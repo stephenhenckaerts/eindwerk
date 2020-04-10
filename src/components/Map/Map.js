@@ -12,6 +12,7 @@ import Select from "ol/interaction/Select";
 import { Feature } from "ol";
 import { Polygon } from "ol/geom";
 import { Fill, Stroke, Style } from "ol/style";
+import { pointerMove } from "ol/events/condition";
 
 class OlMap {
   constructor() {
@@ -28,8 +29,7 @@ class OlMap {
         new Tile({
           source: new BingMaps({
             imagerySet: "Aerial",
-            key:
-              "AsVf4lj-tiANM5N4_P56DC_oQQM9fjb0lMosBxFtgovzGEgcMnQuqYpeKpX-1KL2",
+            key: process.env.REACT_APP_BING_MAPS,
           }),
           visible: false,
         }),
@@ -37,77 +37,80 @@ class OlMap {
     });
   }
 
-  clearAllBoundriesLayers() {
-    console.log(this.map.getLayers());
+  addBoundriesLayer(featureSelected) {
+    let boundriesLayer = null;
     this.map.getLayers().forEach((layer) => {
-      if (
-        layer.get("name") === "plotBoundriesLayer" ||
-        layer.get("name") === "plotUserBoundriesLayer"
-      ) {
-        layer.getSource().clear();
+      if (layer.get("name") === "plotBoundriesLayer") {
+        boundriesLayer = layer;
+      }
+      if (layer.get("name") === "plotUserBoundriesLayer") {
         this.map.removeLayer(layer);
-        layer = null;
       }
     });
-    if (this.select) {
-      this.select.getFeatures().clear();
-    }
-  }
-
-  addBoundriesLayer(featureSelected) {
-    this.clearAllBoundriesLayers();
-    let vectorSource = new VectorSource({
-      format: new GeoJSON(),
-      minScale: 15000000,
-      loader: function (extent, resolution, projection) {
-        /*
+    if (boundriesLayer == null) {
+      let vectorSource = new VectorSource({
+        format: new GeoJSON(),
+        minScale: 15000000,
+        loader: function (extent, resolution, projection) {
+          /*
           Link for the DLV
-          let url =
+          var url =
             "http://localhost:3030/maps/map/https://geoservices.landbouwvlaanderen.be/PUBLIC/wfs?service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:LBGEBRPERC2019&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=" +
             extent.join(",") +
             ",EPSG:3857";
-          */ let url =
-          "http://localhost:3030/maps/map/http://localhost:8080/geoserver/lbgbrprc18/wfs?service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:Lbgbrprc18&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=" +
-          extent.join(",") +
-          ",EPSG:3857";
-        // */
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", url);
-        let onError = function () {
-          vectorSource.removeLoadedExtent(extent);
-        };
-        xhr.onerror = onError;
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            let features = vectorSource
-              .getFormat()
-              .readFeatures(xhr.responseText);
-            features.forEach(function (feature) {
-              //ID for the DLV
-              //feature.setId(feature.get("OBJ_ID"));
-              feature.setId(feature.get("OIDN"));
-            });
-            vectorSource.addFeatures(features);
-          } else {
-            onError();
-          }
-        };
-        xhr.send();
-      },
-      strategy: bboxStrategy,
-    });
-    let vector = new Vector({
-      //minZoom: 13,
-      source: vectorSource,
-    });
-    this.setInteractionForPlotBoundriesLayer(vector, featureSelected);
-    vector.set("name", "plotBoundriesLayer");
-    this.map.addLayer(vector);
+          */ var url =
+            "http://localhost:3030/maps/map/http://localhost:8080/geoserver/lbgbrprc18/wfs?service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:Lbgbrprc18&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=" +
+            extent.join(",") +
+            ",EPSG:3857";
+          // */
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", url);
+          var onError = function () {
+            vectorSource.removeLoadedExtent(extent);
+          };
+          xhr.onerror = onError;
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              var features = vectorSource
+                .getFormat()
+                .readFeatures(xhr.responseText);
+              features.forEach(function (feature) {
+                //ID for the DLV
+                //feature.setId(feature.get("OBJ_ID"));
+                feature.setId(feature.get("OIDN"));
+              });
+              vectorSource.addFeatures(features);
+            } else {
+              onError();
+            }
+          };
+          xhr.send();
+        },
+        strategy: bboxStrategy,
+      });
+      var vector = new Vector({
+        //minZoom: 13,
+        source: vectorSource,
+      });
+      this.setInteractionForPlotBoundriesLayer(vector, featureSelected);
+      vector.set("name", "plotBoundriesLayer");
+      this.map.addLayer(vector);
+    } else {
+      this.setInteractionForPlotBoundriesLayer(boundriesLayer, featureSelected);
+    }
   }
 
   addUsersPlotBoundriesLayer(featureSelected, featureHovered, newFeatures) {
-    this.clearAllBoundriesLayers();
-    if (newFeatures.length > 0) {
+    let boundriesLayer = null;
+    this.map.getLayers().forEach((layer) => {
+      if (layer.get("name") === "plotUserBoundriesLayer") {
+        this.map.removeLayer(layer);
+      }
+      if (layer.get("name") === "plotBoundriesLayer") {
+        this.map.removeLayer(layer);
+      }
+    });
+    if (boundriesLayer == null && newFeatures.length > 0) {
       let vectorSource = new VectorSource({
         format: new GeoJSON(),
         minScale: 15000000,
@@ -118,7 +121,7 @@ class OlMap {
           geometry: new Polygon([newFeature.geometry]),
         });
         feature.setId(newFeature.plotId);
-        let selectedStyle = new Style({
+        var selectedStyle = new Style({
           stroke: new Stroke({
             width: 2,
             color: "#9c1616",
@@ -128,7 +131,7 @@ class OlMap {
         feature.setStyle(selectedStyle);
         vectorSource.addFeature(feature);
       });
-      let vector = new Vector({
+      var vector = new Vector({
         //minZoom: 13,
         source: vectorSource,
       });
@@ -137,6 +140,12 @@ class OlMap {
       vector.set("name", "plotUserBoundriesLayer");
       this.plotsExtent = vectorSource.getExtent();
       this.map.addLayer(vector);
+    } else {
+      this.setInteractionForPlotBoundriesLayer(boundriesLayer, featureSelected);
+      this.setHoverInteractionForUserPlotBoundries(
+        boundriesLayer,
+        featureHovered
+      );
     }
   }
 
@@ -160,14 +169,14 @@ class OlMap {
 
   setHoverInteractionForUserPlotBoundries(layer, featureHovered) {
     this.hoveredFeature = null;
-    let defaultStyle = new Style({
+    var defaultStyle = new Style({
       stroke: new Stroke({
         width: 2,
         color: "#9c1616",
       }),
       fill: new Fill({ color: "#c04e4e" }),
     });
-    let hoveredStyle = new Style({
+    var hoveredStyle = new Style({
       stroke: new Stroke({
         width: 2,
         color: "#9c1616",
@@ -207,14 +216,14 @@ class OlMap {
   }
 
   hoveredSideBarFeatureHandler(hoveredFeatureId) {
-    let defaultStyle = new Style({
+    var defaultStyle = new Style({
       stroke: new Stroke({
         width: 2,
         color: "#9c1616",
       }),
       fill: new Fill({ color: "#c04e4e" }),
     });
-    let hoveredStyle = new Style({
+    var hoveredStyle = new Style({
       stroke: new Stroke({
         width: 2,
         color: "#9c1616",
@@ -257,9 +266,6 @@ class OlMap {
     this.map.getLayers().forEach((layer) => {
       this.map.removeLayer(layer);
     });
-    this.map.setTarget(null);
-    this.map = null;
-    this.createNewMap();
   }
 
   clearSelect() {
@@ -276,6 +282,7 @@ class OlMap {
     } else {
       if (this.backgroundTileType !== type) {
         this.backgroundTileType = type;
+        console.log(this.map.getLayers());
         this.map.getLayers().getArray()[0].setVisible(false);
         this.map.getLayers().getArray()[1].setVisible(false);
         if (type === "OPENSTREETMAP") {
