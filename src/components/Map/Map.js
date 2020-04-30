@@ -76,13 +76,11 @@ class OlMap {
         /*
           Link for the DLV
           let url =
-            "http://localhost:3030/maps/map/https://geoservices.landbouwvlaanderen.be/PUBLIC/wfs?service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:LBGEBRPERC2019&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=" +
+            process.env.REACT_APP_DLV_API +
             extent.join(",") +
             ",EPSG:3857";
           */ let url =
-          "http://localhost:3030/maps/map/http://localhost:8080/geoserver/lbgbrprc18/wfs?service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:Lbgbrprc18&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=" +
-          extent.join(",") +
-          ",EPSG:3857";
+          process.env.REACT_APP_GEOSERVER_API + extent.join(",") + ",EPSG:3857";
         // */
         let xhr = new XMLHttpRequest();
         xhr.open("GET", url);
@@ -120,6 +118,7 @@ class OlMap {
 
   addUsersPlotBoundriesLayer(featureSelected, featureHovered, newFeatures) {
     this.clearAllBoundriesLayers();
+    debugger;
     if (newFeatures.length > 0) {
       let vectorSource = new VectorSource({
         format: new GeoJSON(),
@@ -137,8 +136,10 @@ class OlMap {
         //minZoom: 13,
         source: vectorSource,
       });
-      this.setInteractionForPlotBoundriesLayer(vector, featureSelected);
-      this.setHoverInteractionForUserPlotBoundries(vector, featureHovered);
+      if (featureHovered !== null) {
+        this.setInteractionForPlotBoundriesLayer(vector, featureSelected);
+        this.setHoverInteractionForUserPlotBoundries(vector, featureHovered);
+      }
       vector.set("name", "plotUserBoundriesLayer");
       this.plotsExtent = vectorSource.getExtent();
       this.map.addLayer(vector);

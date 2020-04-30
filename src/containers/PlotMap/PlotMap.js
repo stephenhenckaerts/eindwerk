@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
-import Viewer from "../../components/Viewer/Viewer";
+import Viewer from "../../components/PlotViewer/PlotViewer";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import MapEditor from "../../components/MapEditor/MapEditor";
 import Aux from "../../hoc/Aux/Aux";
@@ -81,7 +81,7 @@ class PlotMap extends Component {
             plotDeleted={(plotId) => this.plotDeletedHandler(plotId)}
           />
         </Sidebar>
-        <Viewer featureAddedHandler={this.featureAddedHandler}></Viewer>
+        <Viewer feature={this.props.feature}></Viewer>
         <MapEditor></MapEditor>
       </Aux>
     );
