@@ -24,6 +24,10 @@ class PlotViewer extends Component {
   resetMapLayers() {
     Map.setBackgroundTileLayer(this.props.type);
     Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
+
+    if (this.props.shapefile) {
+      Map.setShapeFile(this.props.shapefile);
+    }
   }
 
   render() {

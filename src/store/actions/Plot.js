@@ -1,0 +1,43 @@
+import * as actionTypes from "../actions/ActionTypes";
+import axios from "../../axios";
+
+export const getPlotShapefileInit = () => {
+  return {
+    type: actionTypes.GET_PLOT_SHAPEFILE_INIT,
+  };
+};
+
+export const getPlotShapefileStart = () => {
+  return {
+    type: actionTypes.GET_PLOT_SHAPEFILE_START,
+  };
+};
+
+export const getPlotShapefileSucces = (shapefile) => {
+  return {
+    type: actionTypes.GET_PLOT_SHAPEFILE_SUCCESS,
+    shapefile: shapefile,
+  };
+};
+
+export const getPlotShapefileFail = (error) => {
+  return {
+    type: actionTypes.GET_PLOT_SHAPEFILE_FAIL,
+    error: error,
+  };
+};
+
+export const getPlotShapefile = (featureId) => {
+  return (dispatch) => {
+    dispatch(getPlotShapefileStart());
+    axios
+      .get("/maps/json/", featureId)
+      .then((response) => {
+        const shapefile = response.data;
+        dispatch(getPlotShapefileSucces(shapefile));
+      })
+      .catch((error) => {
+        dispatch(getPlotShapefileFail(error));
+      });
+  };
+};

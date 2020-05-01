@@ -37,7 +37,7 @@ export const addFeature = (feature) => {
   return (dispatch) => {
     dispatch(addFeatureStart());
     axios
-      .post("/percelen", feature)
+      .post("api/percelen", feature)
       .then((response) => {
         dispatch(addFeatureSucces());
       })
@@ -77,7 +77,7 @@ export const getUserFeatures = (query) => {
   return (dispatch) => {
     dispatch(getUserFeaturesStart());
     axios
-      .get("/percelen" + query)
+      .get("api/percelen" + query)
       .then((response) => {
         const loadedPlots = [];
         for (const key in response.data) {
@@ -130,7 +130,7 @@ export const getFeature = (featureId) => {
   return (dispatch) => {
     dispatch(getFeatureStart());
     axios
-      .get("/percelen/" + featureId)
+      .get("api/percelen/" + featureId)
       .then((response) => {
         const loadedPlots = [];
         for (const key in response.data) {
@@ -185,7 +185,7 @@ export const deleteFeature = (featureId) => {
   return (dispatch) => {
     dispatch(deleteFeatureStart());
     axios
-      .delete("/percelen/" + featureId)
+      .delete("api/percelen/" + featureId)
       .then((response) => {
         dispatch(deleteFeatureSucces());
       })
@@ -225,7 +225,7 @@ export const updateFeature = (feature) => {
   return (dispatch) => {
     dispatch(updateFeatureStart());
     axios
-      .put("/percelen", feature)
+      .put("api/percelen", feature)
       .then((response) => {
         const loadedPlot = {
           plotId: response.data.plotId,

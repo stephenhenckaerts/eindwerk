@@ -9,12 +9,14 @@ import * as serviceWorker from "./serviceWorker";
 import thunk from "redux-thunk";
 import mapDetailsReducer from "./store/reducer/MapDetails";
 import featuresReducer from "./store/reducer/Features";
+import plotReducer from "./store/reducer/Plot";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
   mapDetails: mapDetailsReducer,
-  features: featuresReducer
+  features: featuresReducer,
+  plot: plotReducer,
 });
 
 const store = createStore(

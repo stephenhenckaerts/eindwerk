@@ -33,9 +33,9 @@ class PlotMap extends Component {
     this.setState({ updatingFeature: false, selectedFeature: null });
   };
 
-  plotNotedHandler(plotId) {
-    console.log(plotId);
-  }
+  plotNotedHandler = (plotId) => {
+    this.props.onGetPlotShapefile(plotId);
+  };
 
   plotUpdateHandler() {
     this.setState({ updatingFeature: true });
@@ -81,7 +81,10 @@ class PlotMap extends Component {
             plotDeleted={(plotId) => this.plotDeletedHandler(plotId)}
           />
         </Sidebar>
-        <Viewer feature={this.props.feature}></Viewer>
+        <Viewer
+          feature={this.props.feature}
+          shapefile={this.props.shapefile}
+        ></Viewer>
         <MapEditor></MapEditor>
       </Aux>
     );
@@ -93,6 +96,7 @@ const mapStateToProps = (state) => {
     feature: state.features.feature,
     loading: state.features.loading,
     added: state.features.added,
+    shapefile: state.plot.shapefile,
   };
 };
 
@@ -102,6 +106,8 @@ const mapDispatchToProps = (dispatch) => {
     onDeleteFeature: (featureId) => dispatch(actions.deleteFeature(featureId)),
     onUpdateFeature: (feature) => dispatch(actions.updateFeature(feature)),
     onUpdateFeatureInit: () => dispatch(actions.updateFeatureInit()),
+    onGetPlotShapefile: (featureId) =>
+      dispatch(actions.getPlotShapefile(featureId)),
   };
 };
 

@@ -12,3 +12,5 @@ export {
   updateFeature,
   updateFeatureInit,
 } from "./Features";
+
+export { getPlotShapefile, getPlotShapefileInit } from "./Plot";

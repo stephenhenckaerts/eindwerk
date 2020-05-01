@@ -54,6 +54,7 @@ class OlMap {
 
   clearAllBoundriesLayers() {
     this.map.getLayers().forEach((layer) => {
+      console.log(layer);
       if (
         layer.get("name") === "plotBoundriesLayer" ||
         layer.get("name") === "plotUserBoundriesLayer"
@@ -118,7 +119,6 @@ class OlMap {
 
   addUsersPlotBoundriesLayer(featureSelected, featureHovered, newFeatures) {
     this.clearAllBoundriesLayers();
-    debugger;
     if (newFeatures.length > 0) {
       let vectorSource = new VectorSource({
         format: new GeoJSON(),
@@ -257,7 +257,6 @@ class OlMap {
     } else {
       if (this.backgroundTileType !== type) {
         this.backgroundTileType = type;
-        console.log(this.map.getLayers());
         this.map.getLayers().getArray()[0].setVisible(false);
         this.map.getLayers().getArray()[1].setVisible(false);
         if (type === "OPENSTREETMAP") {
@@ -280,11 +279,59 @@ class OlMap {
           layer.setVisible(state);
         }
         if (layer.get("name") === "plotUserBoundriesLayer") {
-          console.log(state);
           layer.setVisible(state);
         }
       });
     }
+  }
+
+  setShapeFile(shapefile) {
+    this.clearAllBoundriesLayers();
+    let vectorSource = new VectorSource({
+      format: new GeoJSON(),
+      loader: function (extent, resolution, projection) {
+        var proj = projection.getCode();
+        var url = "http://localhost:3030/maps/json/";
+        //var url = "http://localhost:3030/map/http://localhost:8080/geoserver/database/wfs?service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:wimmertingen&srsname=EPSG:3857&outputFormat=application/json&count=1000,EPSG:3857";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        var onError = function () {
+          vectorSource.removeLoadedExtent(extent);
+        };
+        xhr.onerror = onError;
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            var features = vectorSource
+              .getFormat()
+              .readFeatures(xhr.responseText);
+            features.forEach(function (feature) {
+              feature.setId(feature.get("OBJ_ID"));
+              feature.setStyle(
+                new Style({
+                  fill: new Fill({
+                    color: "rgb(252, 51, 20,0.1)",
+                  }),
+                  stroke: new Stroke({
+                    color: "#fc3314",
+                  }),
+                })
+              );
+            });
+            vectorSource.addFeatures(features);
+          } else {
+            onError();
+          }
+        };
+        xhr.send();
+      },
+      strategy: bboxStrategy,
+    });
+    let vector = new Vector({
+      //minZoom: 13,
+      source: vectorSource,
+    });
+    vector.set("name", "plotShapefileLayer");
+    this.map.addLayer(vector);
   }
 
   addTileLayer(url) {
