@@ -90,6 +90,7 @@ export const getUserFeatures = (query) => {
             comments: response.data[key].comments,
             coords: response.data[key].coords,
             geometry: response.data[key].geometry,
+            shapefile: response.data[key].shapefile,
           });
         }
         dispatch(getUserFeaturesSucces(loadedPlots));
@@ -143,6 +144,7 @@ export const getFeature = (featureId) => {
             comments: response.data[key].comments,
             coords: response.data[key].coords,
             geometry: response.data[key].geometry,
+            shapefile: response.data[key].shapefile,
           });
         }
         if (loadedPlots.length < 1)

@@ -1,0 +1,37 @@
+@import "../../styles/colours.scss";
+@import "../../styles/extends.scss";
+
+.Menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: $yellow;
+  border-radius: 0px 0px 10px 0px;
+  border: 1px solid $dark-green;
+  opacity: 0.7;
+  cursor: pointer;
+  height: 85px;
+  @extend %unselectable;
+}
+
+.Menu > img {
+  margin: 10px 10px 5px 10px;
+}
+
+.MenuOpened {
+  border-radius: 0px;
+}
+
+.ShapefileNote {
+  @extend %unselectable;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  background-color: $yellow;
+  padding: 0 1rem;
+  opacity: 0.8;
+  border: 2px solid $dark-green;
+  border-radius: 10px;
+  text-align: center;
+}

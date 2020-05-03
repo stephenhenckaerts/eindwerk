@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import Map from "../Map/Map";
 import "ol/ol.css";
 import styles from "./PlotViewer.module.scss";
+import NotesEditor from "../NotesEditor/NotesEditor";
 
 class PlotViewer extends Component {
   constructor(props) {
@@ -27,8 +28,10 @@ class PlotViewer extends Component {
     Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
 
     if (this.props.feature !== null) {
-      if (this.props.shapefile) {
-        Map.setShapeFile(this.props.shapefile);
+      if (this.props.showNotes) {
+        if (this.props.feature.shapefile !== "None") {
+          Map.setShapeFile(this.props.shapefile);
+        }
       } else {
         Map.addUsersPlotBoundriesLayer(null, null, [this.props.feature]);
       }
@@ -38,9 +41,15 @@ class PlotViewer extends Component {
 
   render() {
     this.resetMapLayers();
+    let notesOptions = null;
+    if (this.props.showNotes) {
+      notesOptions = <NotesEditor shapefile={this.props.feature.shapefile} />;
+    }
     return (
       <div>
-        <div id="map" className={styles.Map}></div>
+        <div id="map" className={styles.Map}>
+          {notesOptions}
+        </div>
       </div>
     );
   }

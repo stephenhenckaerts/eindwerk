@@ -12,7 +12,6 @@ import Select from "ol/interaction/Select";
 import { Feature } from "ol";
 import { Polygon } from "ol/geom";
 import { Fill, Stroke, Style } from "ol/style";
-import { MouseWheelZoom } from "ol/interaction";
 
 class OlMap {
   constructor() {
@@ -55,7 +54,6 @@ class OlMap {
 
   clearAllBoundriesLayers() {
     this.map.getLayers().forEach((layer) => {
-      console.log(layer.get("name"));
       if (
         layer.get("name") === "plotBoundriesLayer" ||
         layer.get("name") === "plotUserBoundriesLayer" ||
@@ -292,7 +290,6 @@ class OlMap {
     let vectorSource = new VectorSource({
       format: new GeoJSON(),
       loader: function (extent, resolution, projection) {
-        var proj = projection.getCode();
         var url = "http://localhost:3030/maps/json/";
         //var url = "http://localhost:3030/map/http://localhost:8080/geoserver/database/wfs?service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:wimmertingen&srsname=EPSG:3857&outputFormat=application/json&count=1000,EPSG:3857";
         var xhr = new XMLHttpRequest();

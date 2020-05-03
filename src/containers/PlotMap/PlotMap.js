@@ -15,13 +15,13 @@ class PlotMap extends Component {
   state = {
     updatingFeature: false,
     featureDeleted: false,
+    showNotes: false,
   };
 
   constructor(props) {
     super(props);
     this.plotId = this.props.match.params.plotId;
     this.props.onLoadFeature(this.plotId);
-    this.props.onGetPlotShapefileInit();
   }
 
   featureAddedHandler = (feature) => {
@@ -34,8 +34,8 @@ class PlotMap extends Component {
     this.setState({ updatingFeature: false, selectedFeature: null });
   };
 
-  plotNotedHandler = (plotId) => {
-    this.props.onGetPlotShapefile(plotId);
+  plotNotedHandler = () => {
+    this.setState({ showNotes: !this.state.showNotes });
   };
 
   plotUpdateHandler() {
@@ -84,7 +84,7 @@ class PlotMap extends Component {
         </Sidebar>
         <Viewer
           feature={this.props.feature}
-          shapefile={this.props.shapefile}
+          showNotes={this.state.showNotes}
         ></Viewer>
         <MapEditor></MapEditor>
       </Aux>
