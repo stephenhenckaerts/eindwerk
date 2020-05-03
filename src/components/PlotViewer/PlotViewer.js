@@ -19,23 +19,25 @@ class PlotViewer extends Component {
       this.props.userFeatures
     );*/
     Map.map.setTarget("map");
+    Map.changeControls(false);
   }
 
   resetMapLayers() {
     Map.setBackgroundTileLayer(this.props.type);
     Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
 
-    if (this.props.shapefile) {
-      Map.setShapeFile(this.props.shapefile);
+    if (this.props.feature !== null) {
+      if (this.props.shapefile) {
+        Map.setShapeFile(this.props.shapefile);
+      } else {
+        Map.addUsersPlotBoundriesLayer(null, null, [this.props.feature]);
+      }
+      Map.setExtentOfMapByUserFeaters(this.props.feature.coords);
     }
   }
 
   render() {
     this.resetMapLayers();
-    if (this.props.feature !== null) {
-      Map.addUsersPlotBoundriesLayer(null, null, [this.props.feature]);
-      Map.setExtentOfMapByUserFeaters(this.props.feature.coords);
-    }
     return (
       <div>
         <div id="map" className={styles.Map}></div>

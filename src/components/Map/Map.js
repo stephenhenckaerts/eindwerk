@@ -12,6 +12,7 @@ import Select from "ol/interaction/Select";
 import { Feature } from "ol";
 import { Polygon } from "ol/geom";
 import { Fill, Stroke, Style } from "ol/style";
+import { MouseWheelZoom } from "ol/interaction";
 
 class OlMap {
   constructor() {
@@ -54,10 +55,11 @@ class OlMap {
 
   clearAllBoundriesLayers() {
     this.map.getLayers().forEach((layer) => {
-      console.log(layer);
+      console.log(layer.get("name"));
       if (
         layer.get("name") === "plotBoundriesLayer" ||
-        layer.get("name") === "plotUserBoundriesLayer"
+        layer.get("name") === "plotUserBoundriesLayer" ||
+        layer.get("name") === "plotShapefileLayer"
       ) {
         layer.getSource().clear();
         this.map.removeLayer(layer);
@@ -332,6 +334,18 @@ class OlMap {
     });
     vector.set("name", "plotShapefileLayer");
     this.map.addLayer(vector);
+  }
+
+  changeControls(state) {
+    //Removes the ability to interract with the map
+    this.map.getInteractions().forEach(function (interaction) {
+      interaction.setActive(state);
+    }, this);
+
+    //Removes all the buttons from the map
+    this.map.getControls().forEach((control) => {
+      this.map.removeControl(control);
+    });
   }
 
   addTileLayer(url) {

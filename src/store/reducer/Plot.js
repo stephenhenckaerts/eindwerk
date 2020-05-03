@@ -8,7 +8,7 @@ const initialState = {
 };
 
 const getPlotShapefileInit = (state, action) => {
-  return updateObject(state, { loading: false, added: false });
+  return updateObject(state, { loading: false, added: false, shapefile: null });
 };
 
 const getPlotShapefileStart = (state, action) => {

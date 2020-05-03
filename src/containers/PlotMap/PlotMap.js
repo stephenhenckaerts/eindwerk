@@ -21,6 +21,7 @@ class PlotMap extends Component {
     super(props);
     this.plotId = this.props.match.params.plotId;
     this.props.onLoadFeature(this.plotId);
+    this.props.onGetPlotShapefileInit();
   }
 
   featureAddedHandler = (feature) => {
@@ -106,6 +107,7 @@ const mapDispatchToProps = (dispatch) => {
     onDeleteFeature: (featureId) => dispatch(actions.deleteFeature(featureId)),
     onUpdateFeature: (feature) => dispatch(actions.updateFeature(feature)),
     onUpdateFeatureInit: () => dispatch(actions.updateFeatureInit()),
+    onGetPlotShapefileInit: () => dispatch(actions.getPlotShapefileInit()),
     onGetPlotShapefile: (featureId) =>
       dispatch(actions.getPlotShapefile(featureId)),
   };
