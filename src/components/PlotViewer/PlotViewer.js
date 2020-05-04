@@ -7,6 +7,10 @@ import styles from "./PlotViewer.module.scss";
 import NotesEditor from "../NotesEditor/NotesEditor";
 
 class PlotViewer extends Component {
+  state = {
+    showUploadFileWindow: false,
+  };
+
   constructor(props) {
     super(props);
     Map.createNewMap();
@@ -43,7 +47,12 @@ class PlotViewer extends Component {
     this.resetMapLayers();
     let notesOptions = null;
     if (this.props.showNotes) {
-      notesOptions = <NotesEditor shapefile={this.props.feature.shapefile} />;
+      notesOptions = (
+        <NotesEditor
+          shapefile={this.props.feature.shapefile}
+          uploadShapeFile={this.uploadShapeFile}
+        />
+      );
     }
     return (
       <div>
@@ -62,4 +71,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(PlotViewer);
+const mapDispatchToProps = (dispatch) => {
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlotViewer);

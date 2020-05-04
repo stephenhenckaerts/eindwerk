@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import styles from "./NotesEditor.module.scss";
 import exportLogo from "../../assets/NotesEditor/export.png";
+import NotesEditorPopup from "./NotesEditorPopup/NotesEditorPopup";
 
 const NotesEditor = (props) => {
   const [menuOpened, setMenuOpened] = useState(false);
@@ -22,6 +23,12 @@ const NotesEditor = (props) => {
   }
 
   let mapEditorPopUp = null;
+  if (menuOpened) {
+    mapEditorPopUp = (
+      <NotesEditorPopup shapefile={props.shapefile}></NotesEditorPopup>
+    );
+  }
+
   if (menuOpened) {
   }
   return (

@@ -1,0 +1,46 @@
+@import "../../../styles/colours.scss";
+@import "../../../styles/extends.scss";
+
+.MapEditorMenu {
+  position: absolute;
+  left: 84px;
+  top: 0;
+  background-color: $yellow;
+  border-radius: 0px 0px 10px 0px;
+  border: 1px solid $dark-green;
+  opacity: 0.7;
+  min-height: 85px;
+  height: fit-content;
+  @extend %unselectable;
+}
+
+.MapEditorMenuItem {
+  margin: 5px 10px 0px;
+  padding-bottom: 5px;
+  border-bottom: 1px $dark-green solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.MapEditorMenuItem:last-child() {
+  border-bottom: none;
+}
+
+.MapEditorMenuItem > p {
+  margin: 0;
+  color: $dark-green;
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 5px;
+  margin-left: 20px;
+}
+
+.DisabledMenuItem {
+  cursor: not-allowed;
+}
+
+.DisabledMenuItem > p {
+  color: #838383;
+}
