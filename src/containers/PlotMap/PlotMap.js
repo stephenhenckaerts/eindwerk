@@ -10,6 +10,7 @@ import Modal from "../../components/UI/Modal/Modal";
 import FeatureForm from "../../components/FeatureForm/FeatureForm";
 import * as actions from "../../store/actions/Index";
 import PlotSidebar from "../../components/Sidebar/PlotSideBar/PlotSideBar";
+import axios from "axios";
 
 class PlotMap extends Component {
   state = {
@@ -51,6 +52,22 @@ class PlotMap extends Component {
     this.setState({ featureDeleted: true });
   }
 
+  uploadShapefileHandler = (shapefile) => {
+    axios
+      .post(
+        "http://localhost:3030/api/uploadShapefile/" + this.plotId,
+        shapefile,
+        {
+          // receive two parameter endpoint url ,form data
+        }
+      )
+      .then((res) => {
+        // then print response status
+        console.log(res.statusText);
+        this.props.onLoadFeature(this.plotId);
+      });
+  };
+
   render() {
     if (this.state.featureDeleted) {
       return <Redirect to={"/percelen"} />;
@@ -85,6 +102,7 @@ class PlotMap extends Component {
         <Viewer
           feature={this.props.feature}
           showNotes={this.state.showNotes}
+          uploadShapefile={this.uploadShapefileHandler}
         ></Viewer>
         <MapEditor></MapEditor>
       </Aux>
@@ -110,6 +128,8 @@ const mapDispatchToProps = (dispatch) => {
     onGetPlotShapefileInit: () => dispatch(actions.getPlotShapefileInit()),
     onGetPlotShapefile: (featureId) =>
       dispatch(actions.getPlotShapefile(featureId)),
+    onPostPlotShapfile: (featureId, shapefile) =>
+      dispatch(actions.postPlotShapefile(featureId, shapefile)),
   };
 };
 

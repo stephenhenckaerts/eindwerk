@@ -41,3 +41,36 @@ export const getPlotShapefile = (featureId) => {
       });
   };
 };
+
+export const postPlotShapefileStart = () => {
+  return {
+    type: actionTypes.POST_PLOT_SHAPEFILE_START,
+  };
+};
+
+export const postPlotShapefileSucces = () => {
+  return {
+    type: actionTypes.POST_PLOT_SHAPEFILE_SUCCESS,
+  };
+};
+
+export const postPlotShapefileFail = (error) => {
+  return {
+    type: actionTypes.POST_PLOT_SHAPEFILE_FAIL,
+    error: error,
+  };
+};
+
+export const postPlotShapefile = (featureId, shapefile) => {
+  return (dispatch) => {
+    dispatch(postPlotShapefileStart());
+    axios
+      .post("/api/uploadShapefile/" + featureId, shapefile)
+      .then((response) => {
+        dispatch(postPlotShapefileSucces());
+      })
+      .catch((error) => {
+        dispatch(postPlotShapefileFail(error));
+      });
+  };
+};

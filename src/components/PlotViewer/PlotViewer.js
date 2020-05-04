@@ -50,7 +50,7 @@ class PlotViewer extends Component {
       notesOptions = (
         <NotesEditor
           shapefile={this.props.feature.shapefile}
-          uploadShapeFile={this.uploadShapeFile}
+          uploadShapefile={(shapefile) => this.props.uploadShapefile(shapefile)}
         />
       );
     }

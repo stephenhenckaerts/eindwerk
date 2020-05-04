@@ -25,7 +25,10 @@ const NotesEditor = (props) => {
   let mapEditorPopUp = null;
   if (menuOpened) {
     mapEditorPopUp = (
-      <NotesEditorPopup shapefile={props.shapefile}></NotesEditorPopup>
+      <NotesEditorPopup
+        shapefile={props.shapefile}
+        uploadShapefile={(shapefile) => props.uploadShapefile(shapefile)}
+      ></NotesEditorPopup>
     );
   }
 

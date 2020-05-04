@@ -41,6 +41,56 @@
   cursor: not-allowed;
 }
 
+.MapPickerMenuItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .DisabledMenuItem > p {
   color: #838383;
+}
+
+.FilePickerButton {
+  color: $yellow;
+  background-color: $dark-green;
+  width: 40%;
+  border: 3px solid black;
+  border-radius: 10px;
+  padding: 0.4rem;
+  margin: 1rem;
+
+  text-align: center;
+  cursor: pointer;
+}
+
+.FilePickerInput {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.FilePickerInput + label {
+  font-size: 1.25em;
+  font-weight: 700;
+  color: $dark-green;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.FilePickerInput:focus + label,
+.FilePickerInput + label:hover {
+  color: $dark-green-hover;
+}
+
+.FilePickerInput:focus + label {
+  outline: 1px dotted #000;
+  outline: -webkit-focus-ring-color auto 5px;
+}
+
+.FilePickerInput + label {
+  cursor: pointer; /* "hand" cursor */
 }
