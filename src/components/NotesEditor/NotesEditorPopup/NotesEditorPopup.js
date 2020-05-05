@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import styles from "./NotesEditorPopup.module.scss";
 import Button from "../../UI/Button/Button";
 
+import axios from "axios";
+
 class NotesEditorPopup extends Component {
   state = {
     mapPickerMenu: false,
@@ -62,7 +64,13 @@ class NotesEditorPopup extends Component {
             this.props.shapefile == "None" ? styles.DisabledMenuItem : null,
           ].join(" ")}
         >
-          <p>SHAPEFILE DOWNLOADEN</p>
+          <a
+            href="localhost:3030/api/getShapefile/123"
+            target="_blank"
+            download
+          >
+            <p>SHAPEFILE DOWNLOADEN</p>
+          </a>
         </div>
         <div
           className={styles.MapEditorMenuItem}
