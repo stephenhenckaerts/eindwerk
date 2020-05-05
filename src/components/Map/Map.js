@@ -359,4 +359,4 @@ class OlMap {
   }
 }
 
-export default new OlMap();
+export default OlMap;

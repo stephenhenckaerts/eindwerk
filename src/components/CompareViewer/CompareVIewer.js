@@ -3,44 +3,54 @@ import { connect } from "react-redux";
 
 import Map from "../Map/Map";
 import "ol/ol.css";
-import styles from "./PlotViewer.module.scss";
+import styles from "./CompareViewer.module.scss";
 import NotesEditor from "../NotesEditor/NotesEditor";
 
-class PlotViewer extends Component {
+class CompareViewer extends Component {
   state = {
     showUploadFileWindow: false,
   };
 
   constructor(props) {
     super(props);
+
     this.Map = new Map();
+    this.SecondMap = new Map();
+
     this.Map.createNewMap();
+    this.SecondMap.createNewMap();
   }
 
   componentDidMount() {
-    this.Map.setBackgroundTileLayer(this.props.type);
-    this.Map.map.setTarget("map");
-    this.Map.changeControls(false);
+    this.addMapToElement(this.Map, "map");
+    this.addMapToElement(this.SecondMap, "map2");
   }
 
-  resetMapLayers() {
-    this.Map.setBackgroundTileLayer(this.props.type);
-    this.Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
+  addMapToElement(map, element) {
+    map.setBackgroundTileLayer(this.props.type);
+    map.map.setTarget(element);
+    map.changeControls(false);
+  }
+
+  resetMapLayers(map) {
+    map.setBackgroundTileLayer(this.props.type);
+    map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
 
     if (this.props.feature !== null) {
       if (this.props.showNotes) {
         if (this.props.feature.shapefile !== "None") {
-          this.Map.setShapeFile(this.props.shapefile);
+          map.setShapeFile(this.props.shapefile);
         }
       } else {
-        this.Map.addUsersPlotBoundriesLayer(null, null, [this.props.feature]);
+        map.addUsersPlotBoundriesLayer(null, null, [this.props.feature]);
       }
-      this.Map.setExtentOfMapByUserFeaters(this.props.feature.coords);
+      map.setExtentOfMapByUserFeaters(this.props.feature.coords);
     }
   }
 
   render() {
-    this.resetMapLayers();
+    this.resetMapLayers(this.Map);
+    this.resetMapLayers(this.SecondMap);
     let notesOptions = null;
     if (this.props.showNotes) {
       notesOptions = (
@@ -52,8 +62,9 @@ class PlotViewer extends Component {
     }
     return (
       <div>
-        <div id="map" className={styles.Map}>
-          {notesOptions}
+        <div className={styles.MapsDiv}>
+          <div className={styles.Map} id="map"></div>
+          <div className={styles.Map} id="map2"></div>
         </div>
       </div>
     );
@@ -71,4 +82,4 @@ const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlotViewer);
+export default connect(mapStateToProps, mapDispatchToProps)(CompareViewer);

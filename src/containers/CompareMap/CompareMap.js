@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
-import Viewer from "../../components/PlotViewer/PlotViewer";
+import Viewer from "../../components/CompareViewer/CompareVIewer";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import MapEditor from "../../components/MapEditor/MapEditor";
 import Aux from "../../hoc/Aux/Aux";
@@ -12,11 +12,10 @@ import * as actions from "../../store/actions/Index";
 import PlotSidebar from "../../components/Sidebar/PlotSideBar/PlotSideBar";
 import axios from "axios";
 
-class PlotMap extends Component {
+class CompareMap extends Component {
   state = {
     updatingFeature: false,
     featureDeleted: false,
-    featureCompare: false,
     showNotes: false,
   };
 
@@ -53,10 +52,6 @@ class PlotMap extends Component {
     this.setState({ featureDeleted: true });
   }
 
-  plotCompareHandler = () => {
-    this.setState({ featureCompare: true });
-  };
-
   uploadShapefileHandler = (shapefile) => {
     axios
       .post(
@@ -76,9 +71,6 @@ class PlotMap extends Component {
   render() {
     if (this.state.featureDeleted) {
       return <Redirect to={"/percelen"} />;
-    }
-    if (this.state.featureCompare) {
-      return <Redirect to={"/vergelijk/" + this.plotId} />;
     }
     let featureSummary = null;
     if (this.state.updatingFeature) {
@@ -103,7 +95,6 @@ class PlotMap extends Component {
             feature={this.props.feature}
             loading={this.props.loading}
             plotNoted={this.plotNotedHandler}
-            plotCompare={this.plotCompareHandler}
             plotUpdate={() => this.plotUpdateHandler()}
             plotDeleted={(plotId) => this.plotDeletedHandler(plotId)}
           />
@@ -142,4 +133,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlotMap);
+export default connect(mapStateToProps, mapDispatchToProps)(CompareMap);

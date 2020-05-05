@@ -10,15 +10,16 @@ import Button from "../UI/Button/Button";
 class Viewer extends Component {
   constructor(props) {
     super(props);
-    Map.createNewMap();
+    this.Map = new Map();
+    this.Map.createNewMap();
 
     this.popup = React.createRef();
     this.popupContent = React.createRef();
   }
 
   componentDidMount() {
-    Map.addBoundriesLayer(this.featureSelected);
-    Map.map.setTarget("map");
+    this.Map.addBoundriesLayer(this.featureSelected);
+    this.Map.map.setTarget("map");
     let container = this.popup.current;
     let overlay = new Overlay({
       element: container,
@@ -28,12 +29,12 @@ class Viewer extends Component {
       },
     });
     this.overlay = overlay;
-    Map.map.addOverlay(overlay);
+    this.Map.map.addOverlay(overlay);
   }
 
   resetMapLayers() {
-    Map.setBackgroundTileLayer(this.props.type);
-    Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
+    this.Map.setBackgroundTileLayer(this.props.type);
+    this.Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
   }
 
   featureSelected = (event, select) => {
@@ -66,13 +67,13 @@ class Viewer extends Component {
 
   closePopup() {
     this.overlay.setPosition(undefined);
-    Map.clearSelect();
+    this.Map.clearSelect();
     return false;
   }
 
   addFeature() {
     this.overlay.setPosition(undefined);
-    Map.clearSelect();
+    this.Map.clearSelect();
     this.props.featureAddedHandler(this.selectedFeature);
   }
 

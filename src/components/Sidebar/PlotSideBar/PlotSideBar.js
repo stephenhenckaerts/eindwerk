@@ -41,7 +41,7 @@ const PlotSideBar = (props) => {
               className={[styles.PopupButton, styles.ClosePopupButton].join(
                 " "
               )}
-              clicked={() => props.plotNoted()}
+              clicked={() => props.plotCompare()}
             >
               Vergelijk
             </Button>

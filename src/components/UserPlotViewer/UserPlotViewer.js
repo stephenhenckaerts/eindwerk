@@ -8,23 +8,24 @@ import styles from "./UserPlotViewer.module.scss";
 class UserPlotViewer extends Component {
   constructor(props) {
     super(props);
-    Map.createNewMap();
+    this.Map = new Map();
+    this.Map.createNewMap();
   }
 
   componentDidMount() {
-    Map.setBackgroundTileLayer(this.props.type);
-    Map.addUsersPlotBoundriesLayer(
+    this.Map.setBackgroundTileLayer(this.props.type);
+    this.Map.addUsersPlotBoundriesLayer(
       this.featureSelected,
       this.featureHovered,
       this.props.userFeatures
     );
-    Map.map.setTarget("map");
-    Map.setExtentOfMapByUserFeaters();
+    this.Map.map.setTarget("map");
+    this.Map.setExtentOfMapByUserFeaters();
   }
 
   resetMapLayers() {
-    Map.setBackgroundTileLayer(this.props.type);
-    Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
+    this.Map.setBackgroundTileLayer(this.props.type);
+    this.Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
   }
 
   featureSelected = (event, select) => {
@@ -39,20 +40,20 @@ class UserPlotViewer extends Component {
 
   closePopup() {
     this.overlay.setPosition(undefined);
-    Map.clearSelect();
+    this.Map.clearSelect();
     return false;
   }
 
   addFeature() {
     this.overlay.setPosition(undefined);
-    Map.clearSelect();
+    this.Map.clearSelect();
     this.props.featureAddedHandler(this.selectedFeature);
   }
 
   render() {
     this.resetMapLayers();
     if (this.props.hoveredSideBarFeature) {
-      Map.hoveredSideBarFeatureHandler(this.props.hoveredSideBarFeature);
+      this.Map.hoveredSideBarFeatureHandler(this.props.hoveredSideBarFeature);
     }
     return (
       <div>

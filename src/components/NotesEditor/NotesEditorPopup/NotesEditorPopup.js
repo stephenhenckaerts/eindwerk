@@ -76,7 +76,7 @@ class NotesEditorPopup extends Component {
         <div
           className={[
             styles.MapEditorMenuItem,
-            this.props.shapefile == "None" ? styles.DisabledMenuItem : null,
+            this.props.shapefile === "None" ? styles.DisabledMenuItem : null,
           ].join(" ")}
           onClick={this.downloadHandler}
         >
