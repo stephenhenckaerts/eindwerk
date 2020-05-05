@@ -30,6 +30,9 @@ const CompareSideBar = (props) => {
           className={[styles.PlotSquare, styles.PlotSquareActive].join(" ")}
         ></div>
         <div className={styles.PlotSquare}></div>
+        <div className={styles.PlotSquareBreak}></div>
+        <div className={styles.PlotSquare}></div>
+        <div className={styles.PlotSquare}></div>
       </div>
     </div>
   );
