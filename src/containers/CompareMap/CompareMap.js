@@ -9,7 +9,7 @@ import Aux from "../../hoc/Aux/Aux";
 import Modal from "../../components/UI/Modal/Modal";
 import FeatureForm from "../../components/FeatureForm/FeatureForm";
 import * as actions from "../../store/actions/Index";
-import PlotSidebar from "../../components/Sidebar/PlotSideBar/PlotSideBar";
+import CompareSideBar from "../../components/Sidebar/CompareSidebar/CompareSidebar";
 import axios from "axios";
 
 class CompareMap extends Component {
@@ -91,7 +91,7 @@ class CompareMap extends Component {
           {featureSummary}
         </Modal>
         <Sidebar>
-          <PlotSidebar
+          <CompareSideBar
             feature={this.props.feature}
             loading={this.props.loading}
             plotNoted={this.plotNotedHandler}

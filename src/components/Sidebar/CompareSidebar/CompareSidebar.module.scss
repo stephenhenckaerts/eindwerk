@@ -1,0 +1,67 @@
+@import "../../../styles/colours.scss";
+@import "../../../styles/extends.scss";
+
+.Sidebar {
+  width: 12em;
+  height: 100%;
+  @extend %unselectable;
+}
+
+.SidebarHeaderItem {
+  color: $yellow;
+  align-items: center;
+  justify-content: space-around;
+  display: flex;
+  padding-bottom: 10px;
+  margin: 5px 10px;
+  border-bottom: 1px solid $yellow;
+}
+
+.SidebarItem {
+  color: $yellow;
+  text-align: center;
+  cursor: pointer;
+  padding: 5px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0px 20px;
+  height: 40px;
+}
+
+.SidebarItem > img {
+  width: 40px;
+}
+
+.SidebarItem:hover {
+  background-color: $dark-green-hover;
+}
+
+.SidebarPlotAmount {
+  display: flex;
+  font-size: 1.5rem;
+}
+
+.ActivatedPlot {
+  display: flex;
+  text-align: center;
+
+  height: 4rem;
+}
+
+.PlotSquare {
+  width: 100%;
+  height: 100%;
+  border: 3px solid $yellow;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+.PlotSquare:hover {
+  background-color: $yellow;
+}
+
+.PlotSquareActive {
+  background-color: $yellow;
+}
