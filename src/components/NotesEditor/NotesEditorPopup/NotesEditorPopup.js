@@ -28,6 +28,21 @@ class NotesEditorPopup extends Component {
     this.props.uploadShapefile(data);
   };
 
+  downloadHandler = () => {
+    axios({
+      url: "http://localhost:3030/api/getShapefile/123",
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "shapefile.geojson");
+      document.body.appendChild(link);
+      link.click();
+    });
+  };
+
   render() {
     let uploadShapefile = null;
     if (this.state.mapPickerMenu) {
@@ -63,14 +78,9 @@ class NotesEditorPopup extends Component {
             styles.MapEditorMenuItem,
             this.props.shapefile == "None" ? styles.DisabledMenuItem : null,
           ].join(" ")}
+          onClick={this.downloadHandler}
         >
-          <a
-            href="localhost:3030/api/getShapefile/123"
-            target="_blank"
-            download
-          >
-            <p>SHAPEFILE DOWNLOADEN</p>
-          </a>
+          <p>SHAPEFILE DOWNLOADEN</p>
         </div>
         <div
           className={styles.MapEditorMenuItem}
