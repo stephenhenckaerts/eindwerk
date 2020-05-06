@@ -1,0 +1,34 @@
+@import "../../../../styles/colours.scss";
+@import "../../../../styles/extends.scss";
+
+.Menu {
+  height: 100%;
+  width: 100%;
+  color: $yellow;
+}
+
+.Layer {
+  display: flex;
+  text-align: center;
+  padding: 1rem 0.3rem;
+  cursor: pointer;
+
+  border-bottom: 2px solid $yellow;
+}
+
+.Layer:first-child {
+  border-top: 2px solid $yellow;
+}
+
+.Layer:hover {
+  background-color: $dark-green-hover;
+}
+
+.Layer > img {
+  width: 3rem;
+  margin-right: 0.5rem;
+}
+
+.Layer > p {
+  font-weight: bold;
+}

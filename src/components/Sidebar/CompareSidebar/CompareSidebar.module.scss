@@ -86,6 +86,7 @@
   border-radius: 10px;
   padding: 0.3rem 0.8rem;
 
+  margin-bottom: 1rem;
   background-color: #166841;
 
   cursor: pointer;
@@ -99,4 +100,8 @@
   margin: auto;
   margin-right: 0.5rem;
   height: 2.5rem;
+}
+
+.LayersMenu {
+  flex: 1;
 }

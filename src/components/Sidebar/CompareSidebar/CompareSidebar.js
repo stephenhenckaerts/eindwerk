@@ -3,11 +3,9 @@ import React from "react";
 import styles from "./CompareSidebar.module.scss";
 import backLogo from "../../../assets/Sidebar/back.png";
 import { NavLink } from "react-router-dom";
-import Spinner from "../../UI/Spinner/Spinner";
-import Button from "../../UI/Button/Button";
 import Switch from "../../UI/Switch/Switch";
-import Aux from "../../../hoc/Aux/Aux";
 import exportLogo from "../../../assets/CompareSidebar/exportYellow.png";
+import LayersMenu from "./LayersMenu/LayersMenu";
 
 const CompareSideBar = (props) => {
   return (
@@ -103,6 +101,7 @@ const CompareSideBar = (props) => {
           </p>
         </a>
       </div>
+      <LayersMenu className={styles.LayersMenu} />
     </div>
   );
 };
