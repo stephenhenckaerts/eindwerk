@@ -7,55 +7,50 @@
   @extend %unselectable;
 }
 
-.SidebarHeaderItem {
-  color: $yellow;
-  align-items: center;
-  justify-content: space-around;
-  display: flex;
-  padding-bottom: 10px;
-  margin: 5px 10px;
-  border-bottom: 1px solid $yellow;
-}
-
 .SidebarItem {
   color: $yellow;
   text-align: center;
-  cursor: pointer;
-  padding: 5px 0px;
   display: flex;
   align-items: center;
   justify-content: space-around;
   padding: 0px 20px;
-  height: 40px;
 }
 
 .SidebarItem > img {
   width: 40px;
 }
 
-.SidebarItem:hover {
-  background-color: $dark-green-hover;
+.SidebarPlotAmount {
+  font-size: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 0.5rem;
+  grid-row-gap: 0px;
+  margin-bottom: 1rem;
 }
 
-.SidebarPlotAmount {
-  display: flex;
-  font-size: 1.5rem;
+.SidebarPlotAmount > p {
+  margin: auto;
+}
+
+.SidebarPlotAmountArrow {
+  font-size: 2rem;
+  cursor: pointer;
 }
 
 .ActivatedPlot {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-
-  height: 4rem;
+  width: 100%;
 }
 
 .PlotSquare {
-  min-width: 3rem;
-  width: 25%;
-  height: 100%;
+  min-width: 25%;
+  height: 2rem;
   border: 3px solid $yellow;
-  border-radius: 10px;
+  border-radius: 4px;
   cursor: pointer;
   margin-bottom: 1rem;
 }
@@ -71,4 +66,37 @@
 
 .PlotSquareActive {
   background-color: $yellow;
+}
+
+.SlideButton {
+  display: flex;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.SlideButton > p {
+  margin: auto;
+}
+
+.ExportButton {
+  display: flex;
+  text-align: center;
+
+  border: 4px solid $yellow;
+  border-radius: 10px;
+  padding: 0.3rem 0.8rem;
+
+  background-color: #166841;
+
+  cursor: pointer;
+}
+
+.ExportButton:hover {
+  background-color: #105f39;
+}
+
+.ExportButton > img {
+  margin: auto;
+  margin-right: 0.5rem;
+  height: 2.5rem;
 }

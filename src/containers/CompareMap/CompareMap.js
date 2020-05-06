@@ -17,6 +17,8 @@ class CompareMap extends Component {
     updatingFeature: false,
     featureDeleted: false,
     showNotes: false,
+    amountOfPlots: 2,
+    selectedPlotIndex: 1,
   };
 
   constructor(props) {
@@ -51,6 +53,22 @@ class CompareMap extends Component {
     this.props.onDeleteFeature(plotId);
     this.setState({ featureDeleted: true });
   }
+
+  changeAmountOfPlots = (amount) => {
+    const newAmountOfPlots = this.state.amountOfPlots + amount;
+    if (newAmountOfPlots > 1 && newAmountOfPlots <= 4) {
+      this.setState({ amountOfPlots: newAmountOfPlots });
+    }
+    if (newAmountOfPlots < this.state.selectedPlotIndex) {
+      this.setState({ selectedPlotIndex: 1 });
+    }
+  };
+
+  setSelectedPlot = (index) => {
+    if (index > 0 && index <= this.state.amountOfPlots) {
+      this.setState({ selectedPlotIndex: index });
+    }
+  };
 
   uploadShapefileHandler = (shapefile) => {
     axios
@@ -94,9 +112,10 @@ class CompareMap extends Component {
           <CompareSideBar
             feature={this.props.feature}
             loading={this.props.loading}
-            plotNoted={this.plotNotedHandler}
-            plotUpdate={() => this.plotUpdateHandler()}
-            plotDeleted={(plotId) => this.plotDeletedHandler(plotId)}
+            amountOfPlots={this.state.amountOfPlots}
+            changeAmountOfPlots={this.changeAmountOfPlots}
+            selectedPlotIndex={this.state.selectedPlotIndex}
+            setSelectedPlot={this.setSelectedPlot}
           />
         </Sidebar>
         <Viewer
