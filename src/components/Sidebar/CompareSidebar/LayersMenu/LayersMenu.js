@@ -34,7 +34,7 @@ const LayersMenu = () => {
         <img src={satelliet} alt="Sattelietbeelden" />
         <p>Sattelietbeelden</p>
       </div>
-      <Snackbar ref={snackbarRef} />
+      <Snackbar ref={snackbarRef} btnType="danger" />
     </div>
   );
 };

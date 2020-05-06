@@ -22,7 +22,11 @@ class Snackbar extends PureComponent {
     return (
       <div
         className={
-          isActive ? [Styles.snackbar, Styles.show].join(" ") : Styles.snackbar
+          isActive
+            ? [Styles.snackbar, Styles.show, Styles[this.props.btnType]].join(
+                " "
+              )
+            : Styles.snackbar
         }
       >
         {this.message}

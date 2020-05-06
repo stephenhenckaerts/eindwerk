@@ -4,7 +4,6 @@
   visibility: hidden;
   min-width: 250px;
   margin-left: -125px;
-  background-color: $dark-green;
   color: $yellow;
   text-align: center;
   border-radius: 2px;
@@ -14,6 +13,14 @@
   left: 50%;
   bottom: 30px;
   font-size: 1rem;
+}
+
+.sucess {
+  background-color: $dark-green;
+}
+
+.danger {
+  background-color: $dark-red;
 }
 
 .snackbar.show {
