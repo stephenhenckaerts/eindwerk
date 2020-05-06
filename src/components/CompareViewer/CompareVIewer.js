@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import Map from "../Map/Map";
 import "ol/ol.css";
 import styles from "./CompareViewer.module.scss";
-import NotesEditor from "../NotesEditor/NotesEditor";
 
 class CompareViewer extends Component {
   state = {
@@ -51,15 +50,6 @@ class CompareViewer extends Component {
   render() {
     this.resetMapLayers(this.Map);
     this.resetMapLayers(this.SecondMap);
-    let notesOptions = null;
-    if (this.props.showNotes) {
-      notesOptions = (
-        <NotesEditor
-          shapefile={this.props.feature.shapefile}
-          uploadShapefile={(shapefile) => this.props.uploadShapefile(shapefile)}
-        />
-      );
-    }
     return (
       <div>
         <div className={styles.MapsDiv}>

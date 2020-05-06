@@ -11,19 +11,19 @@ const LayersMenu = () => {
   return (
     <div className={styles.Menu}>
       <div className={styles.Layer}>
-        <img src={bodemkaart} />
+        <img src={bodemkaart} alt="Bodemkaart" />
         <p>Bodemkaarten</p>
       </div>
       <div className={styles.Layer}>
-        <img src={tractor} />
+        <img src={tractor} alt="Bodemscans" />
         <p>Bodemscans</p>
       </div>
       <div className={styles.Layer}>
-        <img src={dronebeelden} />
+        <img src={dronebeelden} alt="Dronebeelden" />
         <p>Dronebeelden</p>
       </div>
       <div className={styles.Layer}>
-        <img src={satelliet} />
+        <img src={satelliet} alt="Sattelietbeelden" />
         <p>Sattelietbeelden</p>
       </div>
     </div>

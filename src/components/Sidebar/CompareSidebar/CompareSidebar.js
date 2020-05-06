@@ -94,12 +94,12 @@ const CompareSideBar = (props) => {
         </div>
       ) : null}
       <div className={styles.SidebarItem}>
-        <a className={styles.ExportButton}>
+        <div className={styles.ExportButton}>
           <img src={exportLogo} alt="Percelen Logo" />
           <p>
             <strong>EXPORT</strong>
           </p>
-        </a>
+        </div>
       </div>
       <LayersMenu className={styles.LayersMenu} />
     </div>
