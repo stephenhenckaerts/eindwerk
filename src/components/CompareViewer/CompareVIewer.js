@@ -57,18 +57,23 @@ class CompareViewer extends Component {
       });
     }, 100);
     return (
-      <div className={styles.MapsDiv}>
+      <div
+        className={[
+          styles.MapsDiv,
+          this.props.amountOfPlots > 3 ? styles.Wrap : null,
+        ].join(" ")}
+      >
         <div className={styles.Map} id="map1"></div>
         <div className={styles.Map} id="map2"></div>
         {this.props.amountOfPlots > 2 ? (
           <div className={styles.Map} id="map3"></div>
         ) : (
-          <div className={styles.Map} id="map3" hidden></div>
+          <div className={(styles.Map, styles.Disabled)} id="map3"></div>
         )}
         {this.props.amountOfPlots > 3 ? (
           <div className={styles.Map} id="map4"></div>
         ) : (
-          <div className={styles.Map} id="map4" hidden></div>
+          <div className={(styles.Map, styles.Disabled)} id="map4"></div>
         )}
       </div>
     );

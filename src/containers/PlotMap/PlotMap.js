@@ -11,6 +11,7 @@ import FeatureForm from "../../components/FeatureForm/FeatureForm";
 import * as actions from "../../store/actions/Index";
 import PlotSidebar from "../../components/Sidebar/PlotSideBar/PlotSideBar";
 import axios from "axios";
+import Snackbar from "../../components/UI/Snackbar/Snackbar";
 
 class PlotMap extends Component {
   state = {
@@ -24,6 +25,9 @@ class PlotMap extends Component {
     super(props);
     this.plotId = this.props.match.params.plotId;
     this.props.onLoadFeature(this.plotId);
+
+    this.snackbarSucessRef = React.createRef();
+    this.snackbarDangerRef = React.createRef();
   }
 
   featureAddedHandler = (feature) => {
@@ -34,6 +38,7 @@ class PlotMap extends Component {
     this.props.onUpdateFeatureInit();
     this.props.onUpdateFeature(feature);
     this.setState({ updatingFeature: false, selectedFeature: null });
+    this.snackbarSucessHandler(feature.name + " aangepast!");
   };
 
   plotNotedHandler = () => {
@@ -50,6 +55,7 @@ class PlotMap extends Component {
 
   plotDeletedHandler(plotId) {
     this.props.onDeleteFeature(plotId);
+    this.snackbarSucessHandler("Perceel verwijdert!");
     this.setState({ featureDeleted: true });
   }
 
@@ -68,9 +74,17 @@ class PlotMap extends Component {
       )
       .then((res) => {
         // then print response status
-        console.log(res.statusText);
         this.props.onLoadFeature(this.plotId);
+        this.snackbarSucessHandler("Shapefile toegevoegd!");
       });
+  };
+
+  snackbarSucessHandler = (message) => {
+    this.snackbarSucessRef.current.openSnackBar(message);
+  };
+
+  snackbarDangerHandler = (message) => {
+    this.snackbarDangerRef.current.openSnackBar(message);
   };
 
   render() {
@@ -113,7 +127,9 @@ class PlotMap extends Component {
           showNotes={this.state.showNotes}
           uploadShapefile={this.uploadShapefileHandler}
         ></Viewer>
-        <MapEditor></MapEditor>
+        <MapEditor></MapEditor>{" "}
+        <Snackbar ref={this.snackbarSucessRef} btnType="sucess" />
+        <Snackbar ref={this.snackbarDangerRef} btnType="danger" />
       </Aux>
     );
   }

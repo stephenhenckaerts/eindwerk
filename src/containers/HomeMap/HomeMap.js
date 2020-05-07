@@ -9,14 +9,20 @@ import Modal from "../../components/UI/Modal/Modal";
 import FeatureForm from "../../components/FeatureForm/FeatureForm";
 import * as actions from "../../store/actions/Index";
 import HomeSideBar from "../../components/Sidebar/HomeSideBar/HomeSideBar";
+import Snackbar from "../../components/UI/Snackbar/Snackbar";
 
 class HomeMap extends Component {
   state = {
     addingFeature: false,
-    selectedFeature: null
+    selectedFeature: null,
   };
 
-  featureAddedHandler = feature => {
+  constructor(props) {
+    super(props);
+    this.snackbarRef = React.createRef();
+  }
+
+  featureAddedHandler = (feature) => {
     this.setState({ addingFeature: true, selectedFeature: feature });
   };
 
@@ -24,10 +30,15 @@ class HomeMap extends Component {
     this.setState({ addingFeature: false, selectedFeature: null });
   };
 
-  addFeatureToUserHandler = feature => {
+  addFeatureToUserHandler = (feature) => {
     this.setState({ addingFeature: false, selectedFeature: null });
     this.props.onAddFeatureInit();
     this.props.onAddFeature(feature);
+    this.snackbarHandler(feature.name + " toegevoegd!");
+  };
+
+  snackbarHandler = (message) => {
+    this.snackbarRef.current.openSnackBar(message);
   };
 
   render() {
@@ -54,19 +65,20 @@ class HomeMap extends Component {
         </Sidebar>
         <Viewer featureAddedHandler={this.featureAddedHandler}></Viewer>
         <MapEditor></MapEditor>
+        <Snackbar ref={this.snackbarRef} btnType="sucess" />
       </Aux>
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    onAddFeature: feature => dispatch(actions.addFeature(feature)),
-    onAddFeatureInit: () => dispatch(actions.addFeatureInit())
+    onAddFeature: (feature) => dispatch(actions.addFeature(feature)),
+    onAddFeatureInit: () => dispatch(actions.addFeatureInit()),
   };
 };
 
