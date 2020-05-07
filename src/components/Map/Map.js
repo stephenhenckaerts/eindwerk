@@ -345,6 +345,10 @@ class OlMap {
     });
   }
 
+  updateSize() {
+    this.map.updateSize();
+  }
+
   addTileLayer(url) {
     const wmsLayer = new TileLayer({
       source: new TileWMS({

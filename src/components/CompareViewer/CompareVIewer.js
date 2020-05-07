@@ -13,16 +13,17 @@ class CompareViewer extends Component {
   constructor(props) {
     super(props);
 
-    this.Map = new Map();
-    this.SecondMap = new Map();
+    this.Maps = [new Map(), new Map(), new Map(), new Map()];
 
-    this.Map.createNewMap();
-    this.SecondMap.createNewMap();
+    this.Maps.forEach((map) => {
+      map.createNewMap();
+    });
   }
 
   componentDidMount() {
-    this.addMapToElement(this.Map, "map");
-    this.addMapToElement(this.SecondMap, "map2");
+    for (let i = 0; i < this.Maps.length; i++) {
+      this.addMapToElement(this.Maps[i], "map" + (i + 1));
+    }
   }
 
   addMapToElement(map, element) {
@@ -32,6 +33,7 @@ class CompareViewer extends Component {
   }
 
   resetMapLayers(map) {
+    map.updateSize();
     map.setBackgroundTileLayer(this.props.type);
     map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
 
@@ -48,14 +50,26 @@ class CompareViewer extends Component {
   }
 
   render() {
-    this.resetMapLayers(this.Map);
-    this.resetMapLayers(this.SecondMap);
+    //First let the DIV elements be created
+    setTimeout(() => {
+      this.Maps.forEach((map) => {
+        this.resetMapLayers(map);
+      });
+    }, 100);
     return (
-      <div>
-        <div className={styles.MapsDiv}>
-          <div className={styles.Map} id="map"></div>
-          <div className={styles.Map} id="map2"></div>
-        </div>
+      <div className={styles.MapsDiv}>
+        <div className={styles.Map} id="map1"></div>
+        <div className={styles.Map} id="map2"></div>
+        {this.props.amountOfPlots > 2 ? (
+          <div className={styles.Map} id="map3"></div>
+        ) : (
+          <div className={styles.Map} id="map3" hidden></div>
+        )}
+        {this.props.amountOfPlots > 3 ? (
+          <div className={styles.Map} id="map4"></div>
+        ) : (
+          <div className={styles.Map} id="map4" hidden></div>
+        )}
       </div>
     );
   }

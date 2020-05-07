@@ -2,14 +2,21 @@
 
 .MapsDiv {
   width: calc(100vw - 12em);
-  height: 100%;
+  height: 100vh;
   position: fixed;
   margin-left: 12em;
 
   display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
 .Map {
-  height: 100%;
-  width: 50%;
+  flex-grow: 1;
+}
+
+/* apply when there is 4 items */
+.MapsDiv > :first-child:nth-last-child(4),
+.MapsDiv > :first-child:nth-last-child(4) ~ * {
+  flex-basis: 50%;
 }

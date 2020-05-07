@@ -120,8 +120,9 @@ class CompareMap extends Component {
         </Sidebar>
         <Viewer
           feature={this.props.feature}
-          showNotes={this.state.showNotes}
           uploadShapefile={this.uploadShapefileHandler}
+          amountOfPlots={this.state.amountOfPlots}
+          selectedPlotIndex={this.state.selectedPlotIndex}
         ></Viewer>
         <MapEditor></MapEditor>
       </Aux>
