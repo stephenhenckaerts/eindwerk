@@ -1,0 +1,27 @@
+@import "../../../styles/colours.scss";
+
+.InfoDiv {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: $yellow;
+
+  border: 2px solid $dark-green;
+  border-radius: 0 10px 0 0;
+  opacity: 0.9;
+}
+
+.ColorType {
+  display: flex;
+  margin: 1rem;
+}
+
+.ColorTypeSquare {
+  width: 2rem;
+  height: 2rem;
+}
+
+.ColorType > p {
+  margin: 0;
+  margin-left: 1rem;
+}

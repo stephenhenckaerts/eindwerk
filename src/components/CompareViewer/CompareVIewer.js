@@ -3,11 +3,12 @@ import { connect } from "react-redux";
 
 import Map from "../Map/Map";
 import "ol/ol.css";
+import MapInfo from "./MapInfo/MapInfo";
 import styles from "./CompareViewer.module.scss";
 
 class CompareViewer extends Component {
   state = {
-    showLayerInfo: [null, null, null, null],
+    mapInfos: [null, null, null, null],
   };
 
   constructor(props) {
@@ -17,7 +18,8 @@ class CompareViewer extends Component {
 
     for (let i = 0; i < this.Maps.length; i++) {
       this.Maps[i].createNewMap();
-      this.Maps[i].index = i + 1;
+      this.Maps[i].index = i;
+      this.Maps[i].topLayer = "normal";
     }
   }
 
@@ -31,6 +33,33 @@ class CompareViewer extends Component {
     map.setBackgroundTileLayer(this.props.type);
     map.map.setTarget(element);
     map.changeControls(false);
+  }
+
+  updateTopLayer(map) {
+    if (this.props.topLayers[map.index] !== map.topLayer) {
+      map.topLayer = this.props.topLayers[map.index];
+      if (map.topLayer !== "normal") {
+        const url =
+          "http://localhost:3030/maps/map/http://localhost:8080/geoserver/bodemkaart/wms?tiled=true&service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:20170710_bodemkaart_2_0&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=";
+        map.addTopLayer(url);
+        setTimeout(() => {
+          this.updateMapInfo(map.index, map.topLayer, map.getFeatureStyles());
+        }, 100);
+      } else {
+        map.removeTopLayer();
+        this.updateMapInfo(map.index, map.topLayer);
+      }
+    }
+  }
+
+  updateMapInfo(index, type, colors) {
+    let newLayers = this.state.mapInfos.slice();
+    if (type === "normal") {
+      newLayers[index] = null;
+    } else {
+      newLayers[index] = <MapInfo type={type} colors={colors} />;
+    }
+    this.setState({ mapInfos: newLayers });
   }
 
   resetMapLayers(map) {
@@ -48,20 +77,7 @@ class CompareViewer extends Component {
       }
       map.setExtentOfMapByUserFeaters(this.props.feature.coords);
     }
-    if (this.props.selectedPlotIndex === map.index) {
-      if (this.props.topLayers[this.props.selectedPlotIndex - 1] !== "normal") {
-        //const vitoURL = "http://sentineldata.vito.be/ows?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=CGS_S2_RADIOMETRY_BROWSE&FORMAT=image/png&TIME=2017-05-19T09:05:30.000Z&SRS=EPSG:4326&WIDTH=1920&HEIGHT=800&BBOX=";
-        //const vitoURL = "https://services.terrascope.be/wmts";
-        const url =
-          "http://localhost:3030/maps/map/http://localhost:8080/geoserver/bodemkaart/wms?tiled=true&service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:20170710_bodemkaart_2_0&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=";
-        map.toggleTopLayer(url);
-        setTimeout(() => {
-          if (map.getTopLayer && map.topLayer !== "") {
-            console.log(map.featureStyles);
-          }
-        }, 100);
-      }
-    }
+    this.updateTopLayer(map);
   }
 
   render() {
@@ -78,8 +94,12 @@ class CompareViewer extends Component {
           this.props.amountOfPlots > 3 ? styles.Wrap : null,
         ].join(" ")}
       >
-        <div className={styles.Map} id="map1"></div>
-        <div className={styles.Map} id="map2"></div>
+        <div className={styles.Map} id="map1">
+          {this.state.mapInfos[0]}
+        </div>
+        <div className={styles.Map} id="map2">
+          {this.state.mapInfos[1]}
+        </div>
         {this.props.amountOfPlots > 2 ? (
           <div className={styles.Map} id="map3"></div>
         ) : (

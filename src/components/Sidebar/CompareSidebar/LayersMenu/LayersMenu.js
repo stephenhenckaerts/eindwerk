@@ -4,6 +4,7 @@ import bodemkaart from "../../../../assets/CompareSidebar/bodemkaart.png";
 import dronebeelden from "../../../../assets/CompareSidebar/dronebeelden.png";
 import satelliet from "../../../../assets/CompareSidebar/satelliet.svg";
 import tractor from "../../../../assets/CompareSidebar/tractor.svg";
+import verwijder from "../../../../assets/CompareSidebar/delete.svg";
 
 import Snackbar from "../../../UI/Snackbar/Snackbar";
 
@@ -36,6 +37,13 @@ const LayersMenu = (props) => {
       <div className={styles.Layer} onClick={clickHandler}>
         <img src={satelliet} alt="Sattelietbeelden" />
         <p>Sattelietbeelden</p>
+      </div>
+      <div
+        className={styles.Layer}
+        onClick={() => props.menuItemClicked("normal")}
+      >
+        <img src={verwijder} alt="Verwijder Laag" />
+        <p>Verwijder Laag</p>
       </div>
       <Snackbar ref={snackbarRef} btnType="danger" />
     </div>

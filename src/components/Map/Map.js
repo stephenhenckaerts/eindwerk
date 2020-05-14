@@ -352,14 +352,6 @@ class OlMap {
     this.map.updateSize();
   }
 
-  toggleTopLayer(layerUrl) {
-    if (this.topLayer && this.topLayer !== "") {
-      this.removeTopLayer();
-    } else {
-      this.addTopLayer(layerUrl);
-    }
-  }
-
   getTopLayer() {
     return this.topLayer;
   }
@@ -397,7 +389,6 @@ class OlMap {
       source: vectorSource,
     });
     vector.set("name", "topLayer");
-    this.topLayer = "added";
     this.map.addLayer(vector);
   }
 

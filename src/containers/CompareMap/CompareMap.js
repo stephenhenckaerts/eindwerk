@@ -58,9 +58,11 @@ class CompareMap extends Component {
   };
 
   menuItemClicked = (item) => {
-    let newLayers = this.state.topLayers.slice();
-    newLayers[this.state.selectedPlotIndex - 1] = item;
-    this.setState({ topLayers: newLayers });
+    if (this.state.topLayers[this.state.selectedPlotIndex - 1] !== item) {
+      let newLayers = this.state.topLayers.slice();
+      newLayers[this.state.selectedPlotIndex - 1] = item;
+      this.setState({ topLayers: newLayers });
+    }
   };
 
   render() {
@@ -100,7 +102,6 @@ class CompareMap extends Component {
           feature={this.props.feature}
           uploadShapefile={this.uploadShapefileHandler}
           amountOfPlots={this.state.amountOfPlots}
-          selectedPlotIndex={this.state.selectedPlotIndex}
           topLayers={this.state.topLayers}
         ></Viewer>
         <MapEditor></MapEditor>
