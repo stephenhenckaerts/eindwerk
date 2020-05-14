@@ -7,7 +7,7 @@ import styles from "./CompareViewer.module.scss";
 
 class CompareViewer extends Component {
   state = {
-    showUploadFileWindow: false,
+    showLayerInfo: [null, null, null, null],
   };
 
   constructor(props) {
@@ -15,9 +15,10 @@ class CompareViewer extends Component {
 
     this.Maps = [new Map(), new Map(), new Map(), new Map()];
 
-    this.Maps.forEach((map) => {
-      map.createNewMap();
-    });
+    for (let i = 0; i < this.Maps.length; i++) {
+      this.Maps[i].createNewMap();
+      this.Maps[i].index = i + 1;
+    }
   }
 
   componentDidMount() {
@@ -46,6 +47,20 @@ class CompareViewer extends Component {
         map.addUsersPlotBoundriesLayer(null, null, [this.props.feature]);
       }
       map.setExtentOfMapByUserFeaters(this.props.feature.coords);
+    }
+    if (this.props.selectedPlotIndex === map.index) {
+      if (this.props.topLayers[this.props.selectedPlotIndex - 1] !== "normal") {
+        //const vitoURL = "http://sentineldata.vito.be/ows?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=CGS_S2_RADIOMETRY_BROWSE&FORMAT=image/png&TIME=2017-05-19T09:05:30.000Z&SRS=EPSG:4326&WIDTH=1920&HEIGHT=800&BBOX=";
+        //const vitoURL = "https://services.terrascope.be/wmts";
+        const url =
+          "http://localhost:3030/maps/map/http://localhost:8080/geoserver/bodemkaart/wms?tiled=true&service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:20170710_bodemkaart_2_0&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=";
+        map.toggleTopLayer(url);
+        setTimeout(() => {
+          if (map.getTopLayer && map.topLayer !== "") {
+            console.log(map.featureStyles);
+          }
+        }, 100);
+      }
     }
   }
 

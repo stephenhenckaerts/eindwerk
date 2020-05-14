@@ -1,6 +1,6 @@
 import Map from "ol/Map";
-import TileWMS from "ol/source/TileWMS";
 import TileLayer from "ol/layer/Tile";
+import WMTS from "ol/source/WMTS";
 import View from "ol/View";
 import OSM from "ol/source/OSM";
 import BingMaps from "ol/source/BingMaps";
@@ -54,13 +54,15 @@ class OlMap {
 
   clearAllBoundriesLayers() {
     this.map.getLayers().forEach((layer) => {
-      if (
-        layer.get("name") === "plotBoundriesLayer" ||
-        layer.get("name") === "plotUserBoundriesLayer" ||
-        layer.get("name") === "plotShapefileLayer"
-      ) {
-        layer.getSource().clear();
-        this.map.removeLayer(layer);
+      if (layer !== undefined) {
+        if (
+          layer.get("name") === "plotBoundriesLayer" ||
+          layer.get("name") === "plotUserBoundriesLayer" ||
+          layer.get("name") === "plotShapefileLayer"
+        ) {
+          layer.getSource().clear();
+          this.map.removeLayer(layer);
+        }
       }
     });
     if (this.select) {
@@ -136,6 +138,7 @@ class OlMap {
         //minZoom: 13,
         source: vectorSource,
       });
+      vector.setZIndex(10);
       if (featureHovered !== null) {
         this.setInteractionForPlotBoundriesLayer(vector, featureSelected);
         this.setHoverInteractionForUserPlotBoundries(vector, featureHovered);
@@ -349,9 +352,106 @@ class OlMap {
     this.map.updateSize();
   }
 
+  toggleTopLayer(layerUrl) {
+    if (this.topLayer && this.topLayer !== "") {
+      this.removeTopLayer();
+    } else {
+      this.addTopLayer(layerUrl);
+    }
+  }
+
+  getTopLayer() {
+    return this.topLayer;
+  }
+
+  addTopLayer(layerUrl) {
+    let vectorSource = new VectorSource({
+      format: new GeoJSON(),
+      minScale: 15000000,
+      loader: (extent, resolution, projection) => {
+        let url = layerUrl + extent.join(",") + ",EPSG:3857";
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        let onError = function () {
+          vectorSource.removeLoadedExtent(extent);
+        };
+        xhr.onerror = onError;
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            let features = vectorSource
+              .getFormat()
+              .readFeatures(xhr.responseText);
+            features.forEach((feature) => {
+              feature.setStyle(this.setStyleOfFeature(feature));
+            });
+            vectorSource.addFeatures(features);
+          } else {
+            onError();
+          }
+        };
+        xhr.send();
+      },
+      strategy: bboxStrategy,
+    });
+    let vector = new Vector({
+      source: vectorSource,
+    });
+    vector.set("name", "topLayer");
+    this.topLayer = "added";
+    this.map.addLayer(vector);
+  }
+
+  setStyleOfFeature(feature) {
+    if (!this.featureStyles) {
+      this.featureStyles = [];
+    }
+    let style = null;
+    this.featureStyles.forEach((styleItem) => {
+      if (styleItem[0] === feature.get("Bodemtype")) {
+        style = styleItem;
+      }
+    });
+    if (style === null) {
+      style = [feature.get("Bodemtype"), this.getRandomColor()];
+      this.featureStyles.push(style);
+    }
+    return new Style({
+      stroke: new Stroke({
+        width: 2,
+        color: "#9c1616",
+      }),
+      fill: new Fill({ color: style[1] }),
+    });
+  }
+
+  getFeatureStyles() {
+    return this.featureStyles;
+  }
+
+  getRandomColor() {
+    var letters = "0123456789ABCDEF";
+    var color = "#";
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  removeTopLayer() {
+    this.map.getLayers().forEach((layer) => {
+      if (layer !== undefined) {
+        if (layer.get("name") === "topLayer") {
+          layer.getSource().clear();
+          this.map.removeLayer(layer);
+          this.topLayer = "";
+        }
+      }
+    });
+  }
+
   addTileLayer(url) {
     const wmsLayer = new TileLayer({
-      source: new TileWMS({
+      source: new WMTS({
         url,
         params: {
           TILED: true,
@@ -359,6 +459,7 @@ class OlMap {
         crossOrigin: "Anonymous",
       }),
     });
+    console.log(wmsLayer);
     this.map.addLayer(wmsLayer);
   }
 }

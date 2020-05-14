@@ -9,7 +9,7 @@ import Snackbar from "../../../UI/Snackbar/Snackbar";
 
 import styles from "./LayersMenu.module.scss";
 
-const LayersMenu = () => {
+const LayersMenu = (props) => {
   let snackbarRef = React.createRef();
 
   const clickHandler = () => {
@@ -18,7 +18,10 @@ const LayersMenu = () => {
 
   return (
     <div className={styles.Menu}>
-      <div className={styles.Layer}>
+      <div
+        className={styles.Layer}
+        onClick={() => props.menuItemClicked("bodemkaart")}
+      >
         <img src={bodemkaart} alt="Bodemkaart" />
         <p>Bodemkaarten</p>
       </div>

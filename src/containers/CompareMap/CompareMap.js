@@ -14,44 +14,15 @@ import axios from "axios";
 
 class CompareMap extends Component {
   state = {
-    updatingFeature: false,
-    featureDeleted: false,
-    showNotes: false,
     amountOfPlots: 2,
     selectedPlotIndex: 1,
+    topLayers: ["normal", "normal", "normal", "normal"],
   };
 
   constructor(props) {
     super(props);
     this.plotId = this.props.match.params.plotId;
     this.props.onLoadFeature(this.plotId);
-  }
-
-  featureAddedHandler = (feature) => {
-    this.setState({ Feature: true, selectedFeature: feature });
-  };
-
-  updateFeatureHandler = (feature) => {
-    this.props.onUpdateFeatureInit();
-    this.props.onUpdateFeature(feature);
-    this.setState({ updatingFeature: false, selectedFeature: null });
-  };
-
-  plotNotedHandler = () => {
-    this.setState({ showNotes: !this.state.showNotes });
-  };
-
-  plotUpdateHandler() {
-    this.setState({ updatingFeature: true });
-  }
-
-  updatingFeatureCancelHandler = () => {
-    this.setState({ updatingFeature: false });
-  };
-
-  plotDeletedHandler(plotId) {
-    this.props.onDeleteFeature(plotId);
-    this.setState({ featureDeleted: true });
   }
 
   changeAmountOfPlots = (amount) => {
@@ -86,6 +57,12 @@ class CompareMap extends Component {
       });
   };
 
+  menuItemClicked = (item) => {
+    let newLayers = this.state.topLayers.slice();
+    newLayers[this.state.selectedPlotIndex - 1] = item;
+    this.setState({ topLayers: newLayers });
+  };
+
   render() {
     if (this.state.featureDeleted) {
       return <Redirect to={"/percelen"} />;
@@ -116,6 +93,7 @@ class CompareMap extends Component {
             changeAmountOfPlots={this.changeAmountOfPlots}
             selectedPlotIndex={this.state.selectedPlotIndex}
             setSelectedPlot={this.setSelectedPlot}
+            menuItemClicked={this.menuItemClicked}
           />
         </Sidebar>
         <Viewer
@@ -123,6 +101,7 @@ class CompareMap extends Component {
           uploadShapefile={this.uploadShapefileHandler}
           amountOfPlots={this.state.amountOfPlots}
           selectedPlotIndex={this.state.selectedPlotIndex}
+          topLayers={this.state.topLayers}
         ></Viewer>
         <MapEditor></MapEditor>
       </Aux>

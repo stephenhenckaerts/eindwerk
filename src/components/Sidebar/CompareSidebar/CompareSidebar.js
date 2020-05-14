@@ -101,7 +101,10 @@ const CompareSideBar = (props) => {
           </p>
         </div>
       </div>
-      <LayersMenu className={styles.LayersMenu} />
+      <LayersMenu
+        className={styles.LayersMenu}
+        menuItemClicked={(item) => props.menuItemClicked(item)}
+      />
     </div>
   );
 };
