@@ -1,13 +1,10 @@
 @import "../../../styles/colours.scss";
 
 .InfoDiv {
-  position: absolute;
-  bottom: 0;
-  left: 0;
   background-color: $yellow;
 
   border: 2px solid $dark-green;
-  border-radius: 0 10px 0 0;
+  border-radius: 0 0 10px 0;
   opacity: 0.9;
 }
 

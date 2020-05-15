@@ -88,28 +88,31 @@ class CompareViewer extends Component {
       });
     }, 100);
     return (
-      <div
-        className={[
-          styles.MapsDiv,
-          this.props.amountOfPlots > 3 ? styles.Wrap : null,
-        ].join(" ")}
-      >
+      <div className={styles.MapsDiv}>
         <div className={styles.Map} id="map1">
-          {this.state.mapInfos[0]}
+          <div className={styles.Square}>{this.state.mapInfos[0]}</div>
         </div>
         <div className={styles.Map} id="map2">
-          {this.state.mapInfos[1]}
+          <div className={styles.Square}>{this.state.mapInfos[1]}</div>
         </div>
-        {this.props.amountOfPlots > 2 ? (
-          <div className={styles.Map} id="map3"></div>
-        ) : (
-          <div className={(styles.Map, styles.Disabled)} id="map3"></div>
-        )}
-        {this.props.amountOfPlots > 3 ? (
-          <div className={styles.Map} id="map4"></div>
-        ) : (
-          <div className={(styles.Map, styles.Disabled)} id="map4"></div>
-        )}
+        <div
+          className={[
+            styles.Map,
+            this.props.amountOfPlots < 3 ? styles.invisible : null,
+          ].join(" ")}
+          id="map3"
+        >
+          <div className={styles.Square}>{this.state.mapInfos[2]}</div>
+        </div>
+        <div
+          className={[
+            styles.Map,
+            this.props.amountOfPlots < 4 ? styles.invisible : null,
+          ].join(" ")}
+          id="map4"
+        >
+          <div className={styles.Square}>{this.state.mapInfos[3]}</div>
+        </div>
       </div>
     );
   }

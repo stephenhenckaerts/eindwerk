@@ -6,27 +6,29 @@
   position: fixed;
   margin-left: 12em;
 
-  display: flex;
-  flex-wrap: nowrap;
-  box-sizing: border-box;
-}
+  display: inline-grid;
+  vertical-align: top;
 
-.Wrap {
-  flex-wrap: wrap;
-}
-
-.Map {
-  flex-grow: 1;
-
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
   border: 2px solid $dark-green;
 }
 
-/* apply when there is 4 items */
-.MapsDiv > :first-child:nth-last-child(4),
-.MapsDiv > :first-child:nth-last-child(4) ~ * {
-  flex-basis: 49%;
+.invisible {
+  display: none;
 }
 
-.Disabled {
-  display: none;
+/* this will select the last item and move it to second row*/
+:not(.invisible) + :not(.invisible) + :not(.invisible) + :not(.invisible) {
+  grid-row: 2;
+}
+
+/* this will make sure the blue remain in the first row*/
+:first-child:not(.invisible) + :not(.invisible) {
+  grid-column: 2;
+}
+
+.Square {
+  position: absolute;
+  z-index: 100;
 }

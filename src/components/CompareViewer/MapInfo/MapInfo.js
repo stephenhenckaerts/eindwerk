@@ -3,7 +3,6 @@ import React from "react";
 import styles from "./MapInfo.module.scss";
 
 const MapInfos = (props) => {
-  let info = null;
   return (
     <div className={styles.InfoDiv}>
       {props.colors
