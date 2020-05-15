@@ -5,6 +5,7 @@ import Map from "../Map/Map";
 import "ol/ol.css";
 import MapInfo from "./MapInfo/MapInfo";
 import styles from "./CompareViewer.module.scss";
+import MapEOService from "../MapEOService/MapEOService";
 
 class CompareViewer extends Component {
   state = {
@@ -13,6 +14,8 @@ class CompareViewer extends Component {
 
   constructor(props) {
     super(props);
+
+    let service = new MapEOService();
 
     this.Maps = [new Map(), new Map(), new Map(), new Map()];
 

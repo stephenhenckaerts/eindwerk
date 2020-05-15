@@ -11,7 +11,9 @@ import { Vector, Group, Tile } from "ol/layer";
 import Select from "ol/interaction/Select";
 import { Feature } from "ol";
 import { Polygon } from "ol/geom";
-import { Fill, Stroke, Style } from "ol/style";
+import { Fill, Stroke, Style, Icon } from "ol/style";
+import PinIcon from "../../assets/Map/pin.png";
+import HoveredPinIcon from "../../assets/Map/hoveredpin.png";
 
 class OlMap {
   constructor() {
@@ -58,6 +60,7 @@ class OlMap {
         if (
           layer.get("name") === "plotBoundriesLayer" ||
           layer.get("name") === "plotUserBoundriesLayer" ||
+          layer.get("name") === "plotUserBoundriesLayerIcons" ||
           layer.get("name") === "plotShapefileLayer"
         ) {
           layer.getSource().clear();
@@ -134,8 +137,31 @@ class OlMap {
         feature.setId(newFeature.plotId);
         vectorSource.addFeature(feature);
       });
+      let iconStyle = new Style({
+        geometry: function (feature) {
+          let geometry = feature.getGeometry();
+          let geometryType = geometry.getType();
+          return geometryType === "Polygon"
+            ? geometry.getInteriorPoint()
+            : geometryType === "MultiPolygon"
+            ? geometry.getInteriorPoints()
+            : geometry;
+        },
+        image: new Icon({
+          anchor: [0.5, 46],
+          anchorXUnits: "fraction",
+          anchorYUnits: "pixels",
+          src: PinIcon,
+          scale: 0.12,
+        }),
+      });
+      let vectorIcons = new Vector({
+        maxZoom: 13,
+        source: vectorSource,
+        style: iconStyle,
+      });
       let vector = new Vector({
-        //minZoom: 13,
+        minZoom: 13,
         source: vectorSource,
       });
       vector.setZIndex(10);
@@ -144,7 +170,9 @@ class OlMap {
         this.setHoverInteractionForUserPlotBoundries(vector, featureHovered);
       }
       vector.set("name", "plotUserBoundriesLayer");
+      vector.set("name", "plotUserBoundriesLayerIcons");
       this.plotsExtent = vectorSource.getExtent();
+      this.map.addLayer(vectorIcons);
       this.map.addLayer(vector);
     }
   }
@@ -188,13 +216,56 @@ class OlMap {
         .getSource()
         .getFeatures()
         .forEach((feature) => {
-          feature.setStyle(defaultStyle);
+          if (this.map.getView().getZoom() > 13) {
+            feature.setStyle(defaultStyle);
+          } else {
+            let iconStyle = new Style({
+              geometry: function (feature) {
+                let geometry = feature.getGeometry();
+                let geometryType = geometry.getType();
+                return geometryType === "Polygon"
+                  ? geometry.getInteriorPoint()
+                  : geometryType === "MultiPolygon"
+                  ? geometry.getInteriorPoints()
+                  : geometry;
+              },
+              image: new Icon({
+                anchor: [0.5, 46],
+                anchorXUnits: "fraction",
+                anchorYUnits: "pixels",
+                src: PinIcon,
+                scale: 0.12,
+              }),
+            });
+            feature.setStyle(iconStyle);
+          }
         });
       let newFeature = null;
       this.map.forEachFeatureAtPixel(e.pixel, (f) => {
         newFeature = f;
-
-        newFeature.setStyle(hoveredStyle);
+        if (this.map.getView().getZoom() > 13) {
+          newFeature.setStyle(hoveredStyle);
+        } else {
+          let iconStyle = new Style({
+            geometry: function (newFeature) {
+              let geometry = newFeature.getGeometry();
+              let geometryType = geometry.getType();
+              return geometryType === "Polygon"
+                ? geometry.getInteriorPoint()
+                : geometryType === "MultiPolygon"
+                ? geometry.getInteriorPoints()
+                : geometry;
+            },
+            image: new Icon({
+              anchor: [0.5, 46],
+              anchorXUnits: "fraction",
+              anchorYUnits: "pixels",
+              src: HoveredPinIcon,
+              scale: 0.12,
+            }),
+          });
+          newFeature.setStyle(iconStyle);
+        }
         return true;
       });
 
@@ -230,6 +301,45 @@ class OlMap {
       }),
       fill: new Fill({ color: "#9c1616" }),
     });
+    if (this.map.getView().getZoom() < 13) {
+      defaultStyle = new Style({
+        geometry: function (feature) {
+          let geometry = feature.getGeometry();
+          let geometryType = geometry.getType();
+          return geometryType === "Polygon"
+            ? geometry.getInteriorPoint()
+            : geometryType === "MultiPolygon"
+            ? geometry.getInteriorPoints()
+            : geometry;
+        },
+        image: new Icon({
+          anchor: [0.5, 46],
+          anchorXUnits: "fraction",
+          anchorYUnits: "pixels",
+          src: PinIcon,
+          scale: 0.12,
+        }),
+      });
+
+      defaultStyle = new Style({
+        geometry: function (feature) {
+          let geometry = feature.getGeometry();
+          let geometryType = geometry.getType();
+          return geometryType === "Polygon"
+            ? geometry.getInteriorPoint()
+            : geometryType === "MultiPolygon"
+            ? geometry.getInteriorPoints()
+            : geometry;
+        },
+        image: new Icon({
+          anchor: [0.5, 46],
+          anchorXUnits: "fraction",
+          anchorYUnits: "pixels",
+          src: HoveredPinIcon,
+          scale: 0.12,
+        }),
+      });
+    }
     this.map.getLayers().forEach((layer) => {
       if (layer.get("name") === "plotUserBoundriesLayer") {
         layer

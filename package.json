@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^7.2.1",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
+    "amazon-cognito-identity-js": "^4.2.4",
     "axios": "^0.19.2",
     "babel-eslint": "10.1.0",
     "babel-jest": "^24.9.0",
@@ -41,7 +42,7 @@
     "jest-watch-typeahead": "0.4.2",
     "material-ui-icons": "^1.0.0-beta.36",
     "mini-css-extract-plugin": "0.9.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "ol": "^6.2.1",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "pnp-webpack-plugin": "1.6.4",
@@ -67,7 +68,7 @@
     "ts-pnp": "1.1.6",
     "url-loader": "2.3.0",
     "webpack": "4.42.0",
-    "webpack-dev-server": "3.10.3",
+    "webpack-dev-server": "^3.11.0",
     "webpack-manifest-plugin": "2.2.0",
     "workbox-webpack-plugin": "4.3.1"
   },
@@ -143,5 +144,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.11"
   }
 }
