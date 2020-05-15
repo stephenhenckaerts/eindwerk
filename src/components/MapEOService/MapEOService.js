@@ -1,9 +1,5 @@
-import {
-  CognitoUserPool,
-  CognitoUserAttribute,
-  CognitoUser,
-  AmazonCognitoIdentity,
-} from "amazon-cognito-identity-js";
+import { CognitoUser } from "amazon-cognito-identity-js";
+import Cookies from "universal-cookie";
 
 class MapEOService {
   constructor() {
@@ -25,6 +21,25 @@ class MapEOService {
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (result) => {
         // ... set cookies
+        this.cookies = new Cookies();
+        this.cookies.set(
+          "IdToken",
+          result.getIdToken().getJwtToken(),
+          undefined,
+          "/"
+        );
+        this.cookies.set(
+          "RefreshToken",
+          result.getRefreshToken().getToken(),
+          undefined,
+          "/"
+        );
+        this.cookies.set(
+          "AccessToken",
+          result.getAccessToken().getJwtToken(),
+          undefined,
+          "/"
+        );
         console.log("success");
         console.log(result);
       },
@@ -33,6 +48,10 @@ class MapEOService {
         console.log(error);
       },
     });
+  }
+
+  getCookies() {
+    return this.cookies;
   }
 }
 
