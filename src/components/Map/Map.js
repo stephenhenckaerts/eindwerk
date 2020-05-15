@@ -137,20 +137,6 @@ class OlMap {
         feature.setId(newFeature.plotId);
         vectorSource.addFeature(feature);
       });
-      let defaultStyle = new Style({
-        stroke: new Stroke({
-          width: 2,
-          color: "#9c1616",
-        }),
-        fill: new Fill({ color: "#c04e4e" }),
-      });
-      let hoveredStyle = new Style({
-        stroke: new Stroke({
-          width: 2,
-          color: "#9c1616",
-        }),
-        fill: new Fill({ color: "#9c1616" }),
-      });
       let iconStyle = new Style({
         geometry: function (feature) {
           let geometry = feature.getGeometry();
@@ -177,7 +163,6 @@ class OlMap {
       let vector = new Vector({
         minZoom: 13,
         source: vectorSource,
-        style: defaultStyle,
       });
       vector.setZIndex(10);
       if (featureHovered !== null) {
