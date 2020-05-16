@@ -3,6 +3,13 @@ import Cookies from "universal-cookie";
 
 class MapEOService {
   constructor() {
+    let username = process.env.REACT_APP_USER_USERNAME;
+    let password = process.env.REACT_APP_USER_PASSWORD;
+    let geoserverHash = this.makeBasicGeoserverAuth(username, password);
+    this.makeAWSCognitoAuth(username, password, geoserverHash);
+  }
+
+  makeAWSCognitoAuth(username, password, geoserverHash) {
     var AmazonCognitoIdentity = require("amazon-cognito-identity-js");
     this.cognitoUserPool = new AmazonCognitoIdentity.CognitoUserPool({
       UserPoolId: process.env.REACT_APP_USER_POOL_ID,
@@ -10,8 +17,8 @@ class MapEOService {
     });
     const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(
       {
-        Username: process.env.REACT_APP_USER_USERNAME,
-        Password: process.env.REACT_APP_USER_PASSWORD,
+        Username: username,
+        Password: password,
       }
     );
     const cognitoUser = new CognitoUser({
@@ -40,8 +47,9 @@ class MapEOService {
           undefined,
           "/"
         );
+        this.cookies.set("GeoserverHash", geoserverHash, undefined, "/");
         console.log("success");
-        console.log(result);
+        console.log(this.cookies.getAll());
       },
       onFailure: (error) => {
         console.log("Error");
@@ -52,6 +60,12 @@ class MapEOService {
 
   getCookies() {
     return this.cookies;
+  }
+
+  makeBasicGeoserverAuth(username, password) {
+    const tok = username + ":" + password;
+    const hash = btoa(tok);
+    return "Basic " + hash;
   }
 }
 
