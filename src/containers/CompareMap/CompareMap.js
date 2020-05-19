@@ -57,10 +57,14 @@ class CompareMap extends Component {
       });
   };
 
-  menuItemClicked = (item) => {
+  menuItemClicked = (item, layerinfo) => {
     if (this.state.topLayers[this.state.selectedPlotIndex - 1] !== item) {
       let newLayers = this.state.topLayers.slice();
-      newLayers[this.state.selectedPlotIndex - 1] = item;
+      if (layerinfo) {
+        newLayers[this.state.selectedPlotIndex - 1] = { item, layerinfo };
+      } else {
+        newLayers[this.state.selectedPlotIndex - 1] = item;
+      }
       this.setState({ topLayers: newLayers });
     }
   };

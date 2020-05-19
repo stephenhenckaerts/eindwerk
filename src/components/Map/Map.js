@@ -14,6 +14,7 @@ import { Polygon } from "ol/geom";
 import { Fill, Stroke, Style, Icon } from "ol/style";
 import PinIcon from "../../assets/Map/pin.png";
 import HoveredPinIcon from "../../assets/Map/hoveredpin.png";
+import TileSource from "ol/source/Tile";
 
 class OlMap {
   constructor() {
@@ -504,6 +505,88 @@ class OlMap {
     vector.set("name", "topLayer");
     this.map.addLayer(vector);
   }
+
+  addMapEOLayer(geoserverHash, url) {
+    let vectorSource = new VectorSource({
+      format: new GeoJSON(),
+      minScale: 15000000,
+      loader: async (extent, resolution, projection) => {
+        const client = new XMLHttpRequest();
+        client.open("GET", url);
+        client.setRequestHeader("Authorization", geoserverHash);
+        client.responseType = "arraybuffer";
+
+        const promise = new Promise((resolve, reject) => {
+          client.onload = () => {
+            if (client.status === 200) {
+              const uInt8Array = new Uint8Array(client.response);
+              let i = uInt8Array.length;
+              const binaryString = new Array(i);
+              while (i--) {
+                binaryString[i] = String.fromCharCode(uInt8Array[i]);
+              }
+              const data = binaryString.join("");
+              const base64 = btoa(data);
+              resolve(`data:image/png;base64,${base64}`);
+            } else {
+              resolve(url);
+            }
+          };
+        });
+        client.send();
+
+        return await promise;
+      },
+      strategy: bboxStrategy,
+    });
+    let vector = new Vector({
+      source: vectorSource,
+    });
+    vector.set("name", "topLayer");
+    this.map.addLayer(vector);
+  }
+
+  /*
+
+  addMapEOLayer(geoserverHash, url) {
+    let vectorSource = new WMTS({});
+
+    vectorSource.setTileLoadFunction(() => {
+      const client = new XMLHttpRequest();
+      client.open("GET", url);
+      client.setRequestHeader("Authorization", geoserverHash);
+      client.responseType = "arraybuffer";
+
+      const promise = new Promise((resolve, reject) => {
+        console.log("halloo");
+        client.onload = () => {
+          if (client.status === 200) {
+            const uInt8Array = new Uint8Array(client.response);
+            let i = uInt8Array.length;
+            const binaryString = new Array(i);
+            while (i--) {
+              binaryString[i] = String.fromCharCode(uInt8Array[i]);
+            }
+            const data = binaryString.join("");
+            const base64 = btoa(data);
+            resolve(`data:image/png;base64,${base64}`);
+          } else {
+            resolve(url);
+          }
+        };
+      });
+      client.send();
+
+      return promise;
+    });
+    let vector = new TileLayer({
+      source: vectorSource,
+    });
+    vector.set("name", "topLayer");
+    this.map.addLayer(vector);
+  }
+
+  */
 
   setStyleOfFeature(feature) {
     if (!this.featureStyles) {

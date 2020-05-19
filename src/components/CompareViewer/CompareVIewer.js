@@ -15,8 +15,6 @@ class CompareViewer extends Component {
   constructor(props) {
     super(props);
 
-    let service = new MapEOService();
-
     this.Maps = [new Map(), new Map(), new Map(), new Map()];
 
     for (let i = 0; i < this.Maps.length; i++) {
@@ -24,6 +22,8 @@ class CompareViewer extends Component {
       this.Maps[i].index = i;
       this.Maps[i].topLayer = "normal";
     }
+
+    this.mapEOService = MapEOService;
   }
 
   componentDidMount() {
@@ -41,13 +41,18 @@ class CompareViewer extends Component {
   updateTopLayer(map) {
     if (this.props.topLayers[map.index] !== map.topLayer) {
       map.topLayer = this.props.topLayers[map.index];
-      if (map.topLayer !== "normal") {
-        const url =
-          "http://localhost:3030/maps/map/http://localhost:8080/geoserver/bodemkaart/wms?tiled=true&service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:20170710_bodemkaart_2_0&srsname=EPSG:3857&outputFormat=application/json&count=1000&bbox=";
+      console.log(map.topLayer.item);
+      if (map.topLayer === "bodemkaart") {
+        const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
         map.addTopLayer(url);
         setTimeout(() => {
           this.updateMapInfo(map.index, map.topLayer, map.getFeatureStyles());
         }, 100);
+      } else if (map.topLayer.item && map.topLayer.item === "MapEO") {
+        const url = process.env.REACT_APP_GEOSERVER_MAPEO_API;
+        console.log(map.topLayer);
+        console.log(MapEOService.getCookies().cookies.GeoserverHash);
+        map.addMapEOLayer(MapEOService.getCookies().cookies.GeoserverHash, url);
       } else {
         map.removeTopLayer();
         this.updateMapInfo(map.index, map.topLayer);

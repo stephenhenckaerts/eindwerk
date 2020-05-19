@@ -2,14 +2,14 @@ import { CognitoUser } from "amazon-cognito-identity-js";
 import Cookies from "universal-cookie";
 
 class MapEOService {
-  constructor() {
+  connectToMapEO(loadedHandler) {
     let username = process.env.REACT_APP_USER_USERNAME;
     let password = process.env.REACT_APP_USER_PASSWORD;
     let geoserverHash = this.makeBasicGeoserverAuth(username, password);
-    this.makeAWSCognitoAuth(username, password, geoserverHash);
+    this.makeAWSCognitoAuth(username, password, geoserverHash, loadedHandler);
   }
 
-  makeAWSCognitoAuth(username, password, geoserverHash) {
+  makeAWSCognitoAuth(username, password, geoserverHash, loadedHandler) {
     var AmazonCognitoIdentity = require("amazon-cognito-identity-js");
     this.cognitoUserPool = new AmazonCognitoIdentity.CognitoUserPool({
       UserPoolId: process.env.REACT_APP_USER_POOL_ID,
@@ -48,8 +48,7 @@ class MapEOService {
           "/"
         );
         this.cookies.set("GeoserverHash", geoserverHash, undefined, "/");
-        console.log("success");
-        console.log(this.cookies.getAll());
+        this.getRegionsOfUser(loadedHandler);
       },
       onFailure: (error) => {
         console.log("Error");
@@ -67,6 +66,22 @@ class MapEOService {
     const hash = btoa(tok);
     return "Basic " + hash;
   }
+
+  getRegionsOfUser(loadedHandler) {
+    if (this.cookies) {
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", this.cookies.get("IdToken"));
+      var requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+      fetch("https://api.dev.mapeo.be/api/mapeo/regions", requestOptions)
+        .then((response) => response.json())
+        .then((result) => loadedHandler(result))
+        .catch((error) => console.log("error", error));
+    }
+  }
 }
 
-export default MapEOService;
+export default new MapEOService();
