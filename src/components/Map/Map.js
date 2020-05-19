@@ -208,9 +208,9 @@ class OlMap {
     let hoveredStyle = new Style({
       stroke: new Stroke({
         width: 2,
-        color: "#9c1616",
+        color: "#0c51a7",
       }),
-      fill: new Fill({ color: "#9c1616" }),
+      fill: new Fill({ color: "#1273EB" }),
     });
     this.map.on("pointermove", (e) => {
       layer
@@ -298,9 +298,9 @@ class OlMap {
     let hoveredStyle = new Style({
       stroke: new Stroke({
         width: 2,
-        color: "#9c1616",
+        color: "#0c51a7",
       }),
-      fill: new Fill({ color: "#9c1616" }),
+      fill: new Fill({ color: "#1273EB" }),
     });
     if (this.map.getView().getZoom() < 13) {
       defaultStyle = new Style({
