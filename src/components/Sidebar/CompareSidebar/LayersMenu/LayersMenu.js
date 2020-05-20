@@ -27,8 +27,8 @@ class LayersMenu extends Component {
     MapEOService.connectToMapEO(this.mapEOLoadedHandler);
   }
 
-  clickHandler = () => {
-    this.snackbarRef.current.openSnackBar("Button Pressed...");
+  clickHandler = (type) => {
+    this.snackbarRef.current.openSnackBar(type + " niet beschikbaar.");
   };
 
   backButtonHandler = () => {
@@ -62,7 +62,10 @@ class LayersMenu extends Component {
           <img src={bodemkaart} alt="Bodemkaart" />
           <p>Bodemkaarten</p>
         </div>
-        <div className={styles.Layer}>
+        <div
+          className={styles.Layer}
+          onClick={() => this.clickHandler("Bodemscan ")}
+        >
           <img src={tractor} alt="Bodemscans" />
           <p>Bodemscans</p>
         </div>
@@ -70,7 +73,10 @@ class LayersMenu extends Component {
           <img src={dronebeelden} alt="Dronebeelden" />
           <p>Dronebeelden</p>
         </div>
-        <div className={styles.Layer} onClick={this.clickHandler}>
+        <div
+          className={styles.Layer}
+          onClick={() => this.props.menuItemClicked("satteliet")}
+        >
           <img src={satelliet} alt="Sattelietbeelden" />
           <p>Sattelietbeelden</p>
         </div>

@@ -17,6 +17,7 @@ class CompareMap extends Component {
     amountOfPlots: 2,
     selectedPlotIndex: 1,
     topLayers: ["normal", "normal", "normal", "normal"],
+    export: false,
   };
 
   constructor(props) {
@@ -69,6 +70,10 @@ class CompareMap extends Component {
     }
   };
 
+  exportButtonHandler = () => {
+    this.setState({ export: true });
+  };
+
   render() {
     if (this.state.featureDeleted) {
       return <Redirect to={"/percelen"} />;
@@ -100,6 +105,7 @@ class CompareMap extends Component {
             selectedPlotIndex={this.state.selectedPlotIndex}
             setSelectedPlot={this.setSelectedPlot}
             menuItemClicked={this.menuItemClicked}
+            exportButtonHandler={this.exportButtonHandler}
           />
         </Sidebar>
         <Viewer
@@ -107,6 +113,7 @@ class CompareMap extends Component {
           uploadShapefile={this.uploadShapefileHandler}
           amountOfPlots={this.state.amountOfPlots}
           topLayers={this.state.topLayers}
+          export={this.state.export}
         ></Viewer>
         <MapEditor></MapEditor>
       </Aux>

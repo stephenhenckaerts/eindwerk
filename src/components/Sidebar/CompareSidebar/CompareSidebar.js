@@ -94,7 +94,10 @@ const CompareSideBar = (props) => {
         </div>
       ) : null}
       <div className={styles.SidebarItem}>
-        <div className={styles.ExportButton}>
+        <div
+          className={styles.ExportButton}
+          onClick={() => props.exportButtonHandler()}
+        >
           <img src={exportLogo} alt="Percelen Logo" />
           <p>
             <strong>EXPORT</strong>

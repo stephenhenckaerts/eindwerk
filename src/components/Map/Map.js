@@ -14,7 +14,10 @@ import { Polygon } from "ol/geom";
 import { Fill, Stroke, Style, Icon } from "ol/style";
 import PinIcon from "../../assets/Map/pin.png";
 import HoveredPinIcon from "../../assets/Map/hoveredpin.png";
-import TileSource from "ol/source/Tile";
+import jsPDF from "jspdf";
+import ImageLayer from "ol/layer/Image";
+import ImageWMS from "ol/source/ImageWMS";
+import TileWMS from "ol/source/TileWMS";
 
 class OlMap {
   constructor() {
@@ -36,6 +39,47 @@ class OlMap {
         zoom: 14,
       }),
     });
+  }
+
+  exportMap() {
+    this.map.once("rendercomplete", () => {
+      var viewResolution = this.map.getView().getResolution();
+      var mapCanvas = document.createElement("canvas");
+      var size = this.map.getSize();
+      mapCanvas.width = size[0];
+      mapCanvas.height = size[1];
+      var mapContext = mapCanvas.getContext("2d");
+
+      this.map.getLayers().forEach((canvas) => {
+        if (canvas !== undefined) {
+          if (canvas.width > 0) {
+            var opacity = canvas.parentNode.style.opacity;
+            mapContext.globalAlpha = opacity === "" ? 1 : Number(opacity);
+            var transform = canvas.style.transform;
+            // Get the transform parameters from the style's transform matrix
+            var matrix = transform
+              .match(/^matrix\(([^]*)\)$/)[1]
+              .split(",")
+              .map(Number);
+            // Apply the transform to the export map context
+            CanvasRenderingContext2D.prototype.setTransform.apply(
+              mapContext,
+              matrix
+            );
+            mapContext.drawImage(canvas, 0, 0);
+          }
+        }
+      });
+
+      var pdf = new jsPDF("landscape", undefined, "a4");
+      pdf.addImage(mapCanvas.toDataURL("image/jpeg"), "JPEG", 0, 0, 297, 210);
+      //pdf.save("map.pdf");
+      // Reset original map size
+      this.map.setSize(size);
+      this.map.getView().setResolution(viewResolution);
+      document.body.style.cursor = "auto";
+    });
+    this.map.renderSync();
   }
 
   createBackgroundLayerGroups() {
@@ -506,6 +550,43 @@ class OlMap {
     this.map.addLayer(vector);
   }
 
+  setStyleOfFeature(feature) {
+    if (!this.featureStyles) {
+      this.featureStyles = [];
+    }
+    let style = null;
+    this.featureStyles.forEach((styleItem) => {
+      if (styleItem[0] === feature.get("Bodemtype")) {
+        style = styleItem;
+      }
+    });
+    if (style === null) {
+      style = [feature.get("Bodemtype"), this.getRandomColor()];
+      this.featureStyles.push(style);
+    }
+    return new Style({
+      stroke: new Stroke({
+        width: 2,
+        color: "#9c1616",
+      }),
+      fill: new Fill({ color: style[1] }),
+    });
+  }
+
+  getFeatureStyles() {
+    return this.featureStyles;
+  }
+
+  getRandomColor() {
+    var letters = "0123456789ABCDEF";
+    var color = "#";
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  /*
   addMapEOLayer(geoserverHash, url) {
     let vectorSource = new VectorSource({
       format: new GeoJSON(),
@@ -544,84 +625,62 @@ class OlMap {
     });
     vector.set("name", "topLayer");
     this.map.addLayer(vector);
-  }
-
-  /*
+  }*/
 
   addMapEOLayer(geoserverHash, url) {
-    let vectorSource = new WMTS({});
+    let source = new TileWMS({
+      url: url,
+      params: {
+        LAYERS: "Interreg-PCfruit:Wimmertingen_ortho",
+        TILED: true,
+        TIME: "2018-08-31T00:00:00.000Z",
+      },
+      serverType: "geoserver",
+      // Countries have transparency, so do not fade tiles:
+      transition: 0,
+      crossOrigin: "Anonymous",
+    });
+    let tileLayer = new TileLayer({
+      source: source,
+    });
 
-    vectorSource.setTileLoadFunction(() => {
+    source.setTileLoadFunction(function (tile, src) {
+      console.log(src);
       const client = new XMLHttpRequest();
-      client.open("GET", url);
+      client.open("GET", src);
       client.setRequestHeader("Authorization", geoserverHash);
       client.responseType = "arraybuffer";
 
-      const promise = new Promise((resolve, reject) => {
-        console.log("halloo");
-        client.onload = () => {
-          if (client.status === 200) {
-            const uInt8Array = new Uint8Array(client.response);
-            let i = uInt8Array.length;
-            const binaryString = new Array(i);
-            while (i--) {
-              binaryString[i] = String.fromCharCode(uInt8Array[i]);
-            }
-            const data = binaryString.join("");
-            const base64 = btoa(data);
-            resolve(`data:image/png;base64,${base64}`);
-          } else {
-            resolve(url);
+      client.onload = () => {
+        if (client.status === 200) {
+          const uInt8Array = new Uint8Array(client.response);
+          let i = uInt8Array.length;
+          const binaryString = new Array(i);
+          while (i--) {
+            binaryString[i] = String.fromCharCode(uInt8Array[i]);
           }
-        };
-      });
+          const data = binaryString.join("");
+          const base64 = btoa(data);
+          tile.getImage().src = `data:image/png;base64,${base64}`;
+        }
+      };
       client.send();
-
-      return promise;
     });
-    let vector = new TileLayer({
-      source: vectorSource,
-    });
-    vector.set("name", "topLayer");
-    this.map.addLayer(vector);
+    tileLayer.set("name", "topLayer");
+    this.map.addLayer(tileLayer);
   }
 
-  */
-
-  setStyleOfFeature(feature) {
-    if (!this.featureStyles) {
-      this.featureStyles = [];
-    }
-    let style = null;
-    this.featureStyles.forEach((styleItem) => {
-      if (styleItem[0] === feature.get("Bodemtype")) {
-        style = styleItem;
-      }
-    });
-    if (style === null) {
-      style = [feature.get("Bodemtype"), this.getRandomColor()];
-      this.featureStyles.push(style);
-    }
-    return new Style({
-      stroke: new Stroke({
-        width: 2,
-        color: "#9c1616",
+  addSentinellLayer(url) {
+    let imageLayer = new ImageLayer({
+      source: new ImageWMS({
+        url: url,
+        strategy: bboxStrategy,
       }),
-      fill: new Fill({ color: style[1] }),
     });
-  }
+    console.log(imageLayer);
 
-  getFeatureStyles() {
-    return this.featureStyles;
-  }
-
-  getRandomColor() {
-    var letters = "0123456789ABCDEF";
-    var color = "#";
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+    imageLayer.set("name", "topLayer");
+    this.map.addLayer(imageLayer);
   }
 
   removeTopLayer() {

@@ -41,7 +41,7 @@ class CompareViewer extends Component {
   updateTopLayer(map) {
     if (this.props.topLayers[map.index] !== map.topLayer) {
       map.topLayer = this.props.topLayers[map.index];
-      console.log(map.topLayer.item);
+      map.removeTopLayer();
       if (map.topLayer === "bodemkaart") {
         const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
         map.addTopLayer(url);
@@ -49,12 +49,14 @@ class CompareViewer extends Component {
           this.updateMapInfo(map.index, map.topLayer, map.getFeatureStyles());
         }, 100);
       } else if (map.topLayer.item && map.topLayer.item === "MapEO") {
-        const url = process.env.REACT_APP_GEOSERVER_MAPEO_API;
+        //const url = process.env.REACT_APP_GEOSERVER_MAPEO_API;
+        const url = "/geoserver/wms";
         console.log(map.topLayer);
         console.log(MapEOService.getCookies().cookies.GeoserverHash);
         map.addMapEOLayer(MapEOService.getCookies().cookies.GeoserverHash, url);
-      } else {
-        map.removeTopLayer();
+      } else if (map.topLayer === "satteliet") {
+        map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
+      } else if (map.topLayer === "normal") {
         this.updateMapInfo(map.index, map.topLayer);
       }
     }
@@ -88,6 +90,10 @@ class CompareViewer extends Component {
     this.updateTopLayer(map);
   }
 
+  exportMap() {
+    this.Maps[0].exportMap();
+  }
+
   render() {
     //First let the DIV elements be created
     setTimeout(() => {
@@ -95,6 +101,9 @@ class CompareViewer extends Component {
         this.resetMapLayers(map);
       });
     }, 100);
+    if (this.props.export) {
+      this.exportMap();
+    }
     return (
       <div className={styles.MapsDiv}>
         <div className={styles.Map} id="map1">
