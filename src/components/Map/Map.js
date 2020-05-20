@@ -627,13 +627,13 @@ class OlMap {
     this.map.addLayer(vector);
   }*/
 
-  addMapEOLayer(geoserverHash, url) {
+  addMapEOLayer(geoserverHash, url, layerName, time) {
     let source = new TileWMS({
       url: url,
       params: {
-        LAYERS: "Interreg-PCfruit:Wimmertingen_ortho",
+        LAYERS: layerName,
         TILED: true,
-        TIME: "2018-08-31T00:00:00.000Z",
+        TIME: time,
       },
       serverType: "geoserver",
       // Countries have transparency, so do not fade tiles:

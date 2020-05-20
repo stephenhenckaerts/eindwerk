@@ -4,7 +4,7 @@ module.exports = function (app) {
   app.use(
     "/geoserver",
     createProxyMiddleware({
-      target: "https://dev.mapeo.be/",
+      target: process.env.REACT_APP_GEOSERVER_MAPEO_API,
       changeOrigin: true,
     })
   );

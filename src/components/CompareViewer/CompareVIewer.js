@@ -40,7 +40,9 @@ class CompareViewer extends Component {
 
   updateTopLayer(map) {
     if (this.props.topLayers[map.index] !== map.topLayer) {
+      console.log(this.props.topLayers[map.index] + " ---- " + map.topLayer);
       map.topLayer = this.props.topLayers[map.index];
+      console.log(this.props.topLayers[map.index] + " ---- " + map.topLayer);
       map.removeTopLayer();
       if (map.topLayer === "bodemkaart") {
         const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
@@ -49,11 +51,19 @@ class CompareViewer extends Component {
           this.updateMapInfo(map.index, map.topLayer, map.getFeatureStyles());
         }, 100);
       } else if (map.topLayer.item && map.topLayer.item === "MapEO") {
-        //const url = process.env.REACT_APP_GEOSERVER_MAPEO_API;
-        const url = "/geoserver/wms";
-        console.log(map.topLayer);
-        console.log(MapEOService.getCookies().cookies.GeoserverHash);
-        map.addMapEOLayer(MapEOService.getCookies().cookies.GeoserverHash, url);
+        const url = map.topLayer.layerinfo.layerData[0].url;
+        const title = map.topLayer.layerinfo.layerData[0].title;
+        const time =
+          map.topLayer.layerinfo.layerTimes[0].date.substring(
+            0,
+            map.topLayer.layerinfo.layerTimes[0].date.length - 1
+          ) + ".000Z";
+        map.addMapEOLayer(
+          MapEOService.getCookies().cookies.GeoserverHash,
+          url,
+          title,
+          time
+        );
       } else if (map.topLayer === "satteliet") {
         map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
       } else if (map.topLayer === "normal") {
@@ -64,10 +74,11 @@ class CompareViewer extends Component {
 
   updateMapInfo(index, type, colors) {
     let newLayers = this.state.mapInfos.slice();
-    if (type === "normal") {
-      newLayers[index] = null;
-    } else {
+
+    if (type === "bodemkaart") {
       newLayers[index] = <MapInfo type={type} colors={colors} />;
+    } else {
+      newLayers[index] = null;
     }
     this.setState({ mapInfos: newLayers });
   }
