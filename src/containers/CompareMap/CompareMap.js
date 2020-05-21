@@ -62,7 +62,12 @@ class CompareMap extends Component {
     if (this.state.topLayers[this.state.selectedPlotIndex - 1] !== item) {
       let newLayers = this.state.topLayers.slice();
       if (layerinfo) {
-        newLayers[this.state.selectedPlotIndex - 1] = { item, layerinfo };
+        console.log(layerinfo);
+        newLayers[this.state.selectedPlotIndex - 1] = {
+          item,
+          layerinfo,
+          selectedDate: 0,
+        };
       } else {
         newLayers[this.state.selectedPlotIndex - 1] = item;
       }
@@ -72,6 +77,24 @@ class CompareMap extends Component {
 
   exportButtonHandler = () => {
     this.setState({ export: true });
+  };
+
+  changeDateHandler = (amount) => {
+    let layers = this.state.topLayers.slice();
+    const layerDatesAmount = this.state.topLayers[
+      this.state.selectedPlotIndex - 1
+    ].layerinfo.layerTimes.length;
+    let newIndex =
+      this.state.topLayers[this.state.selectedPlotIndex - 1].selectedDate +
+      amount;
+    if (newIndex < 0) {
+      newIndex = layerDatesAmount - 1;
+    } else if (newIndex > layerDatesAmount - 1) {
+      newIndex = 0;
+    }
+    layers.selectedDate = newIndex;
+    console.log(layers);
+    this.setState({ topLayers: layers });
   };
 
   render() {
@@ -114,6 +137,7 @@ class CompareMap extends Component {
           amountOfPlots={this.state.amountOfPlots}
           topLayers={this.state.topLayers}
           export={this.state.export}
+          changeDateHandler={this.changeDateHandler}
         ></Viewer>
         <MapEditor></MapEditor>
       </Aux>

@@ -645,7 +645,6 @@ class OlMap {
     });
 
     source.setTileLoadFunction(function (tile, src) {
-      console.log(src);
       const client = new XMLHttpRequest();
       client.open("GET", src);
       client.setRequestHeader("Authorization", geoserverHash);
@@ -689,7 +688,6 @@ class OlMap {
         if (layer.get("name") === "topLayer") {
           layer.getSource().clear();
           this.map.removeLayer(layer);
-          this.topLayer = "";
         }
       }
     });

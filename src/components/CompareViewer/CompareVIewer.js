@@ -6,6 +6,7 @@ import "ol/ol.css";
 import MapInfo from "./MapInfo/MapInfo";
 import styles from "./CompareViewer.module.scss";
 import MapEOService from "../MapEOService/MapEOService";
+import MapDatePicker from "./MapDatePicker/MapDatePicker";
 
 class CompareViewer extends Component {
   state = {
@@ -39,10 +40,10 @@ class CompareViewer extends Component {
   }
 
   updateTopLayer(map) {
+    console.log(this.props.topLayers);
+    console.log(this.props.topLayers[map.index]);
     if (this.props.topLayers[map.index] !== map.topLayer) {
-      console.log(this.props.topLayers[map.index] + " ---- " + map.topLayer);
       map.topLayer = this.props.topLayers[map.index];
-      console.log(this.props.topLayers[map.index] + " ---- " + map.topLayer);
       map.removeTopLayer();
       if (map.topLayer === "bodemkaart") {
         const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
@@ -54,9 +55,12 @@ class CompareViewer extends Component {
         const url = map.topLayer.layerinfo.layerData[0].url;
         const title = map.topLayer.layerinfo.layerData[0].title;
         const time =
-          map.topLayer.layerinfo.layerTimes[0].date.substring(
+          map.topLayer.layerinfo.layerTimes[
+            map.topLayer.selectedDate
+          ].date.substring(
             0,
-            map.topLayer.layerinfo.layerTimes[0].date.length - 1
+            map.topLayer.layerinfo.layerTimes[map.topLayer.selectedDate].date
+              .length - 1
           ) + ".000Z";
         map.addMapEOLayer(
           MapEOService.getCookies().cookies.GeoserverHash,
@@ -64,6 +68,8 @@ class CompareViewer extends Component {
           title,
           time
         );
+
+        this.updateMapInfo(map.index, map.topLayer);
       } else if (map.topLayer === "satteliet") {
         map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
       } else if (map.topLayer === "normal") {
@@ -72,11 +78,21 @@ class CompareViewer extends Component {
     }
   }
 
-  updateMapInfo(index, type, colors) {
+  updateMapInfo(index, type, colors, date) {
     let newLayers = this.state.mapInfos.slice();
-
     if (type === "bodemkaart") {
       newLayers[index] = <MapInfo type={type} colors={colors} />;
+    } else if (type.item && type.item === "MapEO") {
+      const date = type.layerinfo.layerTimes[type.selectedDate].date.substring(
+        0,
+        type.layerinfo.layerTimes[type.selectedDate].date.length - 1
+      );
+      newLayers[index] = (
+        <MapDatePicker
+          date={date}
+          changeDateHandler={(amount) => this.props.changeDateHandler(amount)}
+        />
+      );
     } else {
       newLayers[index] = null;
     }
