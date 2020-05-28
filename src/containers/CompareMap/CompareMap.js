@@ -14,7 +14,7 @@ import axios from "axios";
 
 class CompareMap extends Component {
   state = {
-    amountOfPlots: 2,
+    amountOfPlots: 1,
     selectedPlotIndex: 1,
     topLayers: ["normal", "normal", "normal", "normal"],
     export: false,
@@ -28,7 +28,7 @@ class CompareMap extends Component {
 
   changeAmountOfPlots = (amount) => {
     const newAmountOfPlots = this.state.amountOfPlots + amount;
-    if (newAmountOfPlots > 1 && newAmountOfPlots <= 4) {
+    if (newAmountOfPlots > 0 && newAmountOfPlots <= 4) {
       this.setState({ amountOfPlots: newAmountOfPlots });
     }
     if (newAmountOfPlots < this.state.selectedPlotIndex) {

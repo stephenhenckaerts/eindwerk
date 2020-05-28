@@ -3,7 +3,6 @@ import React from "react";
 import styles from "./CompareSidebar.module.scss";
 import backLogo from "../../../assets/Sidebar/back.png";
 import { NavLink } from "react-router-dom";
-import Switch from "../../UI/Switch/Switch";
 import exportLogo from "../../../assets/CompareSidebar/exportYellow.png";
 import LayersMenu from "./LayersMenu/LayersMenu";
 
@@ -20,7 +19,7 @@ const CompareSideBar = (props) => {
       </NavLink>
       <div className={styles.SidebarItem}>
         <div className={styles.SidebarPlotAmount}>
-          {props.amountOfPlots > 2 ? (
+          {props.amountOfPlots > 1 ? (
             <p
               className={styles.SidebarPlotAmountArrow}
               onClick={() => props.changeAmountOfPlots(-1)}
@@ -53,13 +52,15 @@ const CompareSideBar = (props) => {
             ].join(" ")}
             onClick={() => props.setSelectedPlot(1)}
           ></div>
-          <div
-            className={[
-              styles.PlotSquare,
-              props.selectedPlotIndex === 2 ? styles.PlotSquareActive : null,
-            ].join(" ")}
-            onClick={() => props.setSelectedPlot(2)}
-          ></div>
+          {props.amountOfPlots >= 2 ? (
+            <div
+              className={[
+                styles.PlotSquare,
+                props.selectedPlotIndex === 2 ? styles.PlotSquareActive : null,
+              ].join(" ")}
+              onClick={() => props.setSelectedPlot(2)}
+            ></div>
+          ) : null}
           {props.amountOfPlots === 4 ? (
             <div className={styles.PlotSquareBreak}></div>
           ) : null}
@@ -83,16 +84,6 @@ const CompareSideBar = (props) => {
           ) : null}
         </div>
       </div>
-      {props.amountOfPlots === 2 ? (
-        <div className={styles.SidebarItem}>
-          <div className={styles.SlideButton}>
-            <p>
-              <strong>SLIDE</strong>
-            </p>
-            <Switch switchType="export" />
-          </div>
-        </div>
-      ) : null}
       <div className={styles.SidebarItem}>
         <div
           className={styles.ExportButton}

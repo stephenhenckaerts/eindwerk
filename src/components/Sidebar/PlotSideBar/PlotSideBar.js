@@ -34,7 +34,7 @@ const PlotSideBar = (props) => {
               )}
               clicked={() => props.plotNoted()}
             >
-              Notities
+              Indeling
             </Button>
             <Button
               btnType="Info"
@@ -43,7 +43,7 @@ const PlotSideBar = (props) => {
               )}
               clicked={() => props.plotCompare()}
             >
-              Vergelijk
+              Lagen
             </Button>
             <Button
               btnType="SuccessLight"

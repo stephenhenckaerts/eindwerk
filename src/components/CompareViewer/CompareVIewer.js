@@ -64,7 +64,11 @@ class CompareViewer extends Component {
     let newLayers = this.state.mapInfos.slice();
     if (type === "bodemkaart") {
       newLayers[index] = <MapInfo type={type} colors={colors} />;
-    } else if (type.topLayer.item && type.topLayer.item === "MapEO") {
+    } else if (
+      type.topLayer &&
+      type.topLayer.item &&
+      type.topLayer.item === "MapEO"
+    ) {
       newLayers[index] = (
         <MapDatePicker
           map={type}
@@ -146,7 +150,13 @@ class CompareViewer extends Component {
         <div className={styles.Map} id="map1">
           <div className={styles.Square}>{this.state.mapInfos[0]}</div>
         </div>
-        <div className={styles.Map} id="map2">
+        <div
+          className={[
+            styles.Map,
+            this.props.amountOfPlots < 2 ? styles.invisible : null,
+          ].join(" ")}
+          id="map2"
+        >
           <div className={styles.Square}>{this.state.mapInfos[1]}</div>
         </div>
         <div
