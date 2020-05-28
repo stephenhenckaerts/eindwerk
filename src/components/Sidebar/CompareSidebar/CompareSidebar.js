@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./CompareSidebar.module.scss";
 import backLogo from "../../../assets/Sidebar/back.png";
 import { NavLink } from "react-router-dom";
-import exportLogo from "../../../assets/CompareSidebar/exportYellow.png";
+import undoLogo from "../../../assets/CompareSidebar/undo.png";
 import LayersMenu from "./LayersMenu/LayersMenu";
 
 const CompareSideBar = (props) => {
@@ -87,11 +87,11 @@ const CompareSideBar = (props) => {
       <div className={styles.SidebarItem}>
         <div
           className={styles.ExportButton}
-          onClick={() => props.exportButtonHandler()}
+          onClick={() => props.menuItemClicked("normal")}
         >
-          <img src={exportLogo} alt="Percelen Logo" />
+          <img src={undoLogo} alt="Percelen Logo" />
           <p>
-            <strong>EXPORT</strong>
+            <strong>RESET</strong>
           </p>
         </div>
       </div>

@@ -80,13 +80,6 @@ class LayersMenu extends Component {
           <img src={satelliet} alt="Sattelietbeelden" />
           <p>Sattelietbeelden</p>
         </div>
-        <div
-          className={styles.Layer}
-          onClick={() => this.props.menuItemClicked("normal")}
-        >
-          <img src={verwijder} alt="Verwijder Laag" />
-          <p>Verwijder Laag</p>
-        </div>
       </Aux>
     );
     if (this.state.showMapEOLayer) {
