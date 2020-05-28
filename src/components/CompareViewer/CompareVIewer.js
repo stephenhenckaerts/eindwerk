@@ -40,8 +40,6 @@ class CompareViewer extends Component {
   }
 
   updateTopLayer(map) {
-    console.log(this.props.topLayers);
-    console.log(this.props.topLayers[map.index]);
     if (this.props.topLayers[map.index] !== map.topLayer) {
       map.topLayer = this.props.topLayers[map.index];
       map.removeTopLayer();
@@ -52,24 +50,8 @@ class CompareViewer extends Component {
           this.updateMapInfo(map.index, map.topLayer, map.getFeatureStyles());
         }, 100);
       } else if (map.topLayer.item && map.topLayer.item === "MapEO") {
-        const url = map.topLayer.layerinfo.layerData[0].url;
-        const title = map.topLayer.layerinfo.layerData[0].title;
-        const time =
-          map.topLayer.layerinfo.layerTimes[
-            map.topLayer.selectedDate
-          ].date.substring(
-            0,
-            map.topLayer.layerinfo.layerTimes[map.topLayer.selectedDate].date
-              .length - 1
-          ) + ".000Z";
-        map.addMapEOLayer(
-          MapEOService.getCookies().cookies.GeoserverHash,
-          url,
-          title,
-          time
-        );
-
-        this.updateMapInfo(map.index, map.topLayer);
+        this.setMapEOMap(map);
+        this.updateMapInfo(map.index, map);
       } else if (map.topLayer === "satteliet") {
         map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
       } else if (map.topLayer === "normal") {
@@ -78,19 +60,17 @@ class CompareViewer extends Component {
     }
   }
 
-  updateMapInfo(index, type, colors, date) {
+  updateMapInfo(index, type, colors) {
     let newLayers = this.state.mapInfos.slice();
     if (type === "bodemkaart") {
       newLayers[index] = <MapInfo type={type} colors={colors} />;
-    } else if (type.item && type.item === "MapEO") {
-      const date = type.layerinfo.layerTimes[type.selectedDate].date.substring(
-        0,
-        type.layerinfo.layerTimes[type.selectedDate].date.length - 1
-      );
+    } else if (type.topLayer.item && type.topLayer.item === "MapEO") {
       newLayers[index] = (
         <MapDatePicker
-          date={date}
-          changeDateHandler={(amount) => this.props.changeDateHandler(amount)}
+          map={type}
+          changeDateHandler={(amount, map) =>
+            this.changeDateHandler(amount, map)
+          }
         />
       );
     } else {
@@ -120,6 +100,36 @@ class CompareViewer extends Component {
   exportMap() {
     this.Maps[0].exportMap();
   }
+
+  setMapEOMap(map) {
+    const url = map.topLayer.layerinfo.layerData[0].url;
+    const title = map.topLayer.layerinfo.layerData[0].title;
+    const time =
+      map.topLayer.layerinfo.layerTimes[
+        map.topLayer.selectedDate
+      ].date.substring(
+        0,
+        map.topLayer.layerinfo.layerTimes[map.topLayer.selectedDate].date
+          .length - 1
+      ) + ".000Z";
+    map.addMapEOLayer(
+      MapEOService.getCookies().cookies.GeoserverHash,
+      url,
+      title,
+      time
+    );
+  }
+
+  changeDateHandler = (amount, map) => {
+    console.log(map);
+
+    map.selectedDate += amount;
+    if (map.selectedDate > map.layerinfo.layerTimes.length - 1)
+      map.selectedDate = 0;
+    if (map.selectedDate < 0)
+      map.selectedDate = map.layerinfo.layerTimes.length - 1;
+    this.setMapEOMap(map);
+  };
 
   render() {
     //First let the DIV elements be created

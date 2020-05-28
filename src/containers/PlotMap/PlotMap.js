@@ -8,6 +8,7 @@ import MapEditor from "../../components/MapEditor/MapEditor";
 import Aux from "../../hoc/Aux/Aux";
 import Modal from "../../components/UI/Modal/Modal";
 import FeatureForm from "../../components/FeatureForm/FeatureForm";
+import DeleteFeatureForm from "../../components/DeleteFeatureForm/DeleteFeatureForm";
 import * as actions from "../../store/actions/Index";
 import PlotSidebar from "../../components/Sidebar/PlotSideBar/PlotSideBar";
 import axios from "axios";
@@ -16,6 +17,7 @@ import Snackbar from "../../components/UI/Snackbar/Snackbar";
 class PlotMap extends Component {
   state = {
     updatingFeature: false,
+    featureDeleteClicked: false,
     featureDeleted: false,
     featureCompare: false,
     showNotes: false,
@@ -53,11 +55,18 @@ class PlotMap extends Component {
     this.setState({ updatingFeature: false });
   };
 
-  plotDeletedHandler(plotId) {
-    this.props.onDeleteFeature(plotId);
-    this.snackbarSucessHandler("Perceel verwijdert!");
-    this.setState({ featureDeleted: true });
+  plotDeletedClickedHandler() {
+    this.setState({ featureDeleteClicked: true });
   }
+
+  deletingFeatureCancelHandler = () => {
+    this.setState({ featureDeleteClicked: false });
+  };
+
+  plotDeletedHandler = () => {
+    this.props.onDeleteFeature(this.plotId);
+    this.setState({ featureDeleted: true });
+  };
 
   plotCompareHandler = () => {
     this.setState({ featureCompare: true });
@@ -104,6 +113,16 @@ class PlotMap extends Component {
         ></FeatureForm>
       );
     }
+    let deleteSummary = null;
+    if (this.state.featureDeleteClicked) {
+      deleteSummary = (
+        <DeleteFeatureForm
+          selectedFeature={this.props.feature}
+          formClosed={this.deletingFeatureCancelHandler}
+          onDeleteFeature={this.plotDeletedHandler}
+        ></DeleteFeatureForm>
+      );
+    }
     return (
       <Aux>
         <Modal
@@ -112,6 +131,12 @@ class PlotMap extends Component {
         >
           {featureSummary}
         </Modal>
+        <Modal
+          show={this.state.featureDeleteClicked}
+          modalClosed={this.addingFeatureCancelHandler}
+        >
+          {deleteSummary}
+        </Modal>
         <Sidebar>
           <PlotSidebar
             feature={this.props.feature}
@@ -119,7 +144,7 @@ class PlotMap extends Component {
             plotNoted={this.plotNotedHandler}
             plotCompare={this.plotCompareHandler}
             plotUpdate={() => this.plotUpdateHandler()}
-            plotDeleted={(plotId) => this.plotDeletedHandler(plotId)}
+            plotDeleted={(plotId) => this.plotDeletedClickedHandler(plotId)}
           />
         </Sidebar>
         <Viewer
