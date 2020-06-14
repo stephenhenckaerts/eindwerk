@@ -4,7 +4,6 @@ import bodemkaart from "../../../../assets/CompareSidebar/bodemkaart.png";
 import dronebeelden from "../../../../assets/CompareSidebar/dronebeelden.png";
 import satelliet from "../../../../assets/CompareSidebar/satelliet.svg";
 import tractor from "../../../../assets/CompareSidebar/tractor.svg";
-import verwijder from "../../../../assets/CompareSidebar/delete.svg";
 import back from "../../../../assets/CompareSidebar/back.svg";
 import MapEOService from "../../../MapEOService/MapEOService";
 
