@@ -125,14 +125,17 @@ class CompareViewer extends Component {
   }
 
   changeDateHandler = (amount, map) => {
-    console.log(map);
-
-    map.selectedDate += amount;
-    if (map.selectedDate > map.layerinfo.layerTimes.length - 1)
-      map.selectedDate = 0;
-    if (map.selectedDate < 0)
-      map.selectedDate = map.layerinfo.layerTimes.length - 1;
+    map.topLayer.selectedDate += amount;
+    if (
+      map.topLayer.selectedDate >
+      map.topLayer.layerinfo.layerTimes.length - 1
+    )
+      map.topLayer.selectedDate = 0;
+    if (map.topLayer.selectedDate < 0)
+      map.topLayer.selectedDate = map.topLayer.layerinfo.layerTimes.length - 1;
+    map.removeTopLayer();
     this.setMapEOMap(map);
+    this.updateMapInfo(map.index, map);
   };
 
   render() {

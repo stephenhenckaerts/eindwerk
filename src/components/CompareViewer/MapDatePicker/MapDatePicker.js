@@ -18,7 +18,7 @@ const MapDatePicker = (props) => {
           0,
           props.map.topLayer.layerinfo.layerTimes[
             props.map.topLayer.selectedDate
-          ].date.length - 1
+          ].date.length - 10
         )}
       </p>
       <p

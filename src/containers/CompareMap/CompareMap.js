@@ -53,7 +53,6 @@ class CompareMap extends Component {
       )
       .then((res) => {
         // then print response status
-        console.log(res.statusText);
         this.props.onLoadFeature(this.plotId);
       });
   };
@@ -62,7 +61,6 @@ class CompareMap extends Component {
     if (this.state.topLayers[this.state.selectedPlotIndex - 1] !== item) {
       let newLayers = this.state.topLayers.slice();
       if (layerinfo) {
-        console.log(layerinfo);
         newLayers[this.state.selectedPlotIndex - 1] = {
           item,
           layerinfo,
