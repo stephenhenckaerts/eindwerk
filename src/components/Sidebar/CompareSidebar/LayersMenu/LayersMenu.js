@@ -6,6 +6,7 @@ import satelliet from "../../../../assets/CompareSidebar/satelliet.svg";
 import tractor from "../../../../assets/CompareSidebar/tractor.svg";
 import back from "../../../../assets/CompareSidebar/back.svg";
 import plantheight from "../../../../assets/CompareSidebar/plantheight.png";
+import ndvi from "../../../../assets/CompareSidebar/NDVI.png";
 import MapEOService from "../../../MapEOService/MapEOService";
 
 import Snackbar from "../../../UI/Snackbar/Snackbar";
@@ -40,8 +41,17 @@ class LayersMenu extends Component {
   mapEOLoadedHandler = (response) => {
     if (this.props.feature) {
       response.forEach((plot) => {
-        //console.log(plot);
-        if (plot.name === "Wimmertingen") {
+        console.log(plot);
+        let convertedCoords = this.convertCoordinates(
+          plot.geom.coordinates[0][0][0],
+          plot.geom.coordinates[0][0][1]
+        );
+        if (
+          this.checkCoordinatesForPlot(
+            convertedCoords,
+            this.props.feature.coords
+          )
+        ) {
           this.setState({ mapEOLayer: plot });
         }
       });
@@ -62,6 +72,10 @@ class LayersMenu extends Component {
         return "Ortho";
       case "plantheight":
         return "Planthoogte";
+      case "ndre":
+        return "NDRE";
+      case "ndvi":
+        return "NDVI";
       default:
         return name;
     }
@@ -71,13 +85,45 @@ class LayersMenu extends Component {
     switch (name) {
       case "plantheight":
         return plantheight;
+      case "ndvi":
+        return ndvi;
       default:
         return satelliet;
     }
   }
 
+  checkCoordinatesForPlot(mapEOCoords, plotCoords) {
+    if (
+      (this.differenceBetweenCoordinates(plotCoords[0], mapEOCoords[0]) <
+        1000 ||
+        this.differenceBetweenCoordinates(plotCoords[2], mapEOCoords[0]) <
+          1000) &&
+      (this.differenceBetweenCoordinates(plotCoords[1], mapEOCoords[1]) <
+        1000 ||
+        this.differenceBetweenCoordinates(plotCoords[3], mapEOCoords[1]) < 1000)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  convertCoordinates(lon, lat) {
+    var x = (lon * 20037508.34) / 180;
+    var y = Math.log(Math.tan(((90 + lat) * Math.PI) / 360)) / (Math.PI / 180);
+    y = (y * 20037508.34) / 180;
+    return [x, y];
+  }
+
+  differenceBetweenCoordinates(num1, num2) {
+    if (num1 > num2) {
+      return num1 - num2;
+    } else {
+      return num2 - num1;
+    }
+  }
+
   render() {
-    //console.log(this.props.feature);
     let backMenu = null;
     let menu = (
       <Aux>
