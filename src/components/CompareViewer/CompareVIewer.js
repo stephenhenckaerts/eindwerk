@@ -106,6 +106,7 @@ class CompareViewer extends Component {
   }
 
   setMapEOMap(map) {
+    console.log(map.topLayer.layerinfo);
     const url = map.topLayer.layerinfo.layerData[0].url;
     const title = map.topLayer.layerinfo.layerData[0].title;
     const time =

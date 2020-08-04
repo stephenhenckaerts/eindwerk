@@ -5,6 +5,7 @@ import dronebeelden from "../../../../assets/CompareSidebar/dronebeelden.png";
 import satelliet from "../../../../assets/CompareSidebar/satelliet.svg";
 import tractor from "../../../../assets/CompareSidebar/tractor.svg";
 import back from "../../../../assets/CompareSidebar/back.svg";
+import plantheight from "../../../../assets/CompareSidebar/plantheight.png";
 import MapEOService from "../../../MapEOService/MapEOService";
 
 import Snackbar from "../../../UI/Snackbar/Snackbar";
@@ -24,6 +25,8 @@ class LayersMenu extends Component {
     this.snackbarRef = React.createRef();
 
     MapEOService.connectToMapEO(this.mapEOLoadedHandler);
+
+    this.createConvertNames();
   }
 
   clickHandler = (type) => {
@@ -35,11 +38,14 @@ class LayersMenu extends Component {
   };
 
   mapEOLoadedHandler = (response) => {
-    response.forEach((plot) => {
-      if (plot.name === "Wimmertingen") {
-        this.setState({ mapEOLayer: plot });
-      }
-    });
+    if (this.props.feature) {
+      response.forEach((plot) => {
+        //console.log(plot);
+        if (plot.name === "Wimmertingen") {
+          this.setState({ mapEOLayer: plot });
+        }
+      });
+    }
   };
 
   bodemScanClickHandler = () => {
@@ -50,7 +56,28 @@ class LayersMenu extends Component {
     }
   };
 
+  createConvertNames(name) {
+    switch (name) {
+      case "ortho":
+        return "Ortho";
+      case "plantheight":
+        return "Planthoogte";
+      default:
+        return name;
+    }
+  }
+
+  createConvertNameToImage(name) {
+    switch (name) {
+      case "plantheight":
+        return plantheight;
+      default:
+        return satelliet;
+    }
+  }
+
   render() {
+    //console.log(this.props.feature);
     let backMenu = null;
     let menu = (
       <Aux>
@@ -94,10 +121,11 @@ class LayersMenu extends Component {
           className={styles.Layer}
           onClick={() => this.props.menuItemClicked("MapEO", layer)}
         >
-          <img src={satelliet} alt="Sattelietbeelden" />
-          <p>
-            {layer.imageType.charAt(0).toUpperCase() + layer.imageType.slice(1)}
-          </p>
+          <img
+            src={this.createConvertNameToImage(layer.imageType)}
+            alt="Sattelietbeelden"
+          />
+          <p>{this.createConvertNames(layer.imageType)}</p>
         </div>
       ));
     }

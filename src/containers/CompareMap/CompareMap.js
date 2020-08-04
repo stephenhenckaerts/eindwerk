@@ -10,7 +10,6 @@ import Modal from "../../components/UI/Modal/Modal";
 import FeatureForm from "../../components/FeatureForm/FeatureForm";
 import * as actions from "../../store/actions/Index";
 import CompareSideBar from "../../components/Sidebar/CompareSidebar/CompareSidebar";
-import axios from "axios";
 
 class CompareMap extends Component {
   state = {
@@ -40,21 +39,6 @@ class CompareMap extends Component {
     if (index > 0 && index <= this.state.amountOfPlots) {
       this.setState({ selectedPlotIndex: index });
     }
-  };
-
-  uploadShapefileHandler = (shapefile) => {
-    axios
-      .post(
-        "http://localhost:3030/api/uploadShapefile/" + this.plotId,
-        shapefile,
-        {
-          // receive two parameter endpoint url ,form data
-        }
-      )
-      .then((res) => {
-        // then print response status
-        this.props.onLoadFeature(this.plotId);
-      });
   };
 
   menuItemClicked = (item, layerinfo) => {
@@ -101,8 +85,8 @@ class CompareMap extends Component {
         </Modal>
         <Sidebar>
           <CompareSideBar
+            plotId={this.plotId}
             feature={this.props.feature}
-            loading={this.props.loading}
             amountOfPlots={this.state.amountOfPlots}
             changeAmountOfPlots={this.changeAmountOfPlots}
             selectedPlotIndex={this.state.selectedPlotIndex}
@@ -113,7 +97,6 @@ class CompareMap extends Component {
         </Sidebar>
         <Viewer
           feature={this.props.feature}
-          uploadShapefile={this.uploadShapefileHandler}
           amountOfPlots={this.state.amountOfPlots}
           topLayers={this.state.topLayers}
           export={this.state.export}

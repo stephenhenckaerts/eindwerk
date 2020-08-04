@@ -9,7 +9,10 @@ import LayersMenu from "./LayersMenu/LayersMenu";
 const CompareSideBar = (props) => {
   return (
     <div className={styles.Sidebar}>
-      <NavLink to="/percelen" style={{ textDecoration: "none" }}>
+      <NavLink
+        to={"/perceel/" + props.plotId}
+        style={{ textDecoration: "none" }}
+      >
         <div className={styles.SidebarItem}>
           <img src={backLogo} alt="Percelen Logo" />
           <div className={styles.SidebarTitle}>
@@ -100,6 +103,7 @@ const CompareSideBar = (props) => {
         menuItemClicked={(item, layerinfo) =>
           props.menuItemClicked(item, layerinfo)
         }
+        feature={props.feature}
       />
     </div>
   );
