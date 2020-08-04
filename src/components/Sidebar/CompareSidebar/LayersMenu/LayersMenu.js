@@ -41,7 +41,6 @@ class LayersMenu extends Component {
   mapEOLoadedHandler = (response) => {
     if (this.props.feature) {
       response.forEach((plot) => {
-        console.log(plot);
         let convertedCoords = this.convertCoordinates(
           plot.geom.coordinates[0][0][0],
           plot.geom.coordinates[0][0][1]
@@ -86,6 +85,8 @@ class LayersMenu extends Component {
       case "plantheight":
         return plantheight;
       case "ndvi":
+        return ndvi;
+      case "ndre":
         return ndvi;
       default:
         return satelliet;

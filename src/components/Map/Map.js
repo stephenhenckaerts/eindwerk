@@ -561,13 +561,16 @@ class OlMap {
       }
     });
     if (style === null) {
-      style = [feature.get("Bodemtype"), this.getRandomColor()];
+      style = [
+        feature.get("Bodemtype"),
+        this.getRandomColor(feature.get("Bodemtype")),
+      ];
       this.featureStyles.push(style);
     }
     return new Style({
       stroke: new Stroke({
-        width: 2,
-        color: "#9c1616",
+        width: 1,
+        color: "#000000",
       }),
       fill: new Fill({ color: style[1] }),
     });
@@ -577,11 +580,72 @@ class OlMap {
     return this.featureStyles;
   }
 
-  getRandomColor() {
+  getRandomColor(type) {
+    if (!this.leemColors) {
+      this.leemColors = [
+        ["#A4CBAC", false],
+        ["#7DB588", false],
+        ["#4A8256", false],
+        ["#345B3C", false],
+        ["#1E3423", false],
+      ];
+    }
+    if (!this.zandLeemColors) {
+      this.zandLeemColors = [
+        ["#EB9A99", false],
+        ["#E06967", false],
+        ["#D53734", false],
+        ["#98211F", false],
+        ["#771A18", false],
+      ];
+    }
+    if (!this.kleiColors) {
+      this.kleiColors = [
+        ["#85E0FF", false],
+        ["#33CCFF", false],
+        ["#00A7E1", false],
+        ["#007AA3", false],
+        ["#004D66", false],
+      ];
+    }
     var letters = "0123456789ABCDEF";
     var color = "#";
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+    if (type === "OB" || type === "V") {
+      color += "000000";
+    } else if (type.includes("P")) {
+      console.log(this.leemColors);
+      debugger;
+      for (let i = 0; i < this.leemColors.length; i++) {
+        if (this.leemColors[i][1] === false) {
+          color = this.leemColors[i][0];
+          this.leemColors[i][1] = true;
+          break;
+        }
+      }
+    } else if (type.includes("L")) {
+      console.log(this.zandLeemColors);
+      debugger;
+      for (let i = 0; i < this.zandLeemColors.length; i++) {
+        if (this.zandLeemColors[i][1] === false) {
+          color = this.zandLeemColors[i][0];
+          this.zandLeemColors[i][1] = true;
+          break;
+        }
+      }
+    } else if (type.includes("E")) {
+      console.log(this.kleiColors);
+      debugger;
+      for (let i = 0; i < this.kleiColors.length; i++) {
+        if (this.kleiColors[i][1] === false) {
+          color = this.kleiColors[i][0];
+          this.kleiColors[i][1] = true;
+          break;
+        }
+      }
+    } else {
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
     }
     return color;
   }
