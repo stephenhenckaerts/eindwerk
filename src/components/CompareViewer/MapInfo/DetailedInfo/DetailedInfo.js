@@ -283,16 +283,17 @@ class DetailedInfo extends Component {
     }
     return (
       <Aux>
-        <div
-          className={styles.backButton}
-          onClick={() => this.props.returnClicked()}
-        >
-          <img src={backLogo} alt="Percelen Logo" />
-          <p>Terug</p>
+        <div className={styles.backButtonDiv}>
+          <div
+            className={styles.backButton}
+            onClick={() => this.props.returnClicked()}
+          >
+            <img src={backLogo} alt="Percelen Logo" />
+            <p>Terug</p>
+          </div>
         </div>
         <div className={styles.typeHeader}>
-          <h1>Type:</h1>
-          <p>{this.props.type}</p>
+          <h1>{this.props.type}</h1>
         </div>
         {detailedInfo}
       </Aux>

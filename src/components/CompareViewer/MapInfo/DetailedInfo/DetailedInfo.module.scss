@@ -1,18 +1,23 @@
 @import "../../../../styles/colours.scss";
 
+.backButtonDiv {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .backButton {
   display: flex;
   flex-direction: row;
 
-  padding: 0.1rem 2rem;
+  padding: 0rem 1rem;
+  margin-top: 0.5rem;
   margin-bottom: 1rem;
 
   cursor: pointer;
   justify-content: center;
-}
 
-.backButton:hover {
-  background-color: $yellow-hover;
+  width: fit-content;
 }
 
 .backButton > img {
