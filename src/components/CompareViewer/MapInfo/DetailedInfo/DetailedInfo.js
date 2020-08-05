@@ -206,20 +206,59 @@ class DetailedInfo extends Component {
     return substraatklasse;
   }
 
+  getSpecialType(type) {
+    let specialType = "";
+    switch (type) {
+      case "B":
+        specialType = "Bronzones";
+        break;
+      case "R":
+        specialType = "Stenige valleibodems";
+        break;
+      case "S":
+        specialType = "Lemige valleibodems";
+        break;
+      case "J":
+        specialType = "Rotsontsluitingen";
+        break;
+      case "X":
+        specialType = "Duinen";
+        break;
+      case "W":
+        specialType = "Hoogveen";
+        break;
+      case "V":
+        specialType = "Veengronden";
+        break;
+      case "M":
+        specialType = "Mergelgronden";
+        break;
+      case "N":
+        specialType = "Krijtgronden";
+        break;
+      case "OB":
+        specialType = "Bebouwde zone";
+        break;
+      case "OE":
+        specialType = "Groeve";
+        break;
+      case "ON":
+        specialType = "Opgehoogd terrein";
+        break;
+      case "OT":
+        specialType = "Vergraven terrein";
+        break;
+      default:
+        specialType = "Onbepaald gebied";
+        break;
+    }
+    return specialType;
+  }
+
   render() {
-    return (
-      <Aux>
-        <div
-          className={styles.backButton}
-          onClick={() => this.props.returnClicked()}
-        >
-          <img src={backLogo} alt="Percelen Logo" />
-          <p>Terug</p>
-        </div>
-        <div className={styles.typeHeader}>
-          <h1>Type:</h1>
-          <p>{this.props.type}</p>
-        </div>
+    let detailedInfo = null;
+    if (this.props.type.length > 2) {
+      detailedInfo = (
         <div className={styles.typeTable}>
           <div className={styles.typeTableElement}>
             <p>Textuurklasse:</p>
@@ -234,6 +273,28 @@ class DetailedInfo extends Component {
             <p>{this.getSubstraatKlasse(this.props.type)}</p>
           </div>
         </div>
+      );
+    } else {
+      detailedInfo = (
+        <div className={styles.specialType}>
+          {this.getSpecialType(this.props.type)}
+        </div>
+      );
+    }
+    return (
+      <Aux>
+        <div
+          className={styles.backButton}
+          onClick={() => this.props.returnClicked()}
+        >
+          <img src={backLogo} alt="Percelen Logo" />
+          <p>Terug</p>
+        </div>
+        <div className={styles.typeHeader}>
+          <h1>Type:</h1>
+          <p>{this.props.type}</p>
+        </div>
+        {detailedInfo}
       </Aux>
     );
   }

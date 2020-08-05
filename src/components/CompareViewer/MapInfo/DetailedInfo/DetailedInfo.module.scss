@@ -8,6 +8,7 @@
   margin-bottom: 1rem;
 
   cursor: pointer;
+  justify-content: center;
 }
 
 .backButton:hover {
@@ -61,4 +62,8 @@
   color: $dark-green;
 
   padding: 0rem 1rem;
+}
+
+.specialType {
+  padding: 1rem 1rem;
 }
