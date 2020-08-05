@@ -1,0 +1,64 @@
+@import "../../../../styles/colours.scss";
+
+.backButton {
+  display: flex;
+  flex-direction: row;
+
+  padding: 0.1rem 2rem;
+  margin-bottom: 1rem;
+
+  cursor: pointer;
+}
+
+.backButton:hover {
+  background-color: $yellow-hover;
+}
+
+.backButton > img {
+  width: 2.5rem;
+  margin-right: 1rem;
+}
+
+.backButton > p {
+  font-weight: 2rem;
+}
+
+.typeHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 1rem;
+}
+
+.typeHeader > h1 {
+  margin: 0;
+  margin-right: 1rem;
+  font-size: 1.2rem;
+
+  color: $dark-green;
+}
+
+.typeHeader > p {
+  margin: 0;
+}
+
+.typeTable {
+  display: flex;
+  flex-direction: column;
+
+  max-width: 25rem;
+}
+
+.typeTableElement {
+  display: flex;
+  margin: 0rem 1rem;
+}
+
+.typeTableElement > p:first-child {
+  font-weight: bold;
+  margin-right: 0.2rem;
+  color: $dark-green;
+
+  padding: 0rem 1rem;
+}

@@ -1,25 +1,36 @@
-import React from "react";
+import React, { Component } from "react";
+
+import ColorTypeInfo from "./ColorTypeInfo/ColorTypeInfo";
+import DetailedInfo from "./DetailedInfo/DetailedInfo";
 
 import styles from "./MapInfo.module.scss";
 
-const MapInfos = (props) => {
-  return (
-    <div className={styles.InfoDiv}>
-      {props.colors
-        ? props.colors.map((color) => {
-            return (
-              <div key={color[0]} className={styles.ColorType}>
-                <div
-                  className={styles.ColorTypeSquare}
-                  style={{ backgroundColor: color[1] }}
-                ></div>
-                <p>{color[0]}</p>
-              </div>
-            );
-          })
-        : null}
-    </div>
-  );
-};
+class MapInfos extends Component {
+  state = {
+    colorType: null,
+  };
+
+  colorTypeClicked(type) {
+    this.setState({ colorType: type });
+  }
+
+  render() {
+    let mapInfo = (
+      <ColorTypeInfo
+        colorTypeClicked={(type) => this.colorTypeClicked(type)}
+        colors={this.props.colors}
+      />
+    );
+    if (this.state.colorType) {
+      mapInfo = (
+        <DetailedInfo
+          type={this.state.colorType}
+          returnClicked={() => this.colorTypeClicked(null)}
+        />
+      );
+    }
+    return <div className={styles.InfoDiv}>{mapInfo}</div>;
+  }
+}
 
 export default MapInfos;

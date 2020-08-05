@@ -613,8 +613,6 @@ class OlMap {
     if (type === "OB" || type === "V") {
       color += "000000";
     } else if (type.includes("P")) {
-      console.log(this.leemColors);
-      debugger;
       for (let i = 0; i < this.leemColors.length; i++) {
         if (this.leemColors[i][1] === false) {
           color = this.leemColors[i][0];
@@ -623,8 +621,6 @@ class OlMap {
         }
       }
     } else if (type.includes("L")) {
-      console.log(this.zandLeemColors);
-      debugger;
       for (let i = 0; i < this.zandLeemColors.length; i++) {
         if (this.zandLeemColors[i][1] === false) {
           color = this.zandLeemColors[i][0];
@@ -633,8 +629,6 @@ class OlMap {
         }
       }
     } else if (type.includes("E")) {
-      console.log(this.kleiColors);
-      debugger;
       for (let i = 0; i < this.kleiColors.length; i++) {
         if (this.kleiColors[i][1] === false) {
           color = this.kleiColors[i][0];

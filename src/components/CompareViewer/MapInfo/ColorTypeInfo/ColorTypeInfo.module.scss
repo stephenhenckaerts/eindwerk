@@ -1,0 +1,35 @@
+@import "../../../../styles/colours.scss";
+
+.ColorType {
+  margin: 0rem 0rem;
+  padding: 0.3rem 0.8rem;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  cursor: pointer;
+}
+
+.ColorType:first-child {
+  margin-top: 0;
+}
+
+.ColorType:last-child {
+  margin-bottom: 0;
+  border-radius: 0 0 10px 0;
+}
+
+.ColorType:hover {
+  background-color: $yellow-hover;
+}
+
+.ColorTypeSquare {
+  width: 2rem;
+  height: 2rem;
+}
+
+.ColorType > p {
+  margin: 0;
+  margin-left: 1rem;
+}

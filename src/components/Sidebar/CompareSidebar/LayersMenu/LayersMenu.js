@@ -61,7 +61,7 @@ class LayersMenu extends Component {
     if (this.state.mapEOLayer) {
       this.setState({ showMapEOLayer: true });
     } else {
-      this.clickHandler();
+      this.clickHandler("Dronebeelden");
     }
   };
 
