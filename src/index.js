@@ -11,6 +11,8 @@ import mapDetailsReducer from "./store/reducer/MapDetails";
 import featuresReducer from "./store/reducer/Features";
 import plotReducer from "./store/reducer/Plot";
 
+import "./styles.css";
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({

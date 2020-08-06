@@ -68,7 +68,7 @@ class LayersMenu extends Component {
   createConvertNames(name) {
     switch (name) {
       case "ortho":
-        return "Ortho";
+        return "Luchtfoto";
       case "plantheight":
         return "Planthoogte";
       case "ndre":

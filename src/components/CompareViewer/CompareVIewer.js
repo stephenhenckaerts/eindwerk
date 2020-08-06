@@ -72,8 +72,8 @@ class CompareViewer extends Component {
       newLayers[index] = (
         <MapDatePicker
           map={type}
-          changeDateHandler={(amount, map) =>
-            this.changeDateHandler(amount, map)
+          changeDateHandler={(amount, map, i) =>
+            this.changeDateHandler(amount, map, i)
           }
         />
       );
@@ -106,7 +106,6 @@ class CompareViewer extends Component {
   }
 
   setMapEOMap(map) {
-    console.log(map.topLayer.layerinfo);
     const url = map.topLayer.layerinfo.layerData[0].url;
     const title = map.topLayer.layerinfo.layerData[0].title;
     const time =
@@ -125,15 +124,22 @@ class CompareViewer extends Component {
     );
   }
 
-  changeDateHandler = (amount, map) => {
-    map.topLayer.selectedDate += amount;
-    if (
-      map.topLayer.selectedDate >
-      map.topLayer.layerinfo.layerTimes.length - 1
-    )
-      map.topLayer.selectedDate = 0;
-    if (map.topLayer.selectedDate < 0)
-      map.topLayer.selectedDate = map.topLayer.layerinfo.layerTimes.length - 1;
+  changeDateHandler = (amount, map, indexed) => {
+    if (indexed === undefined) {
+      map.topLayer.selectedDate += amount;
+      if (
+        map.topLayer.selectedDate >
+        map.topLayer.layerinfo.layerTimes.length - 1
+      )
+        map.topLayer.selectedDate = 0;
+      if (map.topLayer.selectedDate < 0)
+        map.topLayer.selectedDate =
+          map.topLayer.layerinfo.layerTimes.length - 1;
+    } else {
+      if (map.topLayer.layerinfo.layerTimes.length > indexed && indexed > 0) {
+        map.topLayer.selectedDate = indexed;
+      }
+    }
     map.removeTopLayer();
     this.setMapEOMap(map);
     this.updateMapInfo(map.index, map);
