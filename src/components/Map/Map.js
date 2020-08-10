@@ -553,6 +553,9 @@ class OlMap {
       source: vectorSource,
     });
     vector.set("name", isSlideLayer ? "slideLayer" : "topLayer");
+    if (isSlideLayer) {
+      vector.setZIndex(5);
+    }
     this.map.addLayer(vector);
   }
 
@@ -657,7 +660,7 @@ class OlMap {
     this.map.addLayer(vector);
   }*/
 
-  addMapEOLayer(geoserverHash, url, layerName, time) {
+  addMapEOLayer(geoserverHash, url, layerName, time, isSlideLayer) {
     let source = new TileWMS({
       url: url,
       params: {
@@ -695,7 +698,7 @@ class OlMap {
       };
       client.send();
     });
-    tileLayer.set("name", "topLayer");
+    tileLayer.set("name", isSlideLayer ? "slideLayer" : "topLayer");
     this.map.addLayer(tileLayer);
   }
 
@@ -718,6 +721,16 @@ class OlMap {
         if (layer.get("name") === (isSlideLayer ? "slideLayer" : "topLayer")) {
           layer.getSource().clear();
           this.map.removeLayer(layer);
+        }
+      }
+    });
+  }
+
+  changeOpacitySlideLayer(amount) {
+    this.map.getLayers().forEach((layer) => {
+      if (layer !== undefined) {
+        if (layer.get("name") === "slideLayer") {
+          layer.setOpacity(amount / 100);
         }
       }
     });

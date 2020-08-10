@@ -116,6 +116,7 @@ class CompareMap extends Component {
           export={this.state.export}
           changeDateHandler={this.changeDateHandler}
           slideView={this.state.slideView}
+          slideAmount={this.state.slideAmount}
         ></Viewer>
         <MapEditor></MapEditor>
       </Aux>

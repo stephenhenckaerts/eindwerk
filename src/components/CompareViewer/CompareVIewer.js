@@ -59,25 +59,35 @@ class CompareViewer extends Component {
         this.updateMapInfo(map.index, map.topLayer);
       }
     }
-    if (this.props.slideView && map.index === 0) {
-      if (this.props.topLayers[1] !== map.slideLayer) {
-        map.slideLayer = this.props.topLayers[1];
-        map.removeTopLayer(true);
-        if (map.slideLayer === "bodemkaart") {
-          const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
-          map.addTopLayer(url, true);
-          setTimeout(() => {
-            this.updateMapInfo(map.index, map.topLayer, map.getFeatureStyles());
-          }, 100);
-        } else if (map.slideLayer.item && map.topLayer.item === "MapEO") {
-          this.setMapEOMap(map);
-          this.updateMapInfo(map.index, map);
-        } else if (map.slideLayer === "satteliet") {
-          map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
-        } else if (map.slideLayer === "normal") {
-          this.updateMapInfo(map.index, map.topLayer);
+    if (map.index === 0) {
+      if (this.props.slideView) {
+        if (this.props.topLayers[1] !== map.slideLayer) {
+          map.slideLayer = this.props.topLayers[1];
+          map.removeTopLayer(true);
+          if (map.slideLayer === "bodemkaart") {
+            const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
+            map.addTopLayer(url, true);
+            setTimeout(() => {
+              this.updateMapInfo(
+                map.index,
+                map.topLayer,
+                map.getFeatureStyles()
+              );
+            }, 100);
+          } else if (map.slideLayer.item && map.slideLayer.item === "MapEO") {
+            this.setMapEOMap(map, true);
+            this.updateMapInfo(map.index, map);
+          } else if (map.slideLayer === "satteliet") {
+            map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
+          } else if (map.slideLayer === "normal") {
+            this.updateMapInfo(map.index, map.topLayer);
+          }
         }
+      } else {
+        map.removeTopLayer(true);
+        map.slideLayer = "normal";
       }
+      map.changeOpacitySlideLayer(this.props.slideAmount);
     }
   }
 
@@ -126,22 +136,26 @@ class CompareViewer extends Component {
     this.Maps[0].exportMap();
   }
 
-  setMapEOMap(map) {
-    const url = map.topLayer.layerinfo.layerData[0].url;
-    const title = map.topLayer.layerinfo.layerData[0].title;
-    const time =
-      map.topLayer.layerinfo.layerTimes[
-        map.topLayer.selectedDate
-      ].date.substring(
+  setMapEOMap(map, isSlideLayer) {
+    let layer = null;
+    if (isSlideLayer) {
+      layer = map.slideLayer;
+    } else {
+      layer = map.topLayer;
+    }
+    let url = layer.layerinfo.layerData[0].url;
+    let title = layer.layerinfo.layerData[0].title;
+    let time =
+      layer.layerinfo.layerTimes[layer.selectedDate].date.substring(
         0,
-        map.topLayer.layerinfo.layerTimes[map.topLayer.selectedDate].date
-          .length - 1
+        layer.layerinfo.layerTimes[layer.selectedDate].date.length - 1
       ) + ".000Z";
     map.addMapEOLayer(
       MapEOService.getCookies().cookies.GeoserverHash,
       url,
       title,
-      time
+      time,
+      isSlideLayer
     );
   }
 
