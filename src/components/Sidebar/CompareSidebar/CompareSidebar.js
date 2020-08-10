@@ -37,7 +37,19 @@ const CompareSideBar = (props) => {
     </div>
   );
   if (props.slideView) {
-    plotPicker = null;
+    plotPicker = (
+      <div className={styles.SidebarItem}>
+        <input
+          className={styles.Slider}
+          type="range"
+          min="0"
+          max="100"
+          value={props.slideAmount}
+          onChange={props.slideAmountChanged}
+          step="1"
+        />
+      </div>
+    );
   }
   return (
     <div className={styles.Sidebar}>

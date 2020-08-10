@@ -114,3 +114,22 @@
 .LayersMenu {
   flex: 1;
 }
+
+.Slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 1rem;
+  background: $yellow;
+  color: red;
+  cursor: pointer;
+
+  margin-bottom: 1rem;
+}
+
+.Slider::-moz-range-thumb {
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #43ac46;
+  cursor: pointer;
+}

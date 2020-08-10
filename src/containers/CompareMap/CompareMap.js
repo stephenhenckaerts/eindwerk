@@ -17,6 +17,7 @@ class CompareMap extends Component {
     selectedPlotIndex: 1,
     topLayers: ["normal", "normal", "normal", "normal"],
     slideView: false,
+    slideAmount: 100,
     export: false,
   };
 
@@ -62,6 +63,10 @@ class CompareMap extends Component {
     this.setState({ slideView: !this.state.slideView, amountOfPlots: 2 });
   };
 
+  slideAmountChangedHandler = (event) => {
+    this.setState({ slideAmount: event.target.value });
+  };
+
   exportButtonHandler = () => {
     this.setState({ export: true });
   };
@@ -100,6 +105,8 @@ class CompareMap extends Component {
             exportButtonHandler={this.exportButtonHandler}
             slideViewClicked={this.slideViewClicked}
             slideView={this.state.slideView}
+            slideAmount={this.state.slideAmount}
+            slideAmountChanged={this.slideAmountChangedHandler}
           />
         </Sidebar>
         <Viewer

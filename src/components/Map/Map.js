@@ -520,7 +520,7 @@ class OlMap {
     return this.topLayer;
   }
 
-  addTopLayer(layerUrl) {
+  addTopLayer(layerUrl, isSlideLayer) {
     let vectorSource = new VectorSource({
       format: new GeoJSON(),
       minScale: 15000000,
@@ -552,7 +552,7 @@ class OlMap {
     let vector = new Vector({
       source: vectorSource,
     });
-    vector.set("name", "topLayer");
+    vector.set("name", isSlideLayer ? "slideLayer" : "topLayer");
     this.map.addLayer(vector);
   }
 
@@ -712,10 +712,10 @@ class OlMap {
     this.map.addLayer(imageLayer);
   }
 
-  removeTopLayer() {
+  removeTopLayer(isSlideLayer) {
     this.map.getLayers().forEach((layer) => {
       if (layer !== undefined) {
-        if (layer.get("name") === "topLayer") {
+        if (layer.get("name") === (isSlideLayer ? "slideLayer" : "topLayer")) {
           layer.getSource().clear();
           this.map.removeLayer(layer);
         }
