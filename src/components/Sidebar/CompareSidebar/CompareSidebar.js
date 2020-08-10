@@ -2,11 +2,43 @@ import React from "react";
 
 import styles from "./CompareSidebar.module.scss";
 import backLogo from "../../../assets/Sidebar/back.png";
+import compareLogo from "../../../assets/CompareSidebar/compare.png";
+import compareSelectedLogo from "../../../assets/CompareSidebar/compareSelected.png";
 import { NavLink } from "react-router-dom";
 import undoLogo from "../../../assets/CompareSidebar/undo.png";
 import LayersMenu from "./LayersMenu/LayersMenu";
 
 const CompareSideBar = (props) => {
+  let plotPicker = (
+    <div className={styles.SidebarItem}>
+      <div className={styles.SidebarPlotAmount}>
+        {props.amountOfPlots > 1 ? (
+          <p
+            className={styles.SidebarPlotAmountArrow}
+            onClick={() => props.changeAmountOfPlots(-1)}
+          >
+            &lt;
+          </p>
+        ) : (
+          <p></p>
+        )}
+        <p>{props.amountOfPlots}</p>
+        {props.amountOfPlots < 4 ? (
+          <p
+            className={styles.SidebarPlotAmountArrow}
+            onClick={() => props.changeAmountOfPlots(1)}
+          >
+            >
+          </p>
+        ) : (
+          <p></p>
+        )}
+      </div>
+    </div>
+  );
+  if (props.slideView) {
+    plotPicker = null;
+  }
   return (
     <div className={styles.Sidebar}>
       <NavLink
@@ -20,32 +52,7 @@ const CompareSideBar = (props) => {
           </div>
         </div>
       </NavLink>
-      <div className={styles.SidebarItem}>
-        <div className={styles.SidebarPlotAmount}>
-          {props.amountOfPlots > 1 ? (
-            <p
-              className={styles.SidebarPlotAmountArrow}
-              onClick={() => props.changeAmountOfPlots(-1)}
-            >
-              &lt;
-            </p>
-          ) : (
-            <p></p>
-          )}
-          <p>{props.amountOfPlots}</p>
-          {props.amountOfPlots < 4 ? (
-            <p
-              className={styles.SidebarPlotAmountArrow}
-              onClick={() => props.changeAmountOfPlots(1)}
-            >
-              >
-            </p>
-          ) : (
-            <p></p>
-          )}
-        </div>
-      </div>
-
+      {plotPicker}
       <div className={styles.SidebarItem}>
         <div className={styles.ActivatedPlot}>
           <div
@@ -85,6 +92,23 @@ const CompareSideBar = (props) => {
               onClick={() => props.setSelectedPlot(4)}
             ></div>
           ) : null}
+        </div>
+      </div>
+      <div className={styles.SidebarItem}>
+        <div
+          className={[
+            styles.ExportButton,
+            props.slideView ? styles.ExportButtonSelected : null,
+          ].join(" ")}
+          onClick={() => props.slideViewClicked()}
+        >
+          <img
+            src={props.slideView ? compareSelectedLogo : compareLogo}
+            alt="Percelen Logo"
+          />
+          <p>
+            <strong>SLIDE</strong>
+          </p>
         </div>
       </div>
       <div className={styles.SidebarItem}>

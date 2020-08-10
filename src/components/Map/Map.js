@@ -601,7 +601,6 @@ class OlMap {
         ["#474A2C", false],
       ];
     }
-    var letters = "0123456789ABCDEF";
     var color = "#";
     if (type === "OB" || type === "V") {
       color += "000000";

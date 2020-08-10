@@ -92,8 +92,17 @@
   cursor: pointer;
 }
 
+.ExportButtonSelected {
+  background-color: $yellow;
+  color: #166841;
+}
+
 .ExportButton:hover {
   background-color: #105f39;
+}
+
+.ExportButtonSelected:hover {
+  background-color: $yellow-hover-dark;
 }
 
 .ExportButton > img {

@@ -58,6 +58,9 @@ class CompareViewer extends Component {
         this.updateMapInfo(map.index, map.topLayer);
       }
     }
+    if (this.props.slideView) {
+      console.log("ahahah");
+    }
   }
 
   updateMapInfo(index, type, colors) {
@@ -156,14 +159,18 @@ class CompareViewer extends Component {
       this.exportMap();
     }
     return (
-      <div className={styles.MapsDiv}>
+      <div className={[styles.MapsDiv, styles.MapGridView].join(" ")}>
         <div className={styles.Map} id="map1">
-          <div className={styles.Square}>{this.state.mapInfos[0]}</div>
+          <div className={this.props.slideView ? styles.Slide : styles.Square}>
+            {this.state.mapInfos[0]}
+          </div>
         </div>
         <div
           className={[
             styles.Map,
-            this.props.amountOfPlots < 2 ? styles.invisible : null,
+            this.props.amountOfPlots < 2 || this.props.slideView
+              ? styles.invisible
+              : null,
           ].join(" ")}
           id="map2"
         >
@@ -172,7 +179,9 @@ class CompareViewer extends Component {
         <div
           className={[
             styles.Map,
-            this.props.amountOfPlots < 3 ? styles.invisible : null,
+            this.props.amountOfPlots < 3 || this.props.slideView
+              ? styles.invisible
+              : null,
           ].join(" ")}
           id="map3"
         >
@@ -181,7 +190,9 @@ class CompareViewer extends Component {
         <div
           className={[
             styles.Map,
-            this.props.amountOfPlots < 4 ? styles.invisible : null,
+            this.props.amountOfPlots < 4 || this.props.slideView
+              ? styles.invisible
+              : null,
           ].join(" ")}
           id="map4"
         >

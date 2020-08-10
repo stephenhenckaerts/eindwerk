@@ -1,11 +1,13 @@
 @import "../../styles/colours.scss";
 
 .MapsDiv {
+}
+
+.MapGridView {
   width: calc(100vw - 12em);
   height: 100vh;
   position: fixed;
   margin-left: 12em;
-
   display: inline-grid;
   vertical-align: top;
 
@@ -31,4 +33,10 @@
 .Square {
   position: absolute;
   z-index: 100;
+}
+
+.Slide {
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
