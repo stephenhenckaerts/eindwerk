@@ -123,13 +123,14 @@
   background: $yellow;
   color: red;
   cursor: pointer;
+  border-radius: 4px;
 
-  margin-bottom: 1rem;
+  margin: 1rem 0rem;
 }
 
 .Slider::-moz-range-thumb {
   width: 1.5rem;
   height: 1.5rem;
-  background: #43ac46;
+  background: #2a9b2e;
   cursor: pointer;
 }

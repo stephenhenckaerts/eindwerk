@@ -67,27 +67,20 @@ class CompareViewer extends Component {
           if (map.slideLayer === "bodemkaart") {
             const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
             map.addTopLayer(url, true);
-            setTimeout(() => {
-              this.updateMapInfo(
-                map.index,
-                map.topLayer,
-                map.getFeatureStyles()
-              );
-            }, 100);
           } else if (map.slideLayer.item && map.slideLayer.item === "MapEO") {
             this.setMapEOMap(map, true);
-            this.updateMapInfo(map.index, map);
           } else if (map.slideLayer === "satteliet") {
             map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
           } else if (map.slideLayer === "normal") {
             this.updateMapInfo(map.index, map.topLayer);
           }
         }
+        map.changeOpacitySlideLayer(this.props.slideAmount);
+        this.updateMapInfoSlide();
       } else {
         map.removeTopLayer(true);
         map.slideLayer = "normal";
       }
-      map.changeOpacitySlideLayer(this.props.slideAmount);
     }
   }
 
@@ -112,6 +105,10 @@ class CompareViewer extends Component {
       newLayers[index] = null;
     }
     this.setState({ mapInfos: newLayers });
+  }
+
+  updateMapInfoSlide() {
+    console.log();
   }
 
   resetMapLayers(map) {

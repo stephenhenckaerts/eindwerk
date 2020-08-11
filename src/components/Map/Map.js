@@ -699,6 +699,9 @@ class OlMap {
       client.send();
     });
     tileLayer.set("name", isSlideLayer ? "slideLayer" : "topLayer");
+    if (isSlideLayer) {
+      tileLayer.setZIndex(5);
+    }
     this.map.addLayer(tileLayer);
   }
 

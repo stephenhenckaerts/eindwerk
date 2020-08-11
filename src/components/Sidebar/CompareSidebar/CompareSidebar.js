@@ -28,7 +28,7 @@ const CompareSideBar = (props) => {
             className={styles.SidebarPlotAmountArrow}
             onClick={() => props.changeAmountOfPlots(1)}
           >
-            >
+            &gt;
           </p>
         ) : (
           <p></p>

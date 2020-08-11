@@ -13,6 +13,9 @@
   align-items: center;
 
   padding: 0 1rem;
+
+  position: fixed;
+  z-index: 200;
 }
 
 .InfoDiv > p {
@@ -36,9 +39,4 @@
   border: none;
 
   cursor: pointer;
-}
-
-.react-datepicker__day.react-datepicker__day--keyboard-selected {
-  background: none;
-  color: black;
 }

@@ -17,7 +17,7 @@ class CompareMap extends Component {
     selectedPlotIndex: 1,
     topLayers: ["normal", "normal", "normal", "normal"],
     slideView: false,
-    slideAmount: 100,
+    slideAmount: 50,
     export: false,
   };
 

@@ -106,7 +106,7 @@ class MapDatePicker extends Component {
             this.handleArrowClicked(1);
           }}
         >
-          >
+          &gt;
         </p>
       </div>
     );
