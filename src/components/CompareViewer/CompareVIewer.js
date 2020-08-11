@@ -11,6 +11,7 @@ import MapDatePicker from "./MapDatePicker/MapDatePicker";
 class CompareViewer extends Component {
   state = {
     mapInfos: [null, null, null, null],
+    slideInfo: null,
   };
 
   constructor(props) {
@@ -31,6 +32,19 @@ class CompareViewer extends Component {
   componentDidMount() {
     for (let i = 0; i < this.Maps.length; i++) {
       this.addMapToElement(this.Maps[i], "map" + (i + 1));
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    Object.entries(this.props).forEach(
+      ([key, val]) =>
+        prevProps[key] !== val && console.log(`Prop '${key}' changed`)
+    );
+    if (this.state) {
+      Object.entries(this.state).forEach(
+        ([key, val]) =>
+          prevState[key] !== val && console.log(`State '${key}' changed`)
+      );
     }
   }
 
@@ -66,9 +80,13 @@ class CompareViewer extends Component {
           map.removeTopLayer(true);
           if (map.slideLayer === "bodemkaart") {
             const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
+            setTimeout(() => {
+              this.updateMapInfoSlide(map.topLayer, map.getFeatureStyles());
+            }, 100);
             map.addTopLayer(url, true);
           } else if (map.slideLayer.item && map.slideLayer.item === "MapEO") {
             this.setMapEOMap(map, true);
+            this.updateMapInfoSlide(map);
           } else if (map.slideLayer === "satteliet") {
             map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
           } else if (map.slideLayer === "normal") {
@@ -76,10 +94,10 @@ class CompareViewer extends Component {
           }
         }
         map.changeOpacitySlideLayer(this.props.slideAmount);
-        this.updateMapInfoSlide();
       } else {
         map.removeTopLayer(true);
         map.slideLayer = "normal";
+        this.updateMapInfoSlide("normal");
       }
     }
   }
@@ -107,11 +125,33 @@ class CompareViewer extends Component {
     this.setState({ mapInfos: newLayers });
   }
 
-  updateMapInfoSlide() {
-    console.log();
+  updateMapInfoSlide(type, colors) {
+    let newLayer = this.state.slideInfo;
+    if (type === "bodemkaart") {
+      newLayer = <MapInfo type={type} colors={colors} />;
+    } else if (
+      type.topLayer &&
+      type.topLayer.item &&
+      type.topLayer.item === "MapEO"
+    ) {
+      newLayer = (
+        <MapDatePicker
+          map={type}
+          changeDateHandler={(amount, map, i) =>
+            this.changeDateHandler(amount, map, i)
+          }
+        />
+      );
+    } else {
+      newLayer = null;
+    }
+    if (newLayer !== this.state.slideInfo) {
+      this.setState({ slideInfo: newLayer });
+    }
   }
 
   resetMapLayers(map) {
+    console.log("ahahha");
     map.updateSize();
     map.setBackgroundTileLayer(this.props.type);
     map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
@@ -184,11 +224,9 @@ class CompareViewer extends Component {
         this.resetMapLayers(map);
       });
     }, 100);
-    if (this.props.export) {
-      this.exportMap();
-    }
     return (
       <div className={[styles.MapsDiv, styles.MapGridView].join(" ")}>
+        {this.state.slideInfo}
         <div className={styles.Map} id="map1">
           <div className={this.props.slideView ? styles.Slide : styles.Square}>
             {this.state.mapInfos[0]}
