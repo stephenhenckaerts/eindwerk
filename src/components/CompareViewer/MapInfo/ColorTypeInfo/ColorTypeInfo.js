@@ -12,7 +12,10 @@ const ColorTypesInfo = (props) => {
             return (
               <div
                 key={color[0]}
-                className={styles.ColorType}
+                className={[
+                  styles.ColorType,
+                  props.slide ? styles.Slide : null,
+                ].join(" ")}
                 onClick={() => props.colorTypeClicked(color[0])}
               >
                 <div

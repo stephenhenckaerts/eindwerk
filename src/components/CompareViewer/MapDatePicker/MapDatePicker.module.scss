@@ -13,9 +13,12 @@
   align-items: center;
 
   padding: 0 1rem;
+}
 
-  position: fixed;
-  z-index: 200;
+.Slide {
+  bottom: 97px;
+  right: 200px;
+  position: relative;
 }
 
 .InfoDiv > p {

@@ -15,13 +15,12 @@ class MapDatePicker extends Component {
   componentDidMount() {
     let date = new Date(
       this.convertDate(
-        this.props.map.topLayer.layerinfo.layerTimes[
-          this.props.map.topLayer.selectedDate
-        ].date
+        this.props.layer.layerinfo.layerTimes[this.props.layer.selectedDate]
+          .date
       )
     );
     let availableDates = [];
-    this.props.map.topLayer.layerinfo.layerTimes.forEach((layerTime) => {
+    this.props.layer.layerinfo.layerTimes.forEach((layerTime) => {
       availableDates.push(parseISO(this.convertDate(layerTime.date)));
     });
     this.setState({ startDate: date, allowedDates: availableDates });
@@ -44,16 +43,12 @@ class MapDatePicker extends Component {
     } else {
       formatedDate += parseInt(date.getDate());
     }
-    for (
-      let i = 0;
-      i < this.props.map.topLayer.layerinfo.layerTimes.length;
-      i++
-    ) {
+    for (let i = 0; i < this.props.layer.layerinfo.layerTimes.length; i++) {
       let arrayDate = this.convertDate(
-        this.props.map.topLayer.layerinfo.layerTimes[i].date
+        this.props.layer.layerinfo.layerTimes[i].date
       );
       if (arrayDate === formatedDate) {
-        this.props.changeDateHandler(0, this.props.map, i);
+        this.props.changeDateHandler(0, this.props.map, i, this.props.slide);
         break;
       }
     }
@@ -61,20 +56,25 @@ class MapDatePicker extends Component {
   };
 
   handleArrowClicked = (amount) => {
-    this.props.changeDateHandler(amount, this.props.map);
+    console.log(this.props.slide);
+    this.props.changeDateHandler(
+      amount,
+      this.props.map,
+      undefined,
+      this.props.slide
+    );
     this.updateDate();
   };
 
   updateDate = () => {
     let date = new Date(
       this.convertDate(
-        this.props.map.topLayer.layerinfo.layerTimes[
-          this.props.map.topLayer.selectedDate
-        ].date
+        this.props.layer.layerinfo.layerTimes[this.props.layer.selectedDate]
+          .date
       )
     );
     let availableDates = [];
-    this.props.map.topLayer.layerinfo.layerTimes.forEach((layerTime) => {
+    this.props.layer.layerinfo.layerTimes.forEach((layerTime) => {
       availableDates.push(parseISO(this.convertDate(layerTime.date)));
     });
     this.setState({ startDate: date });
@@ -86,7 +86,12 @@ class MapDatePicker extends Component {
 
   render() {
     return (
-      <div className={styles.InfoDiv}>
+      <div
+        className={[
+          styles.InfoDiv,
+          this.props.slide ? styles.Slide : null,
+        ].join(" ")}
+      >
         <p className={styles.Arrow} onClick={() => this.handleArrowClicked(-1)}>
           &lt;
         </p>

@@ -35,19 +35,6 @@ class CompareViewer extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    Object.entries(this.props).forEach(
-      ([key, val]) =>
-        prevProps[key] !== val && console.log(`Prop '${key}' changed`)
-    );
-    if (this.state) {
-      Object.entries(this.state).forEach(
-        ([key, val]) =>
-          prevState[key] !== val && console.log(`State '${key}' changed`)
-      );
-    }
-  }
-
   addMapToElement(map, element) {
     map.setBackgroundTileLayer(this.props.type);
     map.map.setTarget(element);
@@ -81,7 +68,7 @@ class CompareViewer extends Component {
           if (map.slideLayer === "bodemkaart") {
             const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
             setTimeout(() => {
-              this.updateMapInfoSlide(map.topLayer, map.getFeatureStyles());
+              this.updateMapInfoSlide(map.slideLayer, map.getFeatureStyles());
             }, 100);
             map.addTopLayer(url, true);
           } else if (map.slideLayer.item && map.slideLayer.item === "MapEO") {
@@ -90,7 +77,7 @@ class CompareViewer extends Component {
           } else if (map.slideLayer === "satteliet") {
             map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
           } else if (map.slideLayer === "normal") {
-            this.updateMapInfo(map.index, map.topLayer);
+            this.updateMapInfoSlide(map.index, map.topLayer);
           }
         }
         map.changeOpacitySlideLayer(this.props.slideAmount);
@@ -114,6 +101,7 @@ class CompareViewer extends Component {
       newLayers[index] = (
         <MapDatePicker
           map={type}
+          layer={type.topLayer}
           changeDateHandler={(amount, map, i) =>
             this.changeDateHandler(amount, map, i)
           }
@@ -128,18 +116,20 @@ class CompareViewer extends Component {
   updateMapInfoSlide(type, colors) {
     let newLayer = this.state.slideInfo;
     if (type === "bodemkaart") {
-      newLayer = <MapInfo type={type} colors={colors} />;
+      newLayer = <MapInfo type={type} colors={colors} slide="slide" />;
     } else if (
-      type.topLayer &&
-      type.topLayer.item &&
-      type.topLayer.item === "MapEO"
+      type.slideLayer &&
+      type.slideLayer.item &&
+      type.slideLayer.item === "MapEO"
     ) {
       newLayer = (
         <MapDatePicker
           map={type}
-          changeDateHandler={(amount, map, i) =>
-            this.changeDateHandler(amount, map, i)
+          layer={type.slideLayer}
+          changeDateHandler={(amount, map, i, slide) =>
+            this.changeDateHandler(amount, map, i, slide)
           }
+          slide="slide"
         />
       );
     } else {
@@ -151,7 +141,6 @@ class CompareViewer extends Component {
   }
 
   resetMapLayers(map) {
-    console.log("ahahha");
     map.updateSize();
     map.setBackgroundTileLayer(this.props.type);
     map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
@@ -196,25 +185,49 @@ class CompareViewer extends Component {
     );
   }
 
-  changeDateHandler = (amount, map, indexed) => {
-    if (indexed === undefined) {
-      map.topLayer.selectedDate += amount;
-      if (
-        map.topLayer.selectedDate >
-        map.topLayer.layerinfo.layerTimes.length - 1
-      )
-        map.topLayer.selectedDate = 0;
-      if (map.topLayer.selectedDate < 0)
-        map.topLayer.selectedDate =
-          map.topLayer.layerinfo.layerTimes.length - 1;
-    } else {
-      if (map.topLayer.layerinfo.layerTimes.length > indexed && indexed > 0) {
-        map.topLayer.selectedDate = indexed;
+  changeDateHandler = (amount, map, indexed, slide) => {
+    if (slide === "slide") {
+      if (indexed === undefined) {
+        map.slideLayer.selectedDate += amount;
+        if (
+          map.slideLayer.selectedDate >
+          map.slideLayer.layerinfo.layerTimes.length - 1
+        )
+          map.slideLayer.selectedDate = 0;
+        if (map.slideLayer.selectedDate < 0)
+          map.slideLayer.selectedDate =
+            map.slideLayer.layerinfo.layerTimes.length - 1;
+      } else {
+        if (
+          map.slideLayer.layerinfo.layerTimes.length > indexed &&
+          indexed > 0
+        ) {
+          map.slideLayer.selectedDate = indexed;
+        }
       }
+      map.removeTopLayer(true);
+      this.setMapEOMap(map, true);
+      this.updateMapInfoSlide(map);
+    } else {
+      if (indexed === undefined) {
+        map.topLayer.selectedDate += amount;
+        if (
+          map.topLayer.selectedDate >
+          map.topLayer.layerinfo.layerTimes.length - 1
+        )
+          map.topLayer.selectedDate = 0;
+        if (map.topLayer.selectedDate < 0)
+          map.topLayer.topLayer.selectedDate =
+            map.topLayer.layerinfo.layerTimes.length - 1;
+      } else {
+        if (map.topLayer.layerinfo.layerTimes.length > indexed && indexed > 0) {
+          map.topLayer.selectedDate = indexed;
+        }
+      }
+      map.removeTopLayer();
+      this.setMapEOMap(map);
+      this.updateMapInfo(map.index, map);
     }
-    map.removeTopLayer();
-    this.setMapEOMap(map);
-    this.updateMapInfo(map.index, map);
   };
 
   render() {
@@ -226,7 +239,6 @@ class CompareViewer extends Component {
     }, 100);
     return (
       <div className={[styles.MapsDiv, styles.MapGridView].join(" ")}>
-        {this.state.slideInfo}
         <div className={styles.Map} id="map1">
           <div className={this.props.slideView ? styles.Slide : styles.Square}>
             {this.state.mapInfos[0]}
@@ -265,6 +277,7 @@ class CompareViewer extends Component {
         >
           <div className={styles.Square}>{this.state.mapInfos[3]}</div>
         </div>
+        <div className={styles.SlideInfo}>{this.state.slideInfo}</div>
       </div>
     );
   }

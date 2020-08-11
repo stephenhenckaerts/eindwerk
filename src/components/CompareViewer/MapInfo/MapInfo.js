@@ -19,6 +19,7 @@ class MapInfos extends Component {
       <ColorTypeInfo
         colorTypeClicked={(type) => this.colorTypeClicked(type)}
         colors={this.props.colors}
+        slide={this.props.slide}
       />
     );
     if (this.state.colorType) {
@@ -29,7 +30,16 @@ class MapInfos extends Component {
         />
       );
     }
-    return <div className={styles.InfoDiv}>{mapInfo}</div>;
+    return (
+      <div
+        className={[
+          styles.InfoDiv,
+          this.props.slide ? styles.Slide : null,
+        ].join(" ")}
+      >
+        {mapInfo}
+      </div>
+    );
   }
 }
 
