@@ -75,7 +75,9 @@ class CompareViewer extends Component {
             this.setMapEOMap(map, true);
             this.updateMapInfoSlide(map);
           } else if (map.slideLayer === "satteliet") {
-            map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
+            let url = "https://services.terrascope.be/wms/v2";
+            //map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
+            map.addSentinellLayer(url);
           } else if (map.slideLayer === "normal") {
             this.updateMapInfoSlide(map.index, map.topLayer);
           }
