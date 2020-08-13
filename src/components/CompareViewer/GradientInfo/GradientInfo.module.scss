@@ -1,0 +1,28 @@
+@import "../../../styles/colours.scss";
+@import "../../../styles/extends.scss";
+
+.GradientDiv {
+  background-color: $yellow;
+  height: fit-content;
+  width: fit-content;
+  display: flex;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border-radius: 0 10px 10px 0;
+  border: 1px solid $dark-green;
+}
+
+.GradientDiv > ul {
+  padding: 0;
+  margin: 0 0.5rem;
+}
+
+.GradientListValue {
+  list-style: none;
+  @extend %unselectable;
+}
+
+.GradientColor {
+  height: match;
+  width: 1rem;
+}

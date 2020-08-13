@@ -7,6 +7,8 @@ import MapInfo from "./MapInfo/MapInfo";
 import styles from "./CompareViewer.module.scss";
 import MapEOService from "../MapEOService/MapEOService";
 import MapDatePicker from "./MapDatePicker/MapDatePicker";
+import GradientInfo from "./GradientInfo/GradientInfo";
+import Aux from "../../hoc/Aux/Aux";
 
 class CompareViewer extends Component {
   state = {
@@ -80,7 +82,8 @@ class CompareViewer extends Component {
         this.updateMapInfo(
           slideLayerChanged,
           slideLayerChanged ? 0 : map.index,
-          map
+          map,
+          layer.name
         );
       } else if (layer.item && layer.item === "Sentinel") {
         map.addSentinellLayer(
@@ -92,7 +95,8 @@ class CompareViewer extends Component {
         this.updateMapInfo(
           slideLayerChanged,
           slideLayerChanged ? 0 : map.index,
-          map
+          map,
+          layer.name
         );
       } else if (layer === "normal") {
         this.updateMapInfo(
@@ -131,15 +135,30 @@ class CompareViewer extends Component {
       layer.item &&
       (layer.item === "MapEO" || layer.item === "Sentinel")
     ) {
+      let getGradientInfoAllowed = this.getGradientInfoAllowed(colors);
       newLayer = (
-        <MapDatePicker
-          map={type}
-          layer={layer}
-          changeDateHandler={(amount, map, i) =>
-            this.changeDateHandler(amount, map, i)
-          }
-          slide={slide ? "slide" : null}
-        />
+        <Aux>
+          <MapDatePicker
+            map={type}
+            layer={layer}
+            changeDateHandler={(amount, map, i) =>
+              this.changeDateHandler(amount, map, i)
+            }
+            slide={slide ? "slide" : null}
+          />
+          {getGradientInfoAllowed ? (
+            <GradientInfo
+              values={{
+                min: 0,
+                max: 1,
+                minColor: "#fde725",
+                avgColor: "#5ac864",
+                maxColor: "#46085c",
+                colorType: colors,
+              }}
+            />
+          ) : null}
+        </Aux>
       );
     } else {
       if (slide) {
@@ -155,6 +174,29 @@ class CompareViewer extends Component {
     } else {
       newLayers[index] = newLayer;
       this.setState({ mapInfos: newLayers });
+    }
+  }
+
+  getGradientInfoAllowed(type) {
+    switch (type) {
+      case "CGS_S2_RADIOMETRY":
+        return false;
+      case "CGS_S2_NIR":
+        return true;
+      case "CGS_S2_NDVI":
+        return true;
+      case "CGS_S2_LAI":
+        return true;
+      case "CGS_S2_FCOVER":
+        return true;
+      case "CGS_S2_FAPAR":
+        return true;
+      case "CGS_S1_GRD_SIGMA0":
+        return true;
+      case "CGS_S1_COHERENCE":
+        return true;
+      default:
+        return false;
     }
   }
 

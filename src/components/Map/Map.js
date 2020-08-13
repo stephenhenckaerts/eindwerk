@@ -669,7 +669,6 @@ class OlMap {
           '<StyledLayerDescriptor version="1.0.0"><NamedLayer><Name>Interreg-PCfruit:Rummen_plantheight</Name><UserStyle><IsDefault>1</IsDefault><FeatureTypeStyle><Rule><RasterSymbolizer><Opacity>1.0</Opacity><ColorMap type="ramp"><ColorMapEntry color="#FFFFFF" quantity="-0.25" label="0" opacity="0"/><ColorMapEntry color="#2c7bb6" quantity="0" label="0" opacity="1"/><ColorMapEntry color="#408abe" quantity="0.3" label="0.3" opacity="1"/><ColorMapEntry color="#5a9dc9" quantity="0.5" label="0.5" opacity="1"/><ColorMapEntry color="#74b0d3" quantity="0.8" label="0.8" opacity="1"/><ColorMapEntry color="#8ec3de" quantity="1" label="1" opacity="1"/><ColorMapEntry color="#a7d6e8" quantity="1.3" label="1.3" opacity="1"/><ColorMapEntry color="#bae0e2" quantity="1.5" label="1.5" opacity="1"/><ColorMapEntry color="#cbe8da" quantity="1.8" label="1.8" opacity="1"/><ColorMapEntry color="#dcefd1" quantity="2" label="2" opacity="1"/><ColorMapEntry color="#edf7c9" quantity="2.3" label="2.3" opacity="1"/><ColorMapEntry color="#feffc0" quantity="2.5" label="2.5" opacity="1"/><ColorMapEntry color="#fff1ae" quantity="2.8" label="2.8" opacity="1"/><ColorMapEntry color="#ffe09b" quantity="3" label="3" opacity="1"/><ColorMapEntry color="#fed088" quantity="3.3" label="3.3" opacity="1"/><ColorMapEntry color="#febf75" quantity="3.5" label="3.5" opacity="1"/><ColorMapEntry color="#feaf62" quantity="3.8" label="3.8" opacity="1"/><ColorMapEntry color="#f69154" quantity="4" label="4" opacity="1"/><ColorMapEntry color="#ee7346" quantity="4.3" label="4.3" opacity="1"/><ColorMapEntry color="#e75538" quantity="4.5" label="4.5" opacity="1"/><ColorMapEntry color="#df372a" quantity="4.8" label="4.8" opacity="1"/><ColorMapEntry color="#d7191c" quantity="5" label="5" opacity="1"/></ColorMap></RasterSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>',
       },
       serverType: "geoserver",
-      // Countries have transparency, so do not fade tiles:
       transition: 0,
       crossOrigin: "Anonymous",
     });
@@ -730,7 +729,6 @@ class OlMap {
     this.map.getLayers().forEach((layer) => {
       if (layer !== undefined) {
         if (layer.get("name") === (isSlideLayer ? "slideLayer" : "topLayer")) {
-          console.log(layer);
           layer.getSource().clear();
           this.map.removeLayer(layer);
         }
@@ -742,8 +740,6 @@ class OlMap {
     this.map.getLayers().forEach((layer) => {
       if (layer !== undefined) {
         if (layer.get("name") === "slideLayer") {
-          console.log(layer.get("name"));
-
           layer.setOpacity(amount / 100);
         }
       }
