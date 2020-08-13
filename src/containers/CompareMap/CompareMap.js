@@ -68,7 +68,15 @@ class CompareMap extends Component {
   };
 
   slideViewClicked = () => {
-    this.setState({ slideView: !this.state.slideView, amountOfPlots: 2 });
+    let selectedPlotIndex = this.state.selectedPlotIndex;
+    if (selectedPlotIndex > 2) {
+      selectedPlotIndex = 2;
+    }
+    this.setState({
+      slideView: !this.state.slideView,
+      amountOfPlots: 2,
+      selectedPlotIndex: selectedPlotIndex,
+    });
   };
 
   slideAmountChangedHandler = (event) => {

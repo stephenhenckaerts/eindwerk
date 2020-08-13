@@ -42,74 +42,68 @@ class CompareViewer extends Component {
   }
 
   updateTopLayer(map) {
+    let layer = null;
+    let topLayerChanged = false;
+    let slideLayerChanged = false;
     if (this.props.topLayers[map.index] !== map.topLayer) {
+      topLayerChanged = true;
       map.topLayer = this.props.topLayers[map.index];
-      map.removeTopLayer();
-      if (map.topLayer === "bodemkaart") {
-        const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
-        map.addTopLayer(url);
-        setTimeout(() => {
-          this.updateMapInfo(
-            false,
-            map.index,
-            map.topLayer,
-            map.getFeatureStyles()
-          );
-        }, 100);
-      } else if (map.topLayer.item && map.topLayer.item === "MapEO") {
-        this.setMapEOMap(map);
-        this.updateMapInfo(false, map.index, map);
-      } else if (map.topLayer.item && map.topLayer.item === "Sentinel") {
-        map.addSentinellLayer(
-          process.env.REACT_APP_GEOSERVER_SENTINEL_API,
-          map.topLayer.name,
-          map.topLayer.dates[map.topLayer.selectedDate]
-        );
-        this.updateMapInfo(false, map.index, map);
-      } else if (map.topLayer === "normal") {
-        this.updateMapInfo(false, map.index, map.topLayer);
-      }
-    }
-    if (map.index === 0) {
+      layer = map.topLayer;
+    } else if (map.index === 0) {
       if (this.props.slideView) {
         if (this.props.topLayers[1] !== map.slideLayer) {
+          slideLayerChanged = true;
           map.slideLayer = this.props.topLayers[1];
-          map.removeTopLayer(true);
-          if (map.slideLayer === "bodemkaart") {
-            const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
-            setTimeout(() => {
-              this.updateMapInfo(
-                true,
-                0,
-                map.slideLayer,
-                map.getFeatureStyles()
-              );
-            }, 100);
-            map.addTopLayer(url, true);
-          } else if (map.slideLayer.item && map.slideLayer.item === "MapEO") {
-            this.setMapEOMap(map, true);
-            this.updateMapInfo(true, 0, map);
-          } else if (
-            map.slideLayer.item &&
-            map.slideLayer.item === "Sentinel"
-          ) {
-            map.addSentinellLayer(
-              process.env.REACT_APP_GEOSERVER_SENTINEL_API,
-              map.slideLayer.name,
-              map.slideLayer.dates[map.topLayer.selectedDate],
-              true
-            );
-            this.updateMapInfo(true, 0, map);
-          } else if (map.slideLayer === "normal") {
-            this.updateMapInfo(true, map.index, map.topLayer);
-          }
+          layer = map.slideLayer;
         }
-        map.changeOpacitySlideLayer(this.props.slideAmount);
       } else {
         map.removeTopLayer(true);
         map.slideLayer = "normal";
         this.updateMapInfo(true, "normal");
       }
+    }
+    if (topLayerChanged || slideLayerChanged) {
+      map.removeTopLayer(slideLayerChanged);
+      if (layer === "bodemkaart") {
+        const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
+        map.addTopLayer(url, slideLayerChanged);
+        setTimeout(() => {
+          this.updateMapInfo(
+            slideLayerChanged,
+            slideLayerChanged ? 0 : map.index,
+            layer,
+            map.getFeatureStyles()
+          );
+        }, 100);
+      } else if (layer.item && layer.item === "MapEO") {
+        this.setMapEOMap(map, slideLayerChanged);
+        this.updateMapInfo(
+          slideLayerChanged,
+          slideLayerChanged ? 0 : map.index,
+          map
+        );
+      } else if (layer.item && layer.item === "Sentinel") {
+        map.addSentinellLayer(
+          process.env.REACT_APP_GEOSERVER_SENTINEL_API,
+          layer.name,
+          layer.dates[map.topLayer.selectedDate],
+          slideLayerChanged
+        );
+        this.updateMapInfo(
+          slideLayerChanged,
+          slideLayerChanged ? 0 : map.index,
+          map
+        );
+      } else if (layer === "normal") {
+        this.updateMapInfo(
+          slideLayerChanged,
+          slideLayerChanged ? 0 : map.index,
+          map.topLayer
+        );
+      }
+    }
+    if (this.props.slideView) {
+      map.changeOpacitySlideLayer(this.props.slideAmount);
     }
   }
 
