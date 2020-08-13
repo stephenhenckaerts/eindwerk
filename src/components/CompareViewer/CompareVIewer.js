@@ -49,20 +49,25 @@ class CompareViewer extends Component {
         const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
         map.addTopLayer(url);
         setTimeout(() => {
-          this.updateMapInfo(map.index, map.topLayer, map.getFeatureStyles());
+          this.updateMapInfo(
+            false,
+            map.index,
+            map.topLayer,
+            map.getFeatureStyles()
+          );
         }, 100);
       } else if (map.topLayer.item && map.topLayer.item === "MapEO") {
         this.setMapEOMap(map);
-        this.updateMapInfo(map.index, map);
+        this.updateMapInfo(false, map.index, map);
       } else if (map.topLayer.item && map.topLayer.item === "Sentinel") {
         map.addSentinellLayer(
           process.env.REACT_APP_GEOSERVER_SENTINEL_API,
           map.topLayer.name,
           map.topLayer.dates[map.topLayer.selectedDate]
         );
-        this.updateMapInfo(map.index, map);
+        this.updateMapInfo(false, map.index, map);
       } else if (map.topLayer === "normal") {
-        this.updateMapInfo(map.index, map.topLayer);
+        this.updateMapInfo(false, map.index, map.topLayer);
       }
     }
     if (map.index === 0) {
@@ -73,12 +78,17 @@ class CompareViewer extends Component {
           if (map.slideLayer === "bodemkaart") {
             const url = process.env.REACT_APP_GEOSERVER_BODEMKAART_API;
             setTimeout(() => {
-              this.updateMapInfoSlide(map.slideLayer, map.getFeatureStyles());
+              this.updateMapInfo(
+                true,
+                0,
+                map.slideLayer,
+                map.getFeatureStyles()
+              );
             }, 100);
             map.addTopLayer(url, true);
           } else if (map.slideLayer.item && map.slideLayer.item === "MapEO") {
             this.setMapEOMap(map, true);
-            this.updateMapInfoSlide(map);
+            this.updateMapInfo(true, 0, map);
           } else if (
             map.slideLayer.item &&
             map.slideLayer.item === "Sentinel"
@@ -89,68 +99,68 @@ class CompareViewer extends Component {
               map.slideLayer.dates[map.topLayer.selectedDate],
               true
             );
-            this.updateMapInfoSlide(map);
+            this.updateMapInfo(true, 0, map);
           } else if (map.slideLayer === "normal") {
-            this.updateMapInfoSlide(map.index, map.topLayer);
+            this.updateMapInfo(true, map.index, map.topLayer);
           }
         }
         map.changeOpacitySlideLayer(this.props.slideAmount);
       } else {
         map.removeTopLayer(true);
         map.slideLayer = "normal";
-        this.updateMapInfoSlide("normal");
+        this.updateMapInfo(true, "normal");
       }
     }
   }
 
-  updateMapInfo(index, type, colors) {
-    let newLayers = this.state.mapInfos.slice();
-    if (type === "bodemkaart") {
-      newLayers[index] = <MapInfo type={type} colors={colors} />;
-    } else if (
-      type.topLayer &&
-      type.topLayer.item &&
-      (type.topLayer.item === "MapEO" || type.topLayer.item === "Sentinel")
-    ) {
-      newLayers[index] = (
-        <MapDatePicker
-          map={type}
-          layer={type.topLayer}
-          changeDateHandler={(amount, map, i) =>
-            this.changeDateHandler(amount, map, i)
-          }
-        />
-      );
+  updateMapInfo(slide, index, type, colors) {
+    let newLayer = null;
+    let newLayers = null;
+    let layer = null;
+    if (slide) {
+      newLayer = this.state.slideInfo;
+      if (type) {
+        layer = type.slideLayer;
+      }
     } else {
-      newLayers[index] = null;
+      newLayers = this.state.mapInfos.slice();
+      if (type) {
+        layer = type.topLayer;
+      }
     }
-    this.setState({ mapInfos: newLayers });
-  }
-
-  updateMapInfoSlide(type, colors) {
-    let newLayer = this.state.slideInfo;
     if (type === "bodemkaart") {
-      newLayer = <MapInfo type={type} colors={colors} slide="slide" />;
+      newLayer = (
+        <MapInfo type={type} colors={colors} slide={slide ? "slide" : null} />
+      );
     } else if (
-      type.slideLayer &&
-      type.slideLayer.item &&
-      (type.slideLayer.item === "MapEO" || type.slideLayer.item === "Sentinel")
+      layer &&
+      layer.item &&
+      (layer.item === "MapEO" || layer.item === "Sentinel")
     ) {
       newLayer = (
         <MapDatePicker
           map={type}
-          layer={type.slideLayer}
-          changeDateHandler={(amount, map, i, slide) =>
-            this.changeDateHandler(amount, map, i, slide)
+          layer={layer}
+          changeDateHandler={(amount, map, i) =>
+            this.changeDateHandler(amount, map, i)
           }
-          slide="slide"
+          slide={slide ? "slide" : null}
         />
       );
     } else {
-      newLayer = null;
+      if (slide) {
+        newLayer = null;
+      } else {
+        newLayers[index] = null;
+      }
     }
-    if (newLayer !== this.state.slideInfo) {
-      this.setState({ slideInfo: newLayer });
+    if (slide) {
+      if (newLayer !== this.state.slideInfo) {
+        this.setState({ slideInfo: newLayer });
+      }
+    } else {
+      newLayers[index] = newLayer;
+      this.setState({ mapInfos: newLayers });
     }
   }
 
@@ -233,9 +243,9 @@ class CompareViewer extends Component {
       );
     }
     if (slide === "slide") {
-      this.updateMapInfoSlide(map);
+      this.updateMapInfo(true, map);
     } else {
-      this.updateMapInfo(map.index, map);
+      this.updateMapInfo(false, map.index, map);
     }
   };
 

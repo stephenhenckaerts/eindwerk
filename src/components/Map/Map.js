@@ -713,7 +713,7 @@ class OlMap {
         strategy: bboxStrategy,
         params: {
           layers: layer,
-          time: time,
+          time: "2020-06-01",
           srs: "EPSG:3857",
         },
       }),
