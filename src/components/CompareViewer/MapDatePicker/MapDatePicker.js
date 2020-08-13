@@ -13,17 +13,7 @@ class MapDatePicker extends Component {
   };
 
   componentDidMount() {
-    let date = new Date(
-      this.convertDate(
-        this.props.layer.layerinfo.layerTimes[this.props.layer.selectedDate]
-          .date
-      )
-    );
-    let availableDates = [];
-    this.props.layer.layerinfo.layerTimes.forEach((layerTime) => {
-      availableDates.push(parseISO(this.convertDate(layerTime.date)));
-    });
-    this.setState({ startDate: date, allowedDates: availableDates });
+    this.updateDate();
   }
 
   convertDate(date) {
@@ -43,10 +33,19 @@ class MapDatePicker extends Component {
     } else {
       formatedDate += parseInt(date.getDate());
     }
-    for (let i = 0; i < this.props.layer.layerinfo.layerTimes.length; i++) {
-      let arrayDate = this.convertDate(
-        this.props.layer.layerinfo.layerTimes[i].date
-      );
+    let dates = null;
+    if (this.props.layer.item === "MapEO") {
+      dates = this.props.layer.layerinfo.layerTimes;
+    } else if (this.props.layer.item === "Sentinel") {
+      dates = this.props.layer.dates;
+    }
+    for (let i = 0; i < dates.length; i++) {
+      let arrayDate = new Date();
+      if (this.props.layer.item === "MapEO") {
+        arrayDate = this.convertDate(dates[i].date);
+      } else if (this.props.layer.item === "Sentinel") {
+        arrayDate = dates[i];
+      }
       if (arrayDate === formatedDate) {
         this.props.changeDateHandler(0, this.props.map, i, this.props.slide);
         break;
@@ -56,7 +55,6 @@ class MapDatePicker extends Component {
   };
 
   handleArrowClicked = (amount) => {
-    console.log(this.props.slide);
     this.props.changeDateHandler(
       amount,
       this.props.map,
@@ -67,17 +65,23 @@ class MapDatePicker extends Component {
   };
 
   updateDate = () => {
-    let date = new Date(
-      this.convertDate(
-        this.props.layer.layerinfo.layerTimes[this.props.layer.selectedDate]
-          .date
-      )
-    );
+    let date = new Date();
     let availableDates = [];
-    this.props.layer.layerinfo.layerTimes.forEach((layerTime) => {
-      availableDates.push(parseISO(this.convertDate(layerTime.date)));
-    });
-    this.setState({ startDate: date });
+    if (this.props.layer.item === "MapEO") {
+      date = new Date(
+        this.convertDate(
+          this.props.layer.layerinfo.layerTimes[this.props.layer.selectedDate]
+            .date
+        )
+      );
+      this.props.layer.layerinfo.layerTimes.forEach((layerTime) => {
+        availableDates.push(parseISO(this.convertDate(layerTime.date)));
+      });
+    } else if (this.props.layer.item === "Sentinel") {
+      date = new Date(this.props.layer.dates[this.props.layer.selectedDate]);
+      availableDates = this.props.layer.availableDates;
+    }
+    this.setState({ startDate: date, allowedDates: availableDates });
   };
 
   handleDateChangeRaw = (e) => {

@@ -54,8 +54,13 @@ class CompareViewer extends Component {
       } else if (map.topLayer.item && map.topLayer.item === "MapEO") {
         this.setMapEOMap(map);
         this.updateMapInfo(map.index, map);
-      } else if (map.topLayer === "satteliet") {
-        map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
+      } else if (map.topLayer.item && map.topLayer.item === "Sentinel") {
+        map.addSentinellLayer(
+          process.env.REACT_APP_GEOSERVER_SENTINEL_API,
+          map.topLayer.name,
+          map.topLayer.dates[map.topLayer.selectedDate]
+        );
+        this.updateMapInfo(map.index, map);
       } else if (map.topLayer === "normal") {
         this.updateMapInfo(map.index, map.topLayer);
       }
@@ -74,10 +79,17 @@ class CompareViewer extends Component {
           } else if (map.slideLayer.item && map.slideLayer.item === "MapEO") {
             this.setMapEOMap(map, true);
             this.updateMapInfoSlide(map);
-          } else if (map.slideLayer === "satteliet") {
-            let url = "https://services.terrascope.be/wms/v2";
-            //map.addSentinellLayer(process.env.REACT_APP_GEOSERVER_SENTINEL_API);
-            map.addSentinellLayer(url);
+          } else if (
+            map.slideLayer.item &&
+            map.slideLayer.item === "Sentinel"
+          ) {
+            map.addSentinellLayer(
+              process.env.REACT_APP_GEOSERVER_SENTINEL_API,
+              map.slideLayer.name,
+              map.slideLayer.dates[map.topLayer.selectedDate],
+              true
+            );
+            this.updateMapInfoSlide(map);
           } else if (map.slideLayer === "normal") {
             this.updateMapInfoSlide(map.index, map.topLayer);
           }
@@ -98,7 +110,7 @@ class CompareViewer extends Component {
     } else if (
       type.topLayer &&
       type.topLayer.item &&
-      type.topLayer.item === "MapEO"
+      (type.topLayer.item === "MapEO" || type.topLayer.item === "Sentinel")
     ) {
       newLayers[index] = (
         <MapDatePicker
@@ -122,7 +134,7 @@ class CompareViewer extends Component {
     } else if (
       type.slideLayer &&
       type.slideLayer.item &&
-      type.slideLayer.item === "MapEO"
+      (type.slideLayer.item === "MapEO" || type.slideLayer.item === "Sentinel")
     ) {
       newLayer = (
         <MapDatePicker
@@ -188,46 +200,41 @@ class CompareViewer extends Component {
   }
 
   changeDateHandler = (amount, map, indexed, slide) => {
+    let layer = null;
     if (slide === "slide") {
-      if (indexed === undefined) {
-        map.slideLayer.selectedDate += amount;
-        if (
-          map.slideLayer.selectedDate >
-          map.slideLayer.layerinfo.layerTimes.length - 1
-        )
-          map.slideLayer.selectedDate = 0;
-        if (map.slideLayer.selectedDate < 0)
-          map.slideLayer.selectedDate =
-            map.slideLayer.layerinfo.layerTimes.length - 1;
-      } else {
-        if (
-          map.slideLayer.layerinfo.layerTimes.length > indexed &&
-          indexed > 0
-        ) {
-          map.slideLayer.selectedDate = indexed;
-        }
+      layer = map.slideLayer;
+    } else {
+      layer = map.topLayer;
+    }
+    let dates = null;
+    if (layer.item === "MapEO") {
+      dates = layer.layerinfo.layerTimes;
+    } else if (layer.item === "Sentinel") {
+      dates = layer.dates;
+    }
+    if (indexed === undefined) {
+      layer.selectedDate += amount;
+      if (layer.selectedDate > dates.length - 1) layer.selectedDate = 0;
+      if (layer.selectedDate < 0) layer.selectedDate = dates.length - 1;
+    } else {
+      if (dates.length > indexed && indexed > 0) {
+        layer.selectedDate = indexed;
       }
-      map.removeTopLayer(true);
-      this.setMapEOMap(map, true);
+    }
+    map.removeTopLayer(slide ? true : undefined);
+    if (layer.item === "MapEO") {
+      this.setMapEOMap(map, slide ? true : undefined);
+    } else if (layer.item === "Sentinel") {
+      map.addSentinellLayer(
+        process.env.REACT_APP_GEOSERVER_SENTINEL_API,
+        layer.name,
+        layer.dates[layer.selectedDate],
+        slide ? true : undefined
+      );
+    }
+    if (slide === "slide") {
       this.updateMapInfoSlide(map);
     } else {
-      if (indexed === undefined) {
-        map.topLayer.selectedDate += amount;
-        if (
-          map.topLayer.selectedDate >
-          map.topLayer.layerinfo.layerTimes.length - 1
-        )
-          map.topLayer.selectedDate = 0;
-        if (map.topLayer.selectedDate < 0)
-          map.topLayer.topLayer.selectedDate =
-            map.topLayer.layerinfo.layerTimes.length - 1;
-      } else {
-        if (map.topLayer.layerinfo.layerTimes.length > indexed && indexed > 0) {
-          map.topLayer.selectedDate = indexed;
-        }
-      }
-      map.removeTopLayer();
-      this.setMapEOMap(map);
       this.updateMapInfo(map.index, map);
     }
   };

@@ -2,10 +2,12 @@
 @import "../../../../styles/extends.scss";
 
 .Menu {
-  height: 100%;
+  height: calc(100vh - 330px);
   width: 100%;
   color: $yellow;
   overflow: auto;
+  overflow-y: auto;
+  overflow-wrap: break-word;
 }
 
 .Layer {

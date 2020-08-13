@@ -46,11 +46,19 @@ class CompareMap extends Component {
   menuItemClicked = (item, layerinfo) => {
     if (this.state.topLayers[this.state.selectedPlotIndex - 1] !== item) {
       let newLayers = this.state.topLayers.slice();
-      if (layerinfo) {
+      if (item === "MapEO") {
         newLayers[this.state.selectedPlotIndex - 1] = {
           item,
           layerinfo,
           selectedDate: 0,
+        };
+      } else if (item === "Sentinel") {
+        let dates = layerinfo.Dimension[0].values.split(",");
+        newLayers[this.state.selectedPlotIndex - 1] = {
+          item: item,
+          name: layerinfo.Name,
+          selectedDate: dates.length - 1,
+          dates: dates,
         };
       } else {
         newLayers[this.state.selectedPlotIndex - 1] = item;

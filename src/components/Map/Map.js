@@ -15,10 +15,7 @@ import { Fill, Stroke, Style, Icon } from "ol/style";
 import PinIcon from "../../assets/Map/pin.png";
 import HoveredPinIcon from "../../assets/Map/hoveredpin.png";
 import jsPDF from "jspdf";
-import ImageLayer from "ol/layer/Image";
-import ImageWMS from "ol/source/ImageWMS";
 import TileWMS from "ol/source/TileWMS";
-import WMSCapabilities from "ol/format/WMSCapabilities";
 
 class OlMap {
   constructor() {
@@ -705,36 +702,27 @@ class OlMap {
     if (isSlideLayer) {
       tileLayer.setZIndex(5);
     }
+    console.log(tileLayer.get("name"));
     this.map.addLayer(tileLayer);
   }
 
-  addSentinellLayer(url) {
-    var parser = new WMSCapabilities();
-
-    fetch(
-      "https://services.terrascope.be/wms/v2/wms?service=wms&request=GetCapabilities "
-    )
-      .then(function (response) {
-        return response.text();
-      })
-      .then(function (text) {
-        var result = parser.read(text);
-        console.log(result);
-      });
-
+  addSentinellLayer(url, layer, time, isSlideLayer) {
     let imageLayer = new TileLayer({
       source: new TileWMS({
-        url: "https://services.terrascope.be/wms/v2",
+        url: url,
         strategy: bboxStrategy,
         params: {
-          layers: "CGS_S2_LAI",
-          time: "2020-06-01",
+          layers: layer,
+          time: time,
           srs: "EPSG:3857",
         },
       }),
     });
-    console.log(imageLayer);
-    imageLayer.set("name", "topLayer");
+    imageLayer.set("name", isSlideLayer ? "slideLayer" : "topLayer");
+    if (isSlideLayer) {
+      imageLayer.setZIndex(5);
+    }
+
     this.map.addLayer(imageLayer);
   }
 
@@ -742,6 +730,7 @@ class OlMap {
     this.map.getLayers().forEach((layer) => {
       if (layer !== undefined) {
         if (layer.get("name") === (isSlideLayer ? "slideLayer" : "topLayer")) {
+          console.log(layer);
           layer.getSource().clear();
           this.map.removeLayer(layer);
         }
@@ -753,6 +742,8 @@ class OlMap {
     this.map.getLayers().forEach((layer) => {
       if (layer !== undefined) {
         if (layer.get("name") === "slideLayer") {
+          console.log(layer.get("name"));
+
           layer.setOpacity(amount / 100);
         }
       }

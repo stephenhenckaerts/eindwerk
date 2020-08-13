@@ -13,11 +13,14 @@ import Snackbar from "../../../UI/Snackbar/Snackbar";
 
 import styles from "./LayersMenu.module.scss";
 import Aux from "../../../../hoc/Aux/Aux";
+import WMSCapabilities from "ol/format/WMSCapabilities";
 
 class LayersMenu extends Component {
   state = {
     mapEOLayer: null,
     showMapEOLayer: false,
+    mapSentinelLayer: null,
+    showMapSentinelLayer: false,
   };
 
   constructor(props) {
@@ -27,15 +30,30 @@ class LayersMenu extends Component {
 
     MapEOService.connectToMapEO(this.mapEOLoadedHandler);
 
+    this.getSentinelLayerInfo();
+
     this.createConvertNames();
   }
+
+  getSentinelLayerInfo = () => {
+    var parser = new WMSCapabilities();
+
+    fetch(process.env.REACT_APP_GEOSERVER_SENTINEL_GET_CAPABILITIES)
+      .then((response) => {
+        return response.text();
+      })
+      .then((text) => {
+        var result = parser.read(text);
+        this.setState({ mapSentinelLayer: result.Capability.Layer.Layer });
+      });
+  };
 
   clickHandler = (type) => {
     this.snackbarRef.current.openSnackBar(type + " niet beschikbaar.");
   };
 
   backButtonHandler = () => {
-    this.setState({ showMapEOLayer: false });
+    this.setState({ showMapEOLayer: false, showMapSentinelLayer: false });
   };
 
   mapEOLoadedHandler = (response) => {
@@ -65,6 +83,14 @@ class LayersMenu extends Component {
     }
   };
 
+  senintinelScanClickHandler = () => {
+    if (this.state.mapSentinelLayer) {
+      this.setState({ showMapSentinelLayer: true });
+    } else {
+      this.clickHandler("Sattelietbeelden");
+    }
+  };
+
   createConvertNames(name) {
     switch (name) {
       case "ortho":
@@ -75,12 +101,28 @@ class LayersMenu extends Component {
         return "NDRE";
       case "ndvi":
         return "NDVI";
+      case "CGS_S2_RADIOMETRY":
+        return "Radiometry";
+      case "CGS_S2_NIR":
+        return "NIR";
+      case "CGS_S2_NDVI":
+        return "NDVI";
+      case "CGS_S2_LAI":
+        return "LAI";
+      case "CGS_S2_FCOVER":
+        return "FCOVER";
+      case "CGS_S2_FAPAR":
+        return "FAPAR";
+      case "CGS_S1_GRD_SIGMA0":
+        return "Sigma";
+      case "CGS_S1_COHERENCE":
+        return "Coherence";
       default:
         return name;
     }
   }
 
-  createConvertNameToImage(name) {
+  convertNameToImage(name) {
     switch (name) {
       case "plantheight":
         return plantheight;
@@ -146,10 +188,7 @@ class LayersMenu extends Component {
           <img src={dronebeelden} alt="Dronebeelden" />
           <p>Dronebeelden</p>
         </div>
-        <div
-          className={styles.Layer}
-          onClick={() => this.props.menuItemClicked("satteliet")}
-        >
+        <div className={styles.Layer} onClick={this.senintinelScanClickHandler}>
           <img src={satelliet} alt="Sattelietbeelden" />
           <p>Sattelietbeelden</p>
         </div>
@@ -169,10 +208,30 @@ class LayersMenu extends Component {
           onClick={() => this.props.menuItemClicked("MapEO", layer)}
         >
           <img
-            src={this.createConvertNameToImage(layer.imageType)}
-            alt="Sattelietbeelden"
+            src={this.convertNameToImage(layer.imageType)}
+            alt="Dronebeelden"
           />
           <p>{this.createConvertNames(layer.imageType)}</p>
+        </div>
+      ));
+    } else if (this.state.showMapSentinelLayer) {
+      backMenu = (
+        <div className={styles.Layer} onClick={this.backButtonHandler}>
+          <img src={back} alt="Bodemkaart" />
+          <p>Terug</p>
+        </div>
+      );
+      menu = this.state.mapSentinelLayer.map((layer) => (
+        <div
+          key={layer.Name}
+          className={styles.Layer}
+          onClick={() => this.props.menuItemClicked("Sentinel", layer)}
+        >
+          <img
+            src={this.convertNameToImage(layer.Name)}
+            alt="Sattelietbeelden"
+          />
+          <p>{this.createConvertNames(layer.Name)}</p>
         </div>
       ));
     }
