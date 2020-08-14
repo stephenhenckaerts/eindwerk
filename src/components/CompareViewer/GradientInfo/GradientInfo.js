@@ -13,6 +13,27 @@ const GradientInfo = (props) => {
   }
   let colors = null;
   switch (props.values.colorType) {
+    case "plantheight":
+      colors = {
+        minColor: "#DF372B",
+        avgColor: "#F5FBC4",
+        maxColor: "#3582BA",
+      };
+      break;
+    case "ndre":
+      colors = {
+        minColor: "#026500",
+        avgColor: "#B8D315",
+        maxColor: "#8C5D08",
+      };
+      break;
+    case "ndvi":
+      colors = {
+        minColor: "#219B51",
+        avgColor: "#FFFBB7",
+        maxColor: "#D73027",
+      };
+      break;
     case "CGS_S2_NIR":
       colors = {
         minColor: "#fde725",

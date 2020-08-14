@@ -715,7 +715,6 @@ class OlMap {
     if (isSlideLayer) {
       tileLayer.setZIndex(5);
     }
-    console.log(tileLayer.get("name"));
     this.map.addLayer(tileLayer);
   }
 

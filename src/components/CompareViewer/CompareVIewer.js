@@ -83,7 +83,7 @@ class CompareViewer extends Component {
           slideLayerChanged,
           slideLayerChanged ? 0 : map.index,
           map,
-          layer.name
+          layer.layerinfo.imageType
         );
       } else if (layer.item && layer.item === "Sentinel") {
         map.addSentinellLayer(
@@ -141,8 +141,8 @@ class CompareViewer extends Component {
           <MapDatePicker
             map={type}
             layer={layer}
-            changeDateHandler={(amount, map, i) =>
-              this.changeDateHandler(amount, map, i)
+            changeDateHandler={(amount, map, i, slide) =>
+              this.changeDateHandler(amount, map, i, slide)
             }
             slide={slide ? "slide" : null}
           />
@@ -151,9 +151,6 @@ class CompareViewer extends Component {
               values={{
                 min: 0,
                 max: 1,
-                minColor: "#fde725",
-                avgColor: "#5ac864",
-                maxColor: "#46085c",
                 colorType: colors,
               }}
             />
@@ -194,6 +191,14 @@ class CompareViewer extends Component {
       case "CGS_S1_GRD_SIGMA0":
         return true;
       case "CGS_S1_COHERENCE":
+        return true;
+      case "ortho":
+        return false;
+      case "plantheight":
+        return true;
+      case "ndvi":
+        return true;
+      case "ndre":
         return true;
       default:
         return false;
@@ -278,11 +283,18 @@ class CompareViewer extends Component {
         slide ? true : undefined
       );
     }
-    if (slide === "slide") {
-      this.updateMapInfo(true, map);
-    } else {
-      this.updateMapInfo(false, map.index, map);
+    let colors = null;
+    if (layer.item === "MapEO") {
+      colors = layer.layerinfo.imageType;
+    } else if (colors === "Sentinel") {
+      colors = layer.name;
     }
+    this.updateMapInfo(
+      slide === "slide" ? true : false,
+      slide === "slide" ? 0 : map.index,
+      map,
+      colors
+    );
   };
 
   render() {
