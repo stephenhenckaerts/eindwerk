@@ -128,10 +128,25 @@ class LayersMenu extends Component {
         return plantheight;
       case "ndvi":
         return ndvi;
+      case "CGS_S2_NDVI":
+        return ndvi;
       case "ndre":
         return ndvi;
       default:
         return satelliet;
+    }
+  }
+
+  getDescriptionByName(name) {
+    switch (name) {
+      case "plantheight":
+        return "De hoogteverschillen van het gewas";
+      case "ndvi":
+        return "De groenheid van het blad";
+      case "ndre":
+        return "Toont de levende vegetatie op een gegeven gebied";
+      default:
+        return "Lorem ipsum dolor sit amet, consectetur adipiscing elit";
     }
   }
 
@@ -197,7 +212,11 @@ class LayersMenu extends Component {
     if (this.state.showMapEOLayer) {
       backMenu = (
         <div className={styles.Layer} onClick={this.backButtonHandler}>
-          <img src={back} alt="Bodemkaart" />
+          <img
+            src={back}
+            style={{ height: "auto", minHeight: "auto" }}
+            alt="Bodemkaart"
+          />
           <p>Terug</p>
         </div>
       );
@@ -211,13 +230,20 @@ class LayersMenu extends Component {
             src={this.convertNameToImage(layer.imageType)}
             alt="Dronebeelden"
           />
-          <p>{this.createConvertNames(layer.imageType)}</p>
+          <div className={styles.LayerInfo}>
+            <h1>{this.createConvertNames(layer.imageType)}</h1>
+            <p>{this.getDescriptionByName(layer.imageType)}</p>
+          </div>
         </div>
       ));
     } else if (this.state.showMapSentinelLayer) {
       backMenu = (
         <div className={styles.Layer} onClick={this.backButtonHandler}>
-          <img src={back} alt="Bodemkaart" />
+          <img
+            src={back}
+            style={{ height: "auto", minHeight: "auto" }}
+            alt="Bodemkaart"
+          />
           <p>Terug</p>
         </div>
       );
@@ -231,7 +257,10 @@ class LayersMenu extends Component {
             src={this.convertNameToImage(layer.Name)}
             alt="Sattelietbeelden"
           />
-          <p>{this.createConvertNames(layer.Name)}</p>
+          <div className={styles.LayerInfo}>
+            <h1>{this.createConvertNames(layer.Name)}</h1>
+            <p>{this.getDescriptionByName(layer.imageType)}</p>
+          </div>
         </div>
       ));
     }

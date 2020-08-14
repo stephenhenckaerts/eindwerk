@@ -12,7 +12,7 @@
 
 .Layer {
   display: flex;
-  text-align: center;
+  align-items: center;
   padding: 1rem 0.3rem;
   cursor: pointer;
 
@@ -28,10 +28,20 @@
 }
 
 .Layer > img {
+  height: 4rem;
+  min-height: 4rem;
   width: 3rem;
+  min-width: 3rem;
   margin-right: 0.5rem;
 }
 
-.Layer > p {
-  font-weight: bold;
+.LayerInfo > h1 {
+  font-size: 1rem;
+  margin: 0;
+  margin-bottom: 0.2rem;
+}
+
+.LayerInfo > p {
+  font-size: 0.9rem;
+  margin: 0;
 }
