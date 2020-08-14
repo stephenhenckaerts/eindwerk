@@ -86,7 +86,6 @@ const GradientInfo = (props) => {
 
   let min = 0;
   let max = 1;
-  let round = 1;
 
   switch (props.values.colorType) {
     case "plantheight":
@@ -108,7 +107,11 @@ const GradientInfo = (props) => {
   }
 
   return (
-    <div className={styles.GradientDiv}>
+    <div
+      className={[styles.GradientDiv, props.slide ? styles.Slide : null].join(
+        " "
+      )}
+    >
       <div
         className={styles.GradientColor}
         style={{

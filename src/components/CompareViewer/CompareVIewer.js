@@ -153,6 +153,7 @@ class CompareViewer extends Component {
                 max: 1,
                 colorType: colors,
               }}
+              slide={slide ? "slide" : null}
             />
           ) : null}
         </Aux>
