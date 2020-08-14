@@ -659,21 +659,33 @@ class OlMap {
   }*/
 
   addMapEOLayer(geoserverHash, url, layerName, time, isSlideLayer) {
-    let source = new TileWMS({
-      url: url,
-      params: {
-        LAYERS: layerName,
-        TILED: true,
-        TIME: time,
-        SLD_BODY:
-          '<StyledLayerDescriptor version="1.0.0"><NamedLayer><Name>' +
-          layerName +
-          this.getColorMapForLayer(layerName),
-      },
-      serverType: "geoserver",
-      transition: 0,
-      crossOrigin: "Anonymous",
-    });
+    let source = null;
+    if (layerName.includes("ortho")) {
+      source = new TileWMS({
+        url: url,
+        params: {
+          LAYERS: layerName,
+          TILED: true,
+          TIME: time,
+        },
+        serverType: "geoserver",
+        transition: 0,
+        crossOrigin: "Anonymous",
+      });
+    } else {
+      source = new TileWMS({
+        url: url,
+        params: {
+          LAYERS: layerName,
+          TILED: true,
+          TIME: time,
+          SLD_BODY: this.getColorMapForLayer(layerName),
+        },
+        serverType: "geoserver",
+        transition: 0,
+        crossOrigin: "Anonymous",
+      });
+    }
     let tileLayer = new TileLayer({
       source: source,
     });
@@ -709,11 +721,25 @@ class OlMap {
 
   getColorMapForLayer(layerName) {
     if (layerName.includes("plantheight")) {
-      return '</Name><UserStyle><IsDefault>1</IsDefault><FeatureTypeStyle><Rule><RasterSymbolizer><Opacity>1.0</Opacity><ColorMap type="ramp"><ColorMapEntry color="#FFFFFF" quantity="-0.25" label="0" opacity="0"/><ColorMapEntry color="#2c7bb6" quantity="0" label="0" opacity="1"/><ColorMapEntry color="#408abe" quantity="0.3" label="0.3" opacity="1"/><ColorMapEntry color="#5a9dc9" quantity="0.5" label="0.5" opacity="1"/><ColorMapEntry color="#74b0d3" quantity="0.8" label="0.8" opacity="1"/><ColorMapEntry color="#8ec3de" quantity="1" label="1" opacity="1"/><ColorMapEntry color="#a7d6e8" quantity="1.3" label="1.3" opacity="1"/><ColorMapEntry color="#bae0e2" quantity="1.5" label="1.5" opacity="1"/><ColorMapEntry color="#cbe8da" quantity="1.8" label="1.8" opacity="1"/><ColorMapEntry color="#dcefd1" quantity="2" label="2" opacity="1"/><ColorMapEntry color="#edf7c9" quantity="2.3" label="2.3" opacity="1"/><ColorMapEntry color="#feffc0" quantity="2.5" label="2.5" opacity="1"/><ColorMapEntry color="#fff1ae" quantity="2.8" label="2.8" opacity="1"/><ColorMapEntry color="#ffe09b" quantity="3" label="3" opacity="1"/><ColorMapEntry color="#fed088" quantity="3.3" label="3.3" opacity="1"/><ColorMapEntry color="#febf75" quantity="3.5" label="3.5" opacity="1"/><ColorMapEntry color="#feaf62" quantity="3.8" label="3.8" opacity="1"/><ColorMapEntry color="#f69154" quantity="4" label="4" opacity="1"/><ColorMapEntry color="#ee7346" quantity="4.3" label="4.3" opacity="1"/><ColorMapEntry color="#e75538" quantity="4.5" label="4.5" opacity="1"/>      <ColorMapEntry color="#df372a" quantity="4.8" label="4.8" opacity="1"/><ColorMapEntry color="#d7191c" quantity="5" label="5" opacity="1"/></ColorMap></RasterSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
+      return (
+        '<StyledLayerDescriptor version="1.0.0"><NamedLayer><Name>' +
+        layerName +
+        '</Name><UserStyle><IsDefault>1</IsDefault><FeatureTypeStyle><Rule><RasterSymbolizer><Opacity>1.0</Opacity><ColorMap type="ramp"><ColorMapEntry color="#FFFFFF" quantity="-0.25" label="0" opacity="0"/><ColorMapEntry color="#2c7bb6" quantity="0" label="0" opacity="1"/><ColorMapEntry color="#408abe" quantity="0.3" label="0.3" opacity="1"/><ColorMapEntry color="#5a9dc9" quantity="0.5" label="0.5" opacity="1"/><ColorMapEntry color="#74b0d3" quantity="0.8" label="0.8" opacity="1"/><ColorMapEntry color="#8ec3de" quantity="1" label="1" opacity="1"/><ColorMapEntry color="#a7d6e8" quantity="1.3" label="1.3" opacity="1"/><ColorMapEntry color="#bae0e2" quantity="1.5" label="1.5" opacity="1"/><ColorMapEntry color="#cbe8da" quantity="1.8" label="1.8" opacity="1"/><ColorMapEntry color="#dcefd1" quantity="2" label="2" opacity="1"/><ColorMapEntry color="#edf7c9" quantity="2.3" label="2.3" opacity="1"/><ColorMapEntry color="#feffc0" quantity="2.5" label="2.5" opacity="1"/><ColorMapEntry color="#fff1ae" quantity="2.8" label="2.8" opacity="1"/><ColorMapEntry color="#ffe09b" quantity="3" label="3" opacity="1"/><ColorMapEntry color="#fed088" quantity="3.3" label="3.3" opacity="1"/><ColorMapEntry color="#febf75" quantity="3.5" label="3.5" opacity="1"/><ColorMapEntry color="#feaf62" quantity="3.8" label="3.8" opacity="1"/><ColorMapEntry color="#f69154" quantity="4" label="4" opacity="1"/><ColorMapEntry color="#ee7346" quantity="4.3" label="4.3" opacity="1"/><ColorMapEntry color="#e75538" quantity="4.5" label="4.5" opacity="1"/>      <ColorMapEntry color="#df372a" quantity="4.8" label="4.8" opacity="1"/><ColorMapEntry color="#d7191c" quantity="5" label="5" opacity="1"/></ColorMap></RasterSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>'
+      );
     } else if (layerName.includes("ndvi")) {
-      return '<UserStyle><IsDefault>1</IsDefault><FeatureTypeStyle><Rule><RasterSymbolizer><Opacity>1.0</Opacity><ColorMap type="ramp"><ColorMapEntry color="#FFFFFF" quantity="-0.26" label="-0.23" opacity="0"/>      <ColorMapEntry color="#d73027" quantity="-0.2" label="-0.2" opacity="1"/><ColorMapEntry color="#d73027" quantity="-0.2" label="-0.2" opacity="1"/><ColorMapEntry color="#db392c" quantity="-0.1" label="-0.1" opacity="1"/><ColorMapEntry color="#e55239" quantity="-0.1" label="-0.1" opacity="1"/><ColorMapEntry color="#f88253" quantity="0" label="0" opacity="1"/><ColorMapEntry color="#fd9960" quantity="0.1" label="0.1" opacity="1"/><ColorMapEntry color="#fec47a" quantity="0.1" label="0.1" opacity="1"/><ColorMapEntry color="#feda87" quantity="0.2" label="0.2" opacity="1"/><ColorMapEntry color="#fee795" quantity="0.2" label="0.2" opacity="1"/><ColorMapEntry color="#fff6b0" quantity="0.3" label="0.3" opacity="1"/><ColorMapEntry color="#ffffbe" quantity="0.4" label="0.4" opacity="1"/><ColorMapEntry color="#f7fcb2" quantity="0.4" label="0.4" opacity="1"/><ColorMapEntry color="#e3f398" quantity="0.5" label="0.5" opacity="1"/><ColorMapEntry color="#d8ef8a" quantity="0.5" label="0.5" opacity="1"/><ColorMapEntry color="#c5e67f" quantity="0.6" label="0.6" opacity="1"/><ColorMapEntry color="#a0d668" quantity="0.7" label="0.7" opacity="1"/>      <ColorMapEntry color="#89cc5f" quantity="0.7" label="0.7" opacity="1"/><ColorMapEntry color="#69bd5b" quantity="0.8" label="0.8" opacity="1"/>      <ColorMapEntry color="#2ca152" quantity="0.9" label="0.9" opacity="1"/><ColorMapEntry color="#1a9850" quantity="0.9" label="0.9" opacity="1"/><ColorMapEntry color="#1a9850" quantity="1" label="1" opacity="1"/></ColorMap></RasterSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
+      return (
+        '<StyledLayerDescriptor version="1.0.0"><NamedLayer><Name>' +
+        layerName +
+        '</Name><UserStyle><IsDefault>1</IsDefault><FeatureTypeStyle><Rule><RasterSymbolizer><Opacity>1.0</Opacity><ColorMap type="ramp"><ColorMapEntry color="#FFFFFF" quantity="-0.26" label="-0.23" opacity="0"/>      <ColorMapEntry color="#d73027" quantity="-0.2" label="-0.2" opacity="1"/><ColorMapEntry color="#d73027" quantity="-0.2" label="-0.2" opacity="1"/><ColorMapEntry color="#db392c" quantity="-0.1" label="-0.1" opacity="1"/><ColorMapEntry color="#e55239" quantity="-0.1" label="-0.1" opacity="1"/><ColorMapEntry color="#f88253" quantity="0" label="0" opacity="1"/><ColorMapEntry color="#fd9960" quantity="0.1" label="0.1" opacity="1"/><ColorMapEntry color="#fec47a" quantity="0.1" label="0.1" opacity="1"/><ColorMapEntry color="#feda87" quantity="0.2" label="0.2" opacity="1"/><ColorMapEntry color="#fee795" quantity="0.2" label="0.2" opacity="1"/><ColorMapEntry color="#fff6b0" quantity="0.3" label="0.3" opacity="1"/><ColorMapEntry color="#ffffbe" quantity="0.4" label="0.4" opacity="1"/><ColorMapEntry color="#f7fcb2" quantity="0.4" label="0.4" opacity="1"/><ColorMapEntry color="#e3f398" quantity="0.5" label="0.5" opacity="1"/><ColorMapEntry color="#d8ef8a" quantity="0.5" label="0.5" opacity="1"/><ColorMapEntry color="#c5e67f" quantity="0.6" label="0.6" opacity="1"/><ColorMapEntry color="#a0d668" quantity="0.7" label="0.7" opacity="1"/>      <ColorMapEntry color="#89cc5f" quantity="0.7" label="0.7" opacity="1"/><ColorMapEntry color="#69bd5b" quantity="0.8" label="0.8" opacity="1"/>      <ColorMapEntry color="#2ca152" quantity="0.9" label="0.9" opacity="1"/><ColorMapEntry color="#1a9850" quantity="0.9" label="0.9" opacity="1"/><ColorMapEntry color="#1a9850" quantity="1" label="1" opacity="1"/></ColorMap></RasterSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>'
+      );
     } else if (layerName.includes("ndre")) {
-      return '<UserStyle><IsDefault>1</IsDefault><FeatureTypeStyle><Rule><RasterSymbolizer><Opacity>1.0</Opacity><ColorMap type="ramp">      <ColorMapEntry color="#FFFFFF" quantity="-0.24476190476190476" label="-0.21" opacity="0"/><ColorMapEntry color="#8c5c08" quantity="-0.2" label="-0.2" opacity="1"/>      <ColorMapEntry color="#8c5c08" quantity="-0.2" label="-0.2" opacity="1"/><ColorMapEntry color="#8e5f08" quantity="-0.1" label="-0.1" opacity="1"/><ColorMapEntry color="#8e5f08" quantity="-0.1" label="-0.1" opacity="1"/><ColorMapEntry color="#c5ad13" quantity="0" label="0" opacity="1"/>      <ColorMapEntry color="#c5ad13" quantity="0" label="0" opacity="1"/><ColorMapEntry color="#ffff1e" quantity="0.1" label="0.1" opacity="1"/>      <ColorMapEntry color="#ffff1e" quantity="0.1" label="0.1" opacity="1"/><ColorMapEntry color="#dae819" quantity="0.1" label="0.1" opacity="1"/><ColorMapEntry color="#dae819" quantity="0.2" label="0.2" opacity="1"/><ColorMapEntry color="#b6d215" quantity="0.2" label="0.2" opacity="1"/><ColorMapEntry color="#b6d215" quantity="0.3" label="0.3" opacity="1"/><ColorMapEntry color="#91bc11" quantity="0.3" label="0.3" opacity="1"/><ColorMapEntry color="#91bc11" quantity="0.4" label="0.4" opacity="1"/><ColorMapEntry color="#6da60c" quantity="0.4" label="0.4" opacity="1"/><ColorMapEntry color="#6da60c" quantity="0.5" label="0.5" opacity="1"/><ColorMapEntry color="#489008" quantity="0.5" label="0.5" opacity="1"/><ColorMapEntry color="#489008" quantity="0.6" label="0.6" opacity="1"/><ColorMapEntry color="#247a04" quantity="0.6" label="0.6" opacity="1"/><ColorMapEntry color="#247a04" quantity="0.6" label="0.6" opacity="1"/><ColorMapEntry color="#006400" quantity="0.7" label="0.7" opacity="1"/><ColorMapEntry color="#006400" quantity="0.7" label="0.7" opacity="1"/></ColorMap>      </RasterSymbolizer></Rule></FeatureTypeStyle>      </UserStyle>      </NamedLayer>      </StyledLayerDescriptor>';
+      return (
+        '<StyledLayerDescriptor version="1.0.0"><NamedLayer><Name>' +
+        layerName +
+        '</Name><UserStyle><IsDefault>1</IsDefault><FeatureTypeStyle><Rule><RasterSymbolizer><Opacity>1.0</Opacity><ColorMap type="ramp">      <ColorMapEntry color="#FFFFFF" quantity="-0.24476190476190476" label="-0.21" opacity="0"/><ColorMapEntry color="#8c5c08" quantity="-0.2" label="-0.2" opacity="1"/>      <ColorMapEntry color="#8c5c08" quantity="-0.2" label="-0.2" opacity="1"/><ColorMapEntry color="#8e5f08" quantity="-0.1" label="-0.1" opacity="1"/><ColorMapEntry color="#8e5f08" quantity="-0.1" label="-0.1" opacity="1"/><ColorMapEntry color="#c5ad13" quantity="0" label="0" opacity="1"/>      <ColorMapEntry color="#c5ad13" quantity="0" label="0" opacity="1"/><ColorMapEntry color="#ffff1e" quantity="0.1" label="0.1" opacity="1"/>      <ColorMapEntry color="#ffff1e" quantity="0.1" label="0.1" opacity="1"/><ColorMapEntry color="#dae819" quantity="0.1" label="0.1" opacity="1"/><ColorMapEntry color="#dae819" quantity="0.2" label="0.2" opacity="1"/><ColorMapEntry color="#b6d215" quantity="0.2" label="0.2" opacity="1"/><ColorMapEntry color="#b6d215" quantity="0.3" label="0.3" opacity="1"/><ColorMapEntry color="#91bc11" quantity="0.3" label="0.3" opacity="1"/><ColorMapEntry color="#91bc11" quantity="0.4" label="0.4" opacity="1"/><ColorMapEntry color="#6da60c" quantity="0.4" label="0.4" opacity="1"/><ColorMapEntry color="#6da60c" quantity="0.5" label="0.5" opacity="1"/><ColorMapEntry color="#489008" quantity="0.5" label="0.5" opacity="1"/><ColorMapEntry color="#489008" quantity="0.6" label="0.6" opacity="1"/><ColorMapEntry color="#247a04" quantity="0.6" label="0.6" opacity="1"/><ColorMapEntry color="#247a04" quantity="0.6" label="0.6" opacity="1"/><ColorMapEntry color="#006400" quantity="0.7" label="0.7" opacity="1"/><ColorMapEntry color="#006400" quantity="0.7" label="0.7" opacity="1"/></ColorMap>      </RasterSymbolizer></Rule></FeatureTypeStyle>      </UserStyle>      </NamedLayer>      </StyledLayerDescriptor>'
+      );
+    } else {
+      return "";
     }
   }
 
