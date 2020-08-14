@@ -13,13 +13,6 @@ const GradientInfo = (props) => {
   }
   let colors = null;
   switch (props.values.colorType) {
-    case "CGS_S2_RADIOMETRY":
-      colors = {
-        minColor: "#fde725",
-        avgColor: "#5ac864",
-        maxColor: "#46085c",
-      };
-      break;
     case "CGS_S2_NIR":
       colors = {
         minColor: "#fde725",
