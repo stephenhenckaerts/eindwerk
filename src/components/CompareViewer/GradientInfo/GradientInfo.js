@@ -3,14 +3,6 @@ import React from "react";
 import styles from "./GradientInfo.module.scss";
 
 const GradientInfo = (props) => {
-  let values = [];
-  for (let i = props.values.max * 10; i >= props.values.min; i--) {
-    values.push(
-      <li key={i} className={styles.GradientListValue}>
-        {0 + i / 10 === 0 || 0 + i / 10 === 1 ? i / 10 + ".0" : 0 + i / 10}
-      </li>
-    );
-  }
   let colors = null;
   switch (props.values.colorType) {
     case "plantheight":
@@ -90,6 +82,29 @@ const GradientInfo = (props) => {
         maxColor: "#46085c",
       };
       break;
+  }
+
+  let min = 0;
+  let max = 1;
+  let round = 1;
+
+  switch (props.values.colorType) {
+    case "plantheight":
+      min = 0;
+      max = 5;
+      break;
+    default:
+      min = 0;
+      max = 1;
+      break;
+  }
+  let values = [];
+  for (let i = 10; i >= 0; i--) {
+    values.push(
+      <li key={i} className={styles.GradientListValue}>
+        {(min + ((max - min) / 10) * i).toFixed(1)}
+      </li>
+    );
   }
 
   return (
