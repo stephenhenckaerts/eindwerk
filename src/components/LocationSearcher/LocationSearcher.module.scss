@@ -1,0 +1,45 @@
+@import "../../styles/colours.scss";
+
+.LocationSearcherDiv {
+  position: absolute;
+  left: 80px;
+  bottom: 0;
+  background-color: $dark-green;
+
+  width: 15rem;
+
+  padding: 1rem 1rem 1rem 1rem;
+  border-radius: 0 10px 0 0;
+  border-top: 1px solid $yellow;
+  border-right: 1px solid $yellow;
+}
+
+.InputElementSearchBar {
+  width: 93%;
+}
+
+.ResultsDiv {
+  width: 100%;
+}
+
+.ResultsDiv > ul {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.ResultsDiv > ul > li {
+  color: $yellow;
+  list-style: none;
+  padding: 0.5rem 0.5rem;
+  border-bottom: 1px solid black;
+  cursor: pointer;
+}
+
+.ResultsDiv > ul > li:last-child {
+  border-bottom: none;
+}
+
+.ResultsDiv > ul > li:hover {
+  background-color: $dark-green-hover;
+}

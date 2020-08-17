@@ -10,11 +10,15 @@ import FeatureForm from "../../components/FeatureForm/FeatureForm";
 import * as actions from "../../store/actions/Index";
 import HomeSideBar from "../../components/Sidebar/HomeSideBar/HomeSideBar";
 import Snackbar from "../../components/UI/Snackbar/Snackbar";
+import LocationSearcher from "../../components/LocationSearcher/LocationSearcher";
+import axios from "../../axios";
 
 class HomeMap extends Component {
   state = {
     addingFeature: false,
     selectedFeature: null,
+    locationSearcher: false,
+    location: null,
   };
 
   constructor(props) {
@@ -41,6 +45,44 @@ class HomeMap extends Component {
     this.snackbarRef.current.openSnackBar(message);
   };
 
+  geoLocationClickedHandler = () => {
+    axios
+      .get("maps/geoLocation/")
+      .then((response) => {
+        this.setState({
+          location: {
+            type: "geolocation",
+            location: response.data.location,
+          },
+          locationSearcher: false,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  locationClickedHandler = () => {
+    this.setState({ locationSearcher: !this.state.locationSearcher });
+  };
+
+  onSearchLocationHandler = (input) => {
+    axios
+      .get("maps/location/" + input.place_id)
+      .then((response) => {
+        this.setState({
+          location: {
+            type: "search",
+            location: response.data.result,
+          },
+          locationSearcher: false,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   render() {
     let featureSummary = null;
     if (this.state.addingFeature) {
@@ -52,6 +94,14 @@ class HomeMap extends Component {
         ></FeatureForm>
       );
     }
+    let locationSearcher = null;
+    if (this.state.locationSearcher) {
+      locationSearcher = (
+        <LocationSearcher
+          onSearchLocationHandler={this.onSearchLocationHandler}
+        />
+      );
+    }
     return (
       <Aux>
         <Modal
@@ -61,11 +111,18 @@ class HomeMap extends Component {
           {featureSummary}
         </Modal>
         <Sidebar>
-          <HomeSideBar />
+          <HomeSideBar
+            locationClickedHandler={this.locationClickedHandler}
+            geoLocationClickedHandler={this.geoLocationClickedHandler}
+          />
         </Sidebar>
-        <Viewer featureAddedHandler={this.featureAddedHandler}></Viewer>
+        <Viewer
+          featureAddedHandler={this.featureAddedHandler}
+          location={this.state.location}
+        ></Viewer>
         <MapEditor></MapEditor>
         <Snackbar ref={this.snackbarRef} btnType="sucess" />
+        {locationSearcher}
       </Aux>
     );
   }

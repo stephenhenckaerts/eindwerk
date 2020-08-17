@@ -35,6 +35,15 @@ class Viewer extends Component {
   resetMapLayers() {
     this.Map.setBackgroundTileLayer(this.props.type);
     this.Map.togglePlotBoundriesLayers(this.props.plotBoundriesState);
+    if (this.props.location) {
+      if (this.props.location.type === "search") {
+        this.Map.setExtendOpMapByLocation(
+          this.props.location.location.geometry.viewport
+        );
+      } else if (this.props.location.type === "geolocation") {
+        this.Map.setExtendOpMapByGeoLocation(this.props.location.location);
+      }
+    }
   }
 
   featureSelected = (event, select) => {

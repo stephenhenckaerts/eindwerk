@@ -5,7 +5,7 @@
   height: calc(100vh - 330px);
   width: 100%;
   color: $yellow;
-  overflow: auto;
+  overflow-x: hidden;
   overflow-y: auto;
   overflow-wrap: break-word;
 }

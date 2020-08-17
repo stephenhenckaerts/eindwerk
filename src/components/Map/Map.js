@@ -16,6 +16,7 @@ import PinIcon from "../../assets/Map/pin.png";
 import HoveredPinIcon from "../../assets/Map/hoveredpin.png";
 import jsPDF from "jspdf";
 import TileWMS from "ol/source/TileWMS";
+import * as extent from "ol/extent";
 
 class OlMap {
   constructor() {
@@ -234,6 +235,28 @@ class OlMap {
     } else {
       this.map.getView().fit(extent);
     }
+  }
+
+  setExtendOpMapByLocation(input) {
+    let ext = extent.boundingExtent([
+      this.convertCoordinates(input.northeast.lng, input.northeast.lat),
+      this.convertCoordinates(input.southwest.lng, input.southwest.lat),
+    ]);
+    this.map.getView().fit(ext, this.map.getSize());
+  }
+
+  setExtendOpMapByGeoLocation(input) {
+    let ext = extent.boundingExtent([
+      this.convertCoordinates(input.lng, input.lat),
+    ]);
+    this.map.getView().fit(ext, this.map.getSize());
+  }
+
+  convertCoordinates(lon, lat) {
+    var x = (lon * 20037508.34) / 180;
+    var y = Math.log(Math.tan(((90 + lat) * Math.PI) / 360)) / (Math.PI / 180);
+    y = (y * 20037508.34) / 180;
+    return [x, y];
   }
 
   setInteractionForPlotBoundriesLayer(layer, featureSelected) {
