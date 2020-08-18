@@ -18,6 +18,7 @@ class Viewer extends Component {
   }
 
   componentDidMount() {
+    this.Map.setBackgroundTileLayer(this.props.type);
     this.Map.addBoundriesLayer(this.featureSelected);
     this.Map.map.setTarget("map");
     let container = this.popup.current;
