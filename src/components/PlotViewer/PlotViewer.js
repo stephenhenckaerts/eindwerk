@@ -5,10 +5,12 @@ import Map from "../Map/Map";
 import "ol/ol.css";
 import styles from "./PlotViewer.module.scss";
 import NotesEditor from "../NotesEditor/NotesEditor";
+import FeatureEditor from "../FeatureEditor/FeatureEditor";
 
 class PlotViewer extends Component {
   state = {
     showUploadFileWindow: false,
+    featureEditorEnabled: false,
   };
 
   constructor(props) {
@@ -37,11 +39,24 @@ class PlotViewer extends Component {
       }
       this.Map.setExtentOfMapByUserFeaters(this.props.feature.coords);
     }
+
+    if (this.state.featureEditorEnabled) {
+      this.Map.setEditInteractionForPlotBoundriesLayer();
+    }
+  }
+
+  editButtonClickedHandler() {
+    this.setState({ featureEditorEnabled: !this.state.featureEditorEnabled });
   }
 
   render() {
     this.resetMapLayers();
-    let notesOptions = null;
+    let notesOptions = (
+      <FeatureEditor
+        editButtonClickedHandler={() => this.editButtonClickedHandler()}
+        enabled={this.state.featureEditorEnabled}
+      />
+    );
     if (this.props.showNotes) {
       notesOptions = (
         <NotesEditor

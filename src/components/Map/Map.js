@@ -9,6 +9,7 @@ import { bbox as bboxStrategy } from "ol/loadingstrategy";
 import GeoJSON from "ol/format/GeoJSON";
 import { Vector, Group, Tile } from "ol/layer";
 import Select from "ol/interaction/Select";
+import Modify from "ol/interaction/Modify";
 import { Feature } from "ol";
 import { Polygon } from "ol/geom";
 import { Fill, Stroke, Style, Icon } from "ol/style";
@@ -220,7 +221,6 @@ class OlMap {
         this.setHoverInteractionForUserPlotBoundries(vector, featureHovered);
       }
       vector.set("name", "plotUserBoundriesLayer");
-      vector.set("name", "plotUserBoundriesLayerIcons");
       this.plotsExtent = vectorSource.getExtent();
       this.map.addLayer(vectorIcons);
       this.map.addLayer(vector);
@@ -801,6 +801,27 @@ class OlMap {
       if (layer !== undefined) {
         if (layer.get("name") === "slideLayer") {
           layer.setOpacity(amount / 100);
+        }
+      }
+    });
+  }
+
+  setEditInteractionForPlotBoundriesLayer(state) {
+    this.map.getLayers().forEach((layer) => {
+      if (layer.get("name") === "plotUserBoundriesLayer") {
+        if (state) {
+          var select = new Select({
+            wrapX: false,
+            layers: [layer],
+          });
+          this.modify = new Modify({
+            features: select.getFeatures(),
+          });
+          this.map.addInteraction(this.modify);
+        }
+      } else {
+        if (this.modify) {
+          this.map.removeInteraction(this.modify);
         }
       }
     });
