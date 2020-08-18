@@ -142,7 +142,7 @@ class LayersMenu extends Component {
       case "plantheight":
         return "De hoogteverschillen van het gewas";
       case "ndvi":
-        return "De groenheid van het blad";
+        return "De groenheidsfactor van het blad";
       case "ndre":
         return "Toont de levende vegetatie op een gegeven gebied";
       default:
