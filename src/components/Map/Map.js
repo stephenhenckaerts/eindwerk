@@ -167,7 +167,12 @@ class OlMap {
     this.map.addLayer(vector);
   }
 
-  addUsersPlotBoundriesLayer(featureSelected, featureHovered, newFeatures) {
+  addUsersPlotBoundriesLayer(
+    featureSelected,
+    featureHovered,
+    newFeatures,
+    userPlotViewer
+  ) {
     this.clearAllBoundriesLayers();
     if (newFeatures.length > 0) {
       let vectorSource = new VectorSource({
@@ -205,15 +210,25 @@ class OlMap {
         source: vectorSource,
         style: iconStyle,
       });
+      let style = new Style({
+        stroke: new Stroke({
+          width: 5,
+          color: "#9c1616",
+        }),
+      });
+      if (userPlotViewer) {
+        style = new Style({
+          stroke: new Stroke({
+            width: 2,
+            color: "#9c1616",
+          }),
+          fill: new Fill({ color: "#c04e4e" }),
+        });
+      }
       let vector = new Vector({
         minZoom: 13,
         source: vectorSource,
-        style: new Style({
-          stroke: new Stroke({
-            width: 5,
-            color: "#9c1616",
-          }),
-        }),
+        style: style,
       });
       vector.setZIndex(10);
       if (featureHovered !== null) {

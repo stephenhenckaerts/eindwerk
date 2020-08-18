@@ -17,7 +17,8 @@ class UserPlotViewer extends Component {
     this.Map.addUsersPlotBoundriesLayer(
       this.featureSelected,
       this.featureHovered,
-      this.props.userFeatures
+      this.props.userFeatures,
+      true
     );
     this.Map.map.setTarget("map");
     this.Map.setExtentOfMapByUserFeaters();
