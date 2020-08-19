@@ -175,7 +175,8 @@ const mapDispatchToProps = (dispatch) => {
     onDeleteFeature: (featureId) => dispatch(actions.deleteFeature(featureId)),
     onUpdateFeature: (feature) => dispatch(actions.updateFeature(feature)),
     onUpdateFeatureInit: () => dispatch(actions.updateFeatureInit()),
-    onGetPlotShapefileInit: () => dispatch(actions.getPlotShapefileInit()),
+    onGetPlotShapefileInit: (featureId) =>
+      dispatch(actions.getPlotShapefileInit(featureId)),
     onGetPlotShapefile: (featureId) =>
       dispatch(actions.getPlotShapefile(featureId)),
     onPostPlotShapfile: (featureId, shapefile) =>

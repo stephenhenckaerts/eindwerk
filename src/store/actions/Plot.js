@@ -28,10 +28,11 @@ export const getPlotShapefileFail = (error) => {
 };
 
 export const getPlotShapefile = (featureId) => {
+  console.log(featureId);
   return (dispatch) => {
     dispatch(getPlotShapefileStart());
     axios
-      .get("/maps/json/", featureId)
+      .get("/api/getShapefile/" + featureId)
       .then((response) => {
         const shapefile = response.data;
         dispatch(getPlotShapefileSucces(shapefile));

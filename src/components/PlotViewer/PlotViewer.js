@@ -32,7 +32,7 @@ class PlotViewer extends Component {
     if (this.props.feature !== null) {
       if (this.props.showNotes) {
         if (this.props.feature.shapefile !== "None") {
-          this.Map.setShapeFile(this.props.shapefile);
+          this.Map.setShapeFile(this.props.feature.shapefile);
         }
       } else {
         this.Map.addUsersPlotBoundriesLayer(null, null, [this.props.feature]);
@@ -40,9 +40,9 @@ class PlotViewer extends Component {
       this.Map.setExtentOfMapByUserFeaters(this.props.feature.coords);
     }
 
-    if (this.state.featureEditorEnabled) {
+    /*if (this.state.featureEditorEnabled) {
       this.Map.setEditInteractionForPlotBoundriesLayer();
-    }
+    }*/
   }
 
   editButtonClickedHandler() {

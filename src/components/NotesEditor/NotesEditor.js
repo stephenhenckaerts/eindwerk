@@ -13,7 +13,11 @@ const NotesEditor = (props) => {
 
   let shapefile = null;
 
-  if (props.shapefile === "None") {
+  if (
+    props.shapefile === "None" ||
+    props.shapefile === undefined ||
+    props.shapefile.length === 0
+  ) {
     shapefile = (
       <div className={styles.ShapefileNote}>
         <p>Geen Shapefile beschikbaar voor dit perceel</p>

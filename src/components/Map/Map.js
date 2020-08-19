@@ -83,34 +83,39 @@ class OlMap {
   }
 
   createBackgroundLayerGroups() {
+    let osmLayer = new Tile({
+      source: new OSM(),
+    });
+    osmLayer.set("name", "osmBackgroundLayer");
+    let bingLayer = new Tile({
+      source: new BingMaps({
+        imagerySet: "Aerial",
+        key: process.env.REACT_APP_BING_MAPS,
+      }),
+      visible: false,
+    });
+    bingLayer.set("name", "bingBackgroundLayer");
     this.layersOSM = new Group({
-      layers: [
-        new Tile({
-          source: new OSM(),
-        }),
-        new Tile({
-          source: new BingMaps({
-            imagerySet: "Aerial",
-            key: process.env.REACT_APP_BING_MAPS,
-          }),
-          visible: false,
-        }),
-      ],
+      layers: [osmLayer, bingLayer],
     });
   }
 
   clearAllBoundriesLayers() {
     this.map.getLayers().forEach((layer) => {
       if (layer !== undefined) {
-        if (
-          layer.get("name") === "plotBoundriesLayer" ||
-          layer.get("name") === "plotUserBoundriesLayer" ||
-          layer.get("name") === "plotUserBoundriesLayerIcons" ||
-          layer.get("name") === "plotShapefileLayer"
-        ) {
-          layer.getSource().clear();
-          this.map.removeLayer(layer);
+        if (layer.get("name") !== undefined) {
+          if (
+            layer.get("name") === "plotBoundriesLayer" ||
+            layer.get("name") === "plotUserBoundriesLayer" ||
+            layer.get("name") === "plotUserBoundriesLayerIcons" ||
+            layer.get("name").includes("plotShapefileLayer")
+          ) {
+            layer.getSource().clear();
+            this.map.removeLayer(layer);
+          }
         }
+      } else {
+        this.map.removeLayer(layer);
       }
     });
     if (this.select) {
@@ -237,7 +242,6 @@ class OlMap {
       }
       vector.set("name", "plotUserBoundriesLayer");
       this.plotsExtent = vectorSource.getExtent();
-      this.map.addLayer(vectorIcons);
       this.map.addLayer(vector);
     }
   }
@@ -488,52 +492,82 @@ class OlMap {
     }
   }
 
-  setShapeFile(shapefile) {
+  setShapeFile(shapefiles) {
     this.clearAllBoundriesLayers();
-    let vectorSource = new VectorSource({
-      format: new GeoJSON(),
-      loader: function (extent, resolution, projection) {
-        var url = "http://localhost:3030/maps/json/";
-        //var url = "http://localhost:3030/map/http://localhost:8080/geoserver/database/wfs?service=WFS&request=GetFeature&version=1.1.0&typename=PUBLIC:wimmertingen&srsname=EPSG:3857&outputFormat=application/json&count=1000,EPSG:3857";
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url);
-        var onError = function () {
-          vectorSource.removeLoadedExtent(extent);
-        };
-        xhr.onerror = onError;
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            var features = vectorSource
-              .getFormat()
-              .readFeatures(xhr.responseText);
-            features.forEach(function (feature) {
-              feature.setId(feature.get("OBJ_ID"));
-              feature.setStyle(
-                new Style({
-                  fill: new Fill({
-                    color: "rgb(252, 51, 20,0.1)",
-                  }),
-                  stroke: new Stroke({
-                    color: "#fc3314",
-                  }),
-                })
-              );
-            });
-            vectorSource.addFeatures(features);
-          } else {
-            onError();
-          }
-        };
-        xhr.send();
-      },
-      strategy: bboxStrategy,
+    this.resetShapefileColors();
+    shapefiles.forEach((shapefile) => {
+      let vectorSource = new VectorSource({
+        format: new GeoJSON(),
+        loader: (extent, resolution, projection) => {
+          var url = "http://localhost:3030/api/getShapefile/" + shapefile.file;
+          var xhr = new XMLHttpRequest();
+          let color = this.getshapefileColor();
+          xhr.open("GET", url);
+          var onError = function () {
+            vectorSource.removeLoadedExtent(extent);
+          };
+          xhr.onerror = onError;
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              var features = vectorSource
+                .getFormat()
+                .readFeatures(xhr.responseText);
+              features.forEach((feature) => {
+                feature.setId(feature.get("OBJ_ID"));
+                feature.setStyle(
+                  new Style({
+                    fill: new Fill({
+                      color: color,
+                    }),
+                    stroke: new Stroke({
+                      color: "#000000",
+                      width: 0.5,
+                    }),
+                  })
+                );
+              });
+              vectorSource.addFeatures(features);
+            } else {
+              onError();
+            }
+          };
+          xhr.send();
+        },
+        strategy: bboxStrategy,
+      });
+      let vector = new Vector({
+        //minZoom: 13,
+        source: vectorSource,
+      });
+      vector.set("name", "plotShapefileLayer" + shapefile.type);
+      this.map.addLayer(vector);
     });
-    let vector = new Vector({
-      //minZoom: 13,
-      source: vectorSource,
-    });
-    vector.set("name", "plotShapefileLayer");
-    this.map.addLayer(vector);
+  }
+
+  getshapefileColor() {
+    let color = null;
+    if (!this.shapefileColors) {
+      this.shapefileColors = [
+        ["#D62246", false],
+        ["#17BEBB", false],
+        ["#D4F4DD", false],
+        ["#3F4B3B", false],
+        ["#8377D1", false],
+        ["#000000", false],
+      ];
+    }
+    for (let i = 0; i < this.shapefileColors.length; i++) {
+      if (this.shapefileColors[i][1] === false) {
+        color = this.shapefileColors[i][0];
+        this.shapefileColors[i][1] = true;
+        break;
+      }
+    }
+    return color;
+  }
+
+  resetShapefileColors() {
+    this.shapefileColors = null;
   }
 
   changeControls(state) {
