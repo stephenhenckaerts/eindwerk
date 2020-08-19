@@ -800,6 +800,10 @@ class OlMap {
     this.map.addLayer(imageLayer);
   }
 
+  addBodemLayer() {
+    console.log("test");
+  }
+
   removeTopLayer(isSlideLayer) {
     this.map.getLayers().forEach((layer) => {
       if (layer !== undefined) {

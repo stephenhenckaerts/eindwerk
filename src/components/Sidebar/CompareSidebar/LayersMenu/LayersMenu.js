@@ -194,7 +194,7 @@ class LayersMenu extends Component {
         </div>
         <div
           className={styles.Layer}
-          onClick={() => this.clickHandler("Bodemscan ")}
+          onClick={() => this.props.menuItemClicked("bodemscan")}
         >
           <img src={tractor} alt="Bodemscans" />
           <p>Bodemscans</p>
