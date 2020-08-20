@@ -100,7 +100,7 @@ class CompareViewer extends Component {
           layer.name
         );
       } else if (layer === "bodemscan") {
-        map.addBodemLayer();
+        map.addBodemLayer(slideLayerChanged);
       } else if (layer === "normal") {
         this.updateMapInfo(
           slideLayerChanged,

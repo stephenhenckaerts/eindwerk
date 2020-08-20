@@ -40,9 +40,9 @@ class PlotViewer extends Component {
       this.Map.setExtentOfMapByUserFeaters(this.props.feature.coords);
     }
 
-    /*if (this.state.featureEditorEnabled) {
-      this.Map.setEditInteractionForPlotBoundriesLayer();
-    }*/
+    if (this.state.featureEditorEnabled) {
+      this.Map.setEditInteractionForPlotUserBoundriesLayer();
+    }
   }
 
   editButtonClickedHandler() {

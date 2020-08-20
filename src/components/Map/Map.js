@@ -815,8 +815,56 @@ class OlMap {
     this.map.addLayer(imageLayer);
   }
 
-  addBodemLayer() {
-    console.log("test");
+  addBodemLayer(isSlideLayer) {
+    let vectorSource = new VectorSource({
+      format: new GeoJSON(),
+      loader: (extent, resolution, projection) => {
+        var url = "http://localhost:3030/api/getBodemscan";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        var onError = function () {
+          vectorSource.removeLoadedExtent(extent);
+        };
+        xhr.onerror = onError;
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            var features = vectorSource
+              .getFormat()
+              .readFeatures(xhr.responseText);
+            features.forEach((feature) => {
+              console.log(feature);
+              feature.getGeometry().transform("EPSG:4326", "EPSG:3857");
+              feature.setId(feature.get("ID"));
+              feature.setStyle(
+                new Style({
+                  fill: new Fill({
+                    color: feature.get("COLOR"),
+                  }),
+                  stroke: new Stroke({
+                    color: "#000000",
+                    width: 0.5,
+                  }),
+                })
+              );
+            });
+            vectorSource.addFeatures(features);
+          } else {
+            onError();
+          }
+        };
+        xhr.send();
+      },
+      strategy: bboxStrategy,
+    });
+    let vector = new Vector({
+      //minZoom: 13,
+      source: vectorSource,
+    });
+    vector.set("name", isSlideLayer ? "slideLayer" : "topLayer");
+    if (isSlideLayer) {
+      vector.setZIndex(5);
+    }
+    this.map.addLayer(vector);
   }
 
   removeTopLayer(isSlideLayer) {
@@ -840,7 +888,7 @@ class OlMap {
     });
   }
 
-  setEditInteractionForPlotBoundriesLayer(state) {
+  setEditInteractionForPlotUserBoundriesLayer(state) {
     this.map.getLayers().forEach((layer) => {
       if (layer.get("name") === "plotUserBoundriesLayer") {
         if (state) {
@@ -852,10 +900,11 @@ class OlMap {
             features: select.getFeatures(),
           });
           this.map.addInteraction(this.modify);
-        }
-      } else {
-        if (this.modify) {
-          this.map.removeInteraction(this.modify);
+        } else {
+          if (this.modify) {
+            this.map.removeInteraction(this.modify);
+            this.modify = null;
+          }
         }
       }
     });
