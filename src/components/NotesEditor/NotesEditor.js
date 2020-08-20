@@ -10,9 +10,17 @@ const NotesEditor = (props) => {
   const switchMenuOpened = () => {
     setMenuOpened(!menuOpened);
   };
+  let shapefileColors = [
+    ["#D62246"],
+    ["#17BEBB"],
+    ["#D4F4DD"],
+    ["#3F4B3B"],
+    ["#8377D1"],
+    ["#000000"],
+  ];
 
   let shapefile = null;
-
+  let shapeFileLegend = null;
   if (
     props.shapefile === "None" ||
     props.shapefile === undefined ||
@@ -22,6 +30,22 @@ const NotesEditor = (props) => {
       <div className={styles.ShapefileNote}>
         <p>Geen Shapefile beschikbaar voor dit perceel</p>
         <p>Upload een Shapefile</p>
+      </div>
+    );
+  } else {
+    shapeFileLegend = (
+      <div className={styles.ShapeFileLegend}>
+        {props.shapefile.map((shapefile, index) => {
+          return (
+            <div key={index} className={styles.ShapefileDiv}>
+              <div
+                className={styles.ColorSquare}
+                style={{ backgroundColor: shapefileColors[index] }}
+              />
+              <p>{shapefile.type}</p>
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -51,6 +75,7 @@ const NotesEditor = (props) => {
       </div>
       {mapEditorPopUp}
       {shapefile}
+      {shapeFileLegend}
     </div>
   );
 };

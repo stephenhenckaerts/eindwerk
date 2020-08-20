@@ -101,23 +101,27 @@ class OlMap {
   }
 
   clearAllBoundriesLayers() {
-    this.map.getLayers().forEach((layer) => {
-      if (layer !== undefined) {
-        if (layer.get("name") !== undefined) {
-          if (
-            layer.get("name") === "plotBoundriesLayer" ||
-            layer.get("name") === "plotUserBoundriesLayer" ||
-            layer.get("name") === "plotUserBoundriesLayerIcons" ||
-            layer.get("name").includes("plotShapefileLayer")
-          ) {
-            layer.getSource().clear();
-            this.map.removeLayer(layer);
+    this.map
+      .getLayers()
+      .getArray()
+      .slice()
+      .forEach((layer) => {
+        if (layer !== undefined) {
+          if (layer.get("name") !== undefined) {
+            if (
+              layer.get("name") === "plotBoundriesLayer" ||
+              layer.get("name") === "plotUserBoundriesLayer" ||
+              layer.get("name") === "plotUserBoundriesLayerIcons" ||
+              layer.get("name").includes("plotShapefileLayer")
+            ) {
+              layer.getSource().clear();
+              this.map.removeLayer(layer);
+            }
           }
+        } else {
+          this.map.removeLayer(layer);
         }
-      } else {
-        this.map.removeLayer(layer);
-      }
-    });
+      });
     if (this.select) {
       this.select.getFeatures().clear();
     }
