@@ -73,9 +73,14 @@ class CompareMap extends Component {
     if (selectedPlotIndex > 2) {
       selectedPlotIndex = 2;
     }
+    let amountOfPlots = 2;
+    if (this.state.slideView && this.state.topLayers[1] === "normal") {
+      amountOfPlots = 1;
+      selectedPlotIndex = 1;
+    }
     this.setState({
       slideView: !this.state.slideView,
-      amountOfPlots: 2,
+      amountOfPlots: amountOfPlots,
       selectedPlotIndex: selectedPlotIndex,
     });
   };
