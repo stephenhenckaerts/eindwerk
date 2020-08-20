@@ -214,11 +214,6 @@ class OlMap {
           scale: 0.12,
         }),
       });
-      let vectorIcons = new Vector({
-        maxZoom: 13,
-        source: vectorSource,
-        style: iconStyle,
-      });
       let style = new Style({
         stroke: new Stroke({
           width: 5,

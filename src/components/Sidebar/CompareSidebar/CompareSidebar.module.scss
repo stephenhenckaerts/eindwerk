@@ -68,6 +68,12 @@
   background-color: $yellow;
 }
 
+.SidebarButtonDiv {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 0.3rem;
+}
+
 .SlideButton {
   display: flex;
   text-align: center;
@@ -81,10 +87,11 @@
 .ExportButton {
   display: flex;
   text-align: center;
+  justify-self: center;
 
   border: 4px solid $yellow;
   border-radius: 10px;
-  padding: 0.3rem 0.8rem;
+  padding: 0.5rem 0.5rem;
 
   margin-bottom: 1rem;
   background-color: #166841;
@@ -107,7 +114,6 @@
 
 .ExportButton > img {
   margin: auto;
-  margin-right: 0.5rem;
   height: 2.5rem;
 }
 
@@ -125,7 +131,7 @@
   cursor: pointer;
   border-radius: 4px;
 
-  margin: 1rem 0rem;
+  margin: 1.15rem 0rem;
 }
 
 .Slider::-moz-range-thumb {

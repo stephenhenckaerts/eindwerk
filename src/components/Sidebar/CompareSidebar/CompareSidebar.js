@@ -4,6 +4,9 @@ import styles from "./CompareSidebar.module.scss";
 import backLogo from "../../../assets/Sidebar/back.png";
 import compareLogo from "../../../assets/CompareSidebar/compare.png";
 import compareSelectedLogo from "../../../assets/CompareSidebar/compareSelected.png";
+import shapefileLogo from "../../../assets/CompareSidebar/shapefile.png";
+import shapefileSelectedLogo from "../../../assets/CompareSidebar/shapefileSelected.png";
+import exportLogo from "../../../assets/CompareSidebar/export.svg";
 import { NavLink } from "react-router-dom";
 import undoLogo from "../../../assets/CompareSidebar/undo.png";
 import LayersMenu from "./LayersMenu/LayersMenu";
@@ -106,7 +109,7 @@ const CompareSideBar = (props) => {
           ) : null}
         </div>
       </div>
-      <div className={styles.SidebarItem}>
+      <div className={styles.SidebarButtonDiv}>
         <div
           className={[
             styles.ExportButton,
@@ -118,20 +121,29 @@ const CompareSideBar = (props) => {
             src={props.slideView ? compareSelectedLogo : compareLogo}
             alt="Percelen Logo"
           />
-          <p>
-            <strong>SLIDE</strong>
-          </p>
         </div>
-      </div>
-      <div className={styles.SidebarItem}>
         <div
           className={styles.ExportButton}
           onClick={() => props.menuItemClicked("normal")}
         >
           <img src={undoLogo} alt="Percelen Logo" />
-          <p>
-            <strong>RESET</strong>
-          </p>
+        </div>
+      </div>
+      <div className={styles.SidebarButtonDiv}>
+        <div
+          className={[
+            styles.ExportButton,
+            props.slideView ? styles.ExportButtonSelected : null,
+          ].join(" ")}
+          onClick={() => props.slideViewClicked()}
+        >
+          <img
+            src={props.slideView ? shapefileSelectedLogo : shapefileLogo}
+            alt="Percelen Logo"
+          />
+        </div>
+        <div className={styles.ExportButton}>
+          <img src={exportLogo} alt="Percelen Logo" />
         </div>
       </div>
       <LayersMenu
