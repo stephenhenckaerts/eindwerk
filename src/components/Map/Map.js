@@ -196,24 +196,6 @@ class OlMap {
         feature.setId(newFeature.plotId);
         vectorSource.addFeature(feature);
       });
-      let iconStyle = new Style({
-        geometry: function (feature) {
-          let geometry = feature.getGeometry();
-          let geometryType = geometry.getType();
-          return geometryType === "Polygon"
-            ? geometry.getInteriorPoint()
-            : geometryType === "MultiPolygon"
-            ? geometry.getInteriorPoints()
-            : geometry;
-        },
-        image: new Icon({
-          anchor: [0.5, 46],
-          anchorXUnits: "fraction",
-          anchorYUnits: "pixels",
-          src: PinIcon,
-          scale: 0.12,
-        }),
-      });
       let style = new Style({
         stroke: new Stroke({
           width: 5,

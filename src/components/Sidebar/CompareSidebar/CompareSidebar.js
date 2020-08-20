@@ -133,12 +133,12 @@ const CompareSideBar = (props) => {
         <div
           className={[
             styles.ExportButton,
-            props.slideView ? styles.ExportButtonSelected : null,
+            props.shapefile ? styles.ExportButtonSelected : null,
           ].join(" ")}
-          onClick={() => props.slideViewClicked()}
+          onClick={() => props.shapefileViewClicked()}
         >
           <img
-            src={props.slideView ? shapefileSelectedLogo : shapefileLogo}
+            src={props.shapefile ? shapefileSelectedLogo : shapefileLogo}
             alt="Percelen Logo"
           />
         </div>

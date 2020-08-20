@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styles from "./NotesEditor.module.scss";
 import exportLogo from "../../assets/NotesEditor/export.png";
 import NotesEditorPopup from "./NotesEditorPopup/NotesEditorPopup";
+import Aux from "../../hoc/Aux/Aux";
 
 const NotesEditor = (props) => {
   const [menuOpened, setMenuOpened] = useState(false);
@@ -34,7 +35,12 @@ const NotesEditor = (props) => {
     );
   } else {
     shapeFileLegend = (
-      <div className={styles.ShapeFileLegend}>
+      <div
+        className={[
+          styles.ShapeFileLegend,
+          props.disableUpload ? styles.CompareView : null,
+        ].join(" ")}
+      >
         {props.shapefile.map((shapefile, index) => {
           return (
             <div key={index} className={styles.ShapefileDiv}>
@@ -60,23 +66,26 @@ const NotesEditor = (props) => {
     );
   }
 
-  if (menuOpened) {
+  let menu = (
+    <div
+      className={[styles.Menu, mapEditorPopUp ? styles.MenuOpened : null].join(
+        " "
+      )}
+      onClick={switchMenuOpened}
+    >
+      <img src={exportLogo} alt="Notes Editor Logo" tag="Notes Editor Logo" />
+    </div>
+  );
+  if (props.disableUpload) {
+    menu = null;
   }
   return (
-    <div>
-      <div
-        className={[
-          styles.Menu,
-          mapEditorPopUp ? styles.MenuOpened : null,
-        ].join(" ")}
-        onClick={switchMenuOpened}
-      >
-        <img src={exportLogo} alt="Notes Editor Logo" tag="Notes Editor Logo" />
-      </div>
+    <Aux>
+      {menu}
       {mapEditorPopUp}
       {shapefile}
       {shapeFileLegend}
-    </div>
+    </Aux>
   );
 };
 

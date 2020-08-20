@@ -17,6 +17,7 @@ class CompareMap extends Component {
     selectedPlotIndex: 1,
     topLayers: ["normal", "normal", "normal", "normal"],
     slideView: false,
+    shapefile: false,
     slideAmount: 50,
     export: false,
   };
@@ -79,6 +80,10 @@ class CompareMap extends Component {
     });
   };
 
+  shapefileViewClicked = () => {
+    this.setState({ shapefile: !this.state.shapefile });
+  };
+
   slideAmountChangedHandler = (event) => {
     this.setState({ slideAmount: event.target.value });
   };
@@ -121,6 +126,8 @@ class CompareMap extends Component {
             exportButtonHandler={this.exportButtonHandler}
             slideViewClicked={this.slideViewClicked}
             slideView={this.state.slideView}
+            shapefileViewClicked={this.shapefileViewClicked}
+            shapefile={this.state.shapefile}
             slideAmount={this.state.slideAmount}
             slideAmountChanged={this.slideAmountChangedHandler}
           />
@@ -132,6 +139,7 @@ class CompareMap extends Component {
           export={this.state.export}
           changeDateHandler={this.changeDateHandler}
           slideView={this.state.slideView}
+          shapefile={this.state.shapefile}
           slideAmount={this.state.slideAmount}
         ></Viewer>
         <MapEditor></MapEditor>

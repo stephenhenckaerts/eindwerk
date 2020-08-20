@@ -1,8 +1,5 @@
 @import "../../styles/colours.scss";
 
-.MapsDiv {
-}
-
 .MapGridView {
   width: calc(100vw - 12em);
   height: 100vh;
@@ -51,4 +48,9 @@
   position: absolute;
   right: 0;
   top: 97px;
+}
+
+.ShapefileInfo {
+  position: absolute;
+  z-index: 100;
 }

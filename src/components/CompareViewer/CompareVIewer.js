@@ -9,6 +9,7 @@ import MapEOService from "../MapEOService/MapEOService";
 import MapDatePicker from "./MapDatePicker/MapDatePicker";
 import GradientInfo from "./GradientInfo/GradientInfo";
 import Aux from "../../hoc/Aux/Aux";
+import NotesEditor from "../NotesEditor/NotesEditor";
 
 class CompareViewer extends Component {
   state = {
@@ -223,6 +224,13 @@ class CompareViewer extends Component {
       }
       map.setExtentOfMapByUserFeaters(this.props.feature.coords);
     }
+    if (this.props.feature !== null) {
+      if (this.props.shapefile) {
+        if (this.props.feature.shapefile !== "None") {
+          map.setShapeFile(this.props.feature.shapefile);
+        }
+      }
+    }
     this.updateTopLayer(map);
   }
 
@@ -307,6 +315,15 @@ class CompareViewer extends Component {
         this.resetMapLayers(map);
       });
     }, 100);
+    let notesOptions = null;
+    if (this.props.shapefile) {
+      notesOptions = (
+        <NotesEditor
+          shapefile={this.props.feature.shapefile}
+          disableUpload={true}
+        />
+      );
+    }
     return (
       <div className={[styles.MapsDiv, styles.MapGridView].join(" ")}>
         <div className={styles.Map} id="map1">
@@ -348,6 +365,7 @@ class CompareViewer extends Component {
           <div className={styles.Square}>{this.state.mapInfos[3]}</div>
         </div>
         <div className={styles.SlideInfo}>{this.state.slideInfo}</div>
+        <div className={styles.ShapefileInfo}>{notesOptions}</div>
       </div>
     );
   }
