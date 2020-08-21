@@ -816,13 +816,14 @@ class OlMap {
   }
 
   addBodemLayer(isSlideLayer) {
+    this.resetBodemScanTypes();
     let vectorSource = new VectorSource({
       format: new GeoJSON(),
       loader: (extent, resolution, projection) => {
         var url = "http://localhost:3030/api/getBodemscan";
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url);
-        var onError = function () {
+        var onError = () => {
           vectorSource.removeLoadedExtent(extent);
         };
         xhr.onerror = onError;
@@ -832,9 +833,12 @@ class OlMap {
               .getFormat()
               .readFeatures(xhr.responseText);
             features.forEach((feature) => {
-              console.log(feature);
               feature.getGeometry().transform("EPSG:4326", "EPSG:3857");
               feature.setId(feature.get("ID"));
+              this.addBodemscanType(
+                feature.get("CLASS_BND"),
+                feature.get("COLOR")
+              );
               feature.setStyle(
                 new Style({
                   fill: new Fill({
@@ -865,6 +869,22 @@ class OlMap {
       vector.setZIndex(5);
     }
     this.map.addLayer(vector);
+  }
+
+  resetBodemScanTypes() {
+    this.bodemscanTypes = null;
+  }
+
+  addBodemscanType(type, color) {
+    if (this.bodemscanTypes === null) {
+      this.bodemscanTypes = [];
+    }
+    this.bodemscanTypes.push({ type, color });
+    console.log(this.bodemscanTypes);
+  }
+
+  getBodemscanTypes() {
+    return this.bodemscanTypes;
   }
 
   removeTopLayer(isSlideLayer) {

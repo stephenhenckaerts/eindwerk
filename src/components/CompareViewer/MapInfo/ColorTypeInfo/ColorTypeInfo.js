@@ -9,22 +9,40 @@ const ColorTypesInfo = (props) => {
     <Aux>
       {props.colors
         ? props.colors.map((color) => {
-            return (
-              <div
-                key={color[0]}
-                className={[
-                  styles.ColorType,
-                  props.slide ? styles.Slide : null,
-                ].join(" ")}
-                onClick={() => props.colorTypeClicked(color[0])}
-              >
+            if (props.bodemscan) {
+              return (
                 <div
-                  className={styles.ColorTypeSquare}
-                  style={{ backgroundColor: color[1] }}
-                ></div>
-                <p>{color[0]}</p>
-              </div>
-            );
+                  key={color.type}
+                  className={[
+                    styles.ColorType,
+                    props.slide ? styles.Slide : null,
+                  ].join(" ")}
+                >
+                  <div
+                    className={styles.ColorTypeSquare}
+                    style={{ backgroundColor: color.color }}
+                  ></div>
+                  <p>{color.type}</p>
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  key={color[0]}
+                  className={[
+                    styles.ColorType,
+                    props.slide ? styles.Slide : null,
+                  ].join(" ")}
+                  onClick={() => props.colorTypeClicked(color[0])}
+                >
+                  <div
+                    className={styles.ColorTypeSquare}
+                    style={{ backgroundColor: color[1] }}
+                  ></div>
+                  <p>{color[0]}</p>
+                </div>
+              );
+            }
           })
         : null}
     </Aux>

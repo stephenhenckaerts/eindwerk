@@ -20,6 +20,7 @@ class MapInfos extends Component {
         colorTypeClicked={(type) => this.colorTypeClicked(type)}
         colors={this.props.colors}
         slide={this.props.slide}
+        bodemscan={this.props.bodemscan}
       />
     );
     if (this.state.colorType) {

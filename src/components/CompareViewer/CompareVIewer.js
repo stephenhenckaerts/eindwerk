@@ -77,7 +77,7 @@ class CompareViewer extends Component {
             layer,
             map.getFeatureStyles()
           );
-        }, 100);
+        }, 200);
       } else if (layer.item && layer.item === "MapEO") {
         this.setMapEOMap(map, slideLayerChanged);
         this.updateMapInfo(
@@ -101,6 +101,14 @@ class CompareViewer extends Component {
         );
       } else if (layer === "bodemscan") {
         map.addBodemLayer(slideLayerChanged);
+        setTimeout(() => {
+          this.updateMapInfo(
+            slideLayerChanged,
+            slideLayerChanged ? 0 : map.index,
+            layer,
+            map.getBodemscanTypes()
+          );
+        }, 200);
       } else if (layer === "normal") {
         this.updateMapInfo(
           slideLayerChanged,
@@ -160,6 +168,15 @@ class CompareViewer extends Component {
             />
           ) : null}
         </Aux>
+      );
+    } else if (type === "bodemscan") {
+      newLayer = (
+        <MapInfo
+          type={type}
+          colors={colors}
+          slide={slide ? "slide" : null}
+          bodemscan={true}
+        />
       );
     } else {
       if (slide) {
@@ -365,7 +382,7 @@ class CompareViewer extends Component {
           <div className={styles.Square}>{this.state.mapInfos[3]}</div>
         </div>
         <div className={styles.SlideInfo}>{this.state.slideInfo}</div>
-        <div className={styles.ShapefileInfo}>{notesOptions}</div>
+        <div className={[styles.ShapefileInfo]}>{notesOptions}</div>
       </div>
     );
   }
