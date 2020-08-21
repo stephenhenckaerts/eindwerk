@@ -9,6 +9,7 @@ class NotesEditorPopup extends Component {
   state = {
     mapPickerMenu: false,
     selectedFile: null,
+    selectedType: "",
   };
 
   openShapefilePickerMenu = () => {
@@ -22,10 +23,14 @@ class NotesEditorPopup extends Component {
     });
   };
 
+  onTypeChangedHandler = (event) => {
+    this.setState({ selectedType: event.target.value });
+  };
+
   onClickHandler = () => {
     const data = new FormData();
     data.append("file", this.state.selectedFile);
-    this.props.uploadShapefile(data);
+    this.props.uploadShapefile(data, this.state.selectedType);
   };
 
   downloadHandler = () => {
@@ -60,6 +65,14 @@ class NotesEditorPopup extends Component {
               <strong>Kies een bestand...</strong>
             </label>
 
+            <input
+              type="text"
+              placeholder="type"
+              value={this.state.selectedType}
+              name="type"
+              id="type"
+              onChange={this.onTypeChangedHandler}
+            />
             <Button
               disabled={!this.state.selectedFile}
               btnType="Success"

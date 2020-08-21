@@ -72,13 +72,14 @@ class PlotMap extends Component {
     this.setState({ featureCompare: true });
   };
 
-  uploadShapefileHandler = (shapefile) => {
+  uploadShapefileHandler = (shapefile, type) => {
     axios
       .post(
-        "http://localhost:3030/api/uploadShapefile/" + this.plotId,
+        "http://localhost:3030/api/uploadShapefile/" + this.plotId + "&" + type,
         shapefile,
         {
-          // receive two parameter endpoint url ,form data
+          shapefile,
+          type,
         }
       )
       .then((res) => {

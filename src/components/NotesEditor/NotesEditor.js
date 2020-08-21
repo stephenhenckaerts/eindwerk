@@ -66,7 +66,9 @@ const NotesEditor = (props) => {
     mapEditorPopUp = (
       <NotesEditorPopup
         shapefile={props.shapefile}
-        uploadShapefile={(shapefile) => props.uploadShapefile(shapefile)}
+        uploadShapefile={(shapefile, type) =>
+          props.uploadShapefile(shapefile, type)
+        }
       ></NotesEditorPopup>
     );
   }
