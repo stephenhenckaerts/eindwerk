@@ -10,6 +10,7 @@ import MapDatePicker from "./MapDatePicker/MapDatePicker";
 import GradientInfo from "./GradientInfo/GradientInfo";
 import Aux from "../../hoc/Aux/Aux";
 import NotesEditor from "../NotesEditor/NotesEditor";
+import jsPDF from "jspdf";
 
 class CompareViewer extends Component {
   state = {
@@ -252,7 +253,48 @@ class CompareViewer extends Component {
   }
 
   exportMap() {
-    this.Maps[0].exportMap();
+    this.Maps[0].getMap().once("rendercomplete", () => {
+      var pdf = new jsPDF("landscape", undefined, "a4");
+      var viewResolution = this.Maps[0].getMap().getView().getResolution();
+      var mapCanvas = document.createElement("canvas");
+      var size = this.Maps[0].getMap().getSize();
+      mapCanvas.width = size[0];
+      mapCanvas.height = size[1];
+      var mapContext = mapCanvas.getContext("2d");
+
+      this.Maps[0]
+        .getMap()
+        .getViewport()
+        .querySelectorAll(".ol-layer canvas")
+        .forEach((canvas) => {
+          if (canvas !== undefined) {
+            if (canvas.width > 0) {
+              console.log(canvas);
+              var opacity = canvas.parentNode.style.opacity;
+              mapContext.globalAlpha = opacity === "" ? 1 : Number(opacity);
+              var transform = canvas.style.transform;
+              // Get the transform parameters from the style's transform matrix
+              var matrix = transform
+                .match(/^matrix\(([^]*)\)$/)[1]
+                .split(",")
+                .map(Number);
+              // Apply the transform to the export map context
+              CanvasRenderingContext2D.prototype.setTransform.apply(
+                mapContext,
+                matrix
+              );
+              mapContext.drawImage(canvas, 0, 0);
+            }
+          }
+        });
+      pdf.addImage(mapCanvas.toDataURL("image/jpeg"), "JPEG", 0, 0, 297, 210);
+      // Reset original map size
+      this.Maps[0].getMap().setSize(size);
+      this.Maps[0].getMap().getView().setResolution(viewResolution);
+      document.body.style.cursor = "auto";
+      pdf.save("map.pdf");
+    });
+    this.Maps[0].getMap().renderSync();
   }
 
   setMapEOMap(map, isSlideLayer) {
@@ -340,6 +382,9 @@ class CompareViewer extends Component {
           disableUpload={true}
         />
       );
+    }
+    if (this.props.export) {
+      this.exportMap();
     }
     return (
       <div className={[styles.MapsDiv, styles.MapGridView].join(" ")}>
