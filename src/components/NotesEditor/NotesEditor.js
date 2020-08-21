@@ -28,7 +28,12 @@ const NotesEditor = (props) => {
     props.shapefile.length === 0
   ) {
     shapefile = (
-      <div className={styles.ShapefileNote}>
+      <div
+        className={[
+          styles.ShapefileNote,
+          props.disableUpload ? styles.CompareViewNote : null,
+        ].join(" ")}
+      >
         <p>Geen Shapefile beschikbaar voor dit perceel</p>
         <p>Upload een Shapefile</p>
       </div>
