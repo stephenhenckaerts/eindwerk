@@ -108,6 +108,7 @@ const GradientInfo = (props) => {
 
   return (
     <div
+      id={props.id}
       className={[styles.GradientDiv, props.slide ? styles.Slide : null].join(
         " "
       )}

@@ -11,6 +11,7 @@ import GradientInfo from "./GradientInfo/GradientInfo";
 import Aux from "../../hoc/Aux/Aux";
 import NotesEditor from "../NotesEditor/NotesEditor";
 import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 class CompareViewer extends Component {
   state = {
@@ -140,7 +141,12 @@ class CompareViewer extends Component {
     }
     if (type === "bodemkaart") {
       newLayer = (
-        <MapInfo type={type} colors={colors} slide={slide ? "slide" : null} />
+        <MapInfo
+          id={"InfoDiv" + index}
+          type={type}
+          colors={colors}
+          slide={slide ? "slide" : null}
+        />
       );
     } else if (
       layer &&
@@ -160,6 +166,7 @@ class CompareViewer extends Component {
           />
           {getGradientInfoAllowed ? (
             <GradientInfo
+              id={"InfoDiv" + index}
               values={{
                 min: 0,
                 max: 1,
@@ -173,6 +180,7 @@ class CompareViewer extends Component {
     } else if (type === "bodemscan") {
       newLayer = (
         <MapInfo
+          id={"InfoDiv" + index}
           type={type}
           colors={colors}
           slide={slide ? "slide" : null}
@@ -253,26 +261,17 @@ class CompareViewer extends Component {
   }
 
   exportMap() {
-    this.mapsRendered = 0;
-    this.Maps.forEach((map) => {
-      map.getMap().once("rendercomplete", () => {
-        this.mapRendered();
-      });
-      map.getMap().renderSync();
-    });
-  }
-
-  mapRendered() {
-    this.mapsRendered++;
-    if (this.mapsRendered === this.props.amountOfPlots) {
-      var pdf = new jsPDF("landscape", undefined, "a4");
-      for (let i = 0; i < this.props.amountOfPlots; i++) {
-        var viewResolution = this.Maps[i].getMap().getView().getResolution();
-        var mapCanvas = document.createElement("canvas");
-        var size = this.Maps[i].getMap().getSize();
+    const jpegs = new Array(this.props.amountOfPlots);
+    let jpegCount = 0;
+    for (let i = 0; i < this.props.amountOfPlots; i++) {
+      // eslint-disable-next-line
+      this.Maps[i].getMap().once("rendercomplete", () => {
+        let viewResolution = this.Maps[i].getMap().getView().getResolution();
+        let mapCanvas = document.createElement("canvas");
+        let size = this.Maps[i].getMap().getSize();
         mapCanvas.width = size[0];
         mapCanvas.height = size[1];
-        var mapContext = mapCanvas.getContext("2d");
+        let mapContext = mapCanvas.getContext("2d");
 
         this.Maps[i]
           .getMap()
@@ -281,16 +280,13 @@ class CompareViewer extends Component {
           .forEach((canvas) => {
             if (canvas !== undefined) {
               if (canvas.width > 0) {
-                console.log(canvas);
-                var opacity = canvas.parentNode.style.opacity;
+                let opacity = canvas.parentNode.style.opacity;
                 mapContext.globalAlpha = opacity === "" ? 1 : Number(opacity);
-                var transform = canvas.style.transform;
-                // Get the transform parameters from the style's transform matrix
-                var matrix = transform
+                let transform = canvas.style.transform;
+                let matrix = transform
                   .match(/^matrix\(([^]*)\)$/)[1]
                   .split(",")
                   .map(Number);
-                // Apply the transform to the export map context
                 CanvasRenderingContext2D.prototype.setTransform.apply(
                   mapContext,
                   matrix
@@ -299,17 +295,56 @@ class CompareViewer extends Component {
               }
             }
           });
-        pdf.addImage(mapCanvas.toDataURL("image/jpeg"), "JPEG", 0, 0, 297, 210);
-        if (i + 1 < this.props.amountOfPlots) {
-          pdf.addPage();
-        }
-        // Reset original map size
+
+        jpegs[i] = mapCanvas.toDataURL("image/jpeg");
+        jpegCount++;
+
         this.Maps[i].getMap().setSize(size);
         this.Maps[i].getMap().getView().setResolution(viewResolution);
-        document.body.style.cursor = "auto";
-      }
-      pdf.save("map.pdf");
+
+        if (jpegCount === this.props.amountOfPlots) {
+          let legendCount = 0;
+          let legends = [];
+          for (let j = 0; j < jpegCount; j++) {
+            const input = document.getElementById("InfoDiv" + j);
+            // eslint-disable-next-line
+            if (input !== null) {
+              html2canvas(input).then((canvas) => {
+                legends[j] = canvas.toDataURL("image/png");
+                legendCount++;
+
+                if (legendCount === jpegCount) {
+                  this.printPDF(jpegs, legends);
+                }
+              });
+            } else {
+              legends[j] = null;
+              legendCount++;
+
+              if (legendCount === jpegCount) {
+                this.printPDF(jpegs, legends);
+              }
+            }
+          }
+          this.props.exportButtonHandler();
+        }
+      });
+      this.Maps[i].getMap().renderSync();
     }
+  }
+
+  printPDF(jpegs, legends) {
+    const pdf = new jsPDF("landscape", undefined, "a4");
+    for (let k = 0; k < this.props.amountOfPlots; k++) {
+      pdf.addImage(jpegs[k], "JPEG", 0, 0, 297, 210);
+      if (legends[k] !== null) {
+        pdf.addImage(legends[k], "JPEG", 0, 0);
+      }
+      if (k + 1 < this.props.amountOfPlots) {
+        pdf.addPage();
+      }
+    }
+    pdf.save("map.pdf");
   }
 
   setMapEOMap(map, isSlideLayer) {

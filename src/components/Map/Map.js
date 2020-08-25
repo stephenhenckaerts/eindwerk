@@ -15,7 +15,6 @@ import { Polygon } from "ol/geom";
 import { Fill, Stroke, Style, Icon } from "ol/style";
 import PinIcon from "../../assets/Map/pin.png";
 import HoveredPinIcon from "../../assets/Map/hoveredpin.png";
-import jsPDF from "jspdf";
 import TileWMS from "ol/source/TileWMS";
 import * as extent from "ol/extent";
 
@@ -43,55 +42,6 @@ class OlMap {
 
   getMap() {
     return this.map;
-  }
-
-  exportMap() {
-    let image = null;
-    this.map.once("rendercomplete", () => {
-      var viewResolution = this.map.getView().getResolution();
-      var mapCanvas = document.createElement("canvas");
-      var size = this.map.getSize();
-      mapCanvas.width = size[0];
-      mapCanvas.height = size[1];
-      var mapContext = mapCanvas.getContext("2d");
-
-      this.map
-        .getViewport()
-        .querySelectorAll(".ol-layer canvas")
-        .forEach((canvas) => {
-          if (canvas !== undefined) {
-            if (canvas.width > 0) {
-              console.log(canvas);
-              var opacity = canvas.parentNode.style.opacity;
-              mapContext.globalAlpha = opacity === "" ? 1 : Number(opacity);
-              var transform = canvas.style.transform;
-              // Get the transform parameters from the style's transform matrix
-              var matrix = transform
-                .match(/^matrix\(([^]*)\)$/)[1]
-                .split(",")
-                .map(Number);
-              // Apply the transform to the export map context
-              CanvasRenderingContext2D.prototype.setTransform.apply(
-                mapContext,
-                matrix
-              );
-              mapContext.drawImage(canvas, 0, 0);
-            }
-          }
-        });
-      console.log("ahahahhahahah");
-      image = mapCanvas.toDataURL("image/jpeg");
-      console.log(image);
-      var pdf = new jsPDF("landscape", undefined, "a4");
-      pdf.addImage(mapCanvas.toDataURL("image/jpeg"), "JPEG", 0, 0, 297, 210);
-      pdf.save("map.pdf");
-      // Reset original map size
-      this.map.setSize(size);
-      this.map.getView().setResolution(viewResolution);
-      document.body.style.cursor = "auto";
-    });
-    this.map.renderSync();
-    return image;
   }
 
   createBackgroundLayerGroups() {
@@ -817,6 +767,9 @@ class OlMap {
           time: "2020-06-01",
           srs: "EPSG:3857",
         },
+        serverType: "geoserver",
+        transition: 0,
+        crossOrigin: "Anonymous",
       }),
     });
     imageLayer.set("name", isSlideLayer ? "slideLayer" : "topLayer");

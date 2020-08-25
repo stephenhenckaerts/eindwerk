@@ -33,6 +33,7 @@ class MapInfos extends Component {
     }
     return (
       <div
+        id={this.props.id}
         className={[
           styles.InfoDiv,
           this.props.slide ? styles.Slide : null,

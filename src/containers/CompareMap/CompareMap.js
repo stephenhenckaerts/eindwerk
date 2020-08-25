@@ -94,7 +94,7 @@ class CompareMap extends Component {
   };
 
   exportButtonHandler = () => {
-    this.setState({ export: true });
+    this.setState({ export: !this.state.export });
   };
 
   render() {
@@ -146,6 +146,7 @@ class CompareMap extends Component {
           slideView={this.state.slideView}
           shapefile={this.state.shapefile}
           slideAmount={this.state.slideAmount}
+          exportButtonHandler={this.exportButtonHandler}
         ></Viewer>
         <MapEditor></MapEditor>
       </Aux>
