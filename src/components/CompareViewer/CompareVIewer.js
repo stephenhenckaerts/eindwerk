@@ -142,7 +142,7 @@ class CompareViewer extends Component {
     if (type === "bodemkaart") {
       newLayer = (
         <MapInfo
-          id={"InfoDiv" + index}
+          id={slide ? "InfoSlide" + index : "InfoDiv" + index}
           type={type}
           colors={colors}
           slide={slide ? "slide" : null}
@@ -166,7 +166,7 @@ class CompareViewer extends Component {
           />
           {getGradientInfoAllowed ? (
             <GradientInfo
-              id={"InfoDiv" + index}
+              id={slide ? "InfoSlide" + index : "InfoDiv" + index}
               values={{
                 min: 0,
                 max: 1,
@@ -180,7 +180,7 @@ class CompareViewer extends Component {
     } else if (type === "bodemscan") {
       newLayer = (
         <MapInfo
-          id={"InfoDiv" + index}
+          id={slide ? "InfoSlide" + index : "InfoDiv" + index}
           type={type}
           colors={colors}
           slide={slide ? "slide" : null}
@@ -302,31 +302,72 @@ class CompareViewer extends Component {
         this.Maps[i].getMap().setSize(size);
         this.Maps[i].getMap().getView().setResolution(viewResolution);
 
-        if (jpegCount === this.props.amountOfPlots) {
-          let legendCount = 0;
+        if (this.props.slideView && i === 0) {
           let legends = [];
-          for (let j = 0; j < jpegCount; j++) {
-            const input = document.getElementById("InfoDiv" + j);
-            // eslint-disable-next-line
-            if (input !== null) {
-              html2canvas(input).then((canvas) => {
-                legends[j] = canvas.toDataURL("image/png");
+          const input = document.getElementById("InfoDiv0");
+          // eslint-disable-next-line
+          if (input !== null) {
+            html2canvas(input).then((canvas) => {
+              legends[0] = canvas.toDataURL("image/png");
+              const slideInput = document.getElementById("InfoSlide0");
+              if (slideInput !== null) {
+                html2canvas(slideInput).then((canvas) => {
+                  legends[1] = canvas;
+
+                  this.printPDF(jpegs, legends);
+                  this.props.exportButtonHandler();
+                });
+              } else {
+                legends[1] = null;
+
+                this.printPDF(jpegs, legends);
+                this.props.exportButtonHandler();
+              }
+            });
+          } else {
+            legends[0] = null;
+            const slideInput = document.getElementById("InfoSlide0");
+            if (slideInput !== null) {
+              html2canvas(slideInput).then((canvas) => {
+                legends[1] = canvas;
+
+                this.printPDF(jpegs, legends);
+                this.props.exportButtonHandler();
+              });
+            } else {
+              legends[1] = null;
+
+              this.printPDF(jpegs, legends);
+              this.props.exportButtonHandler();
+            }
+          }
+        } else {
+          if (jpegCount === this.props.amountOfPlots) {
+            let legendCount = 0;
+            let legends = [];
+            for (let j = 0; j < jpegCount; j++) {
+              const input = document.getElementById("InfoDiv" + j);
+              // eslint-disable-next-line
+              if (input !== null) {
+                html2canvas(input).then((canvas) => {
+                  legends[j] = canvas.toDataURL("image/png");
+                  legendCount++;
+
+                  if (legendCount === jpegCount) {
+                    this.printPDF(jpegs, legends);
+                  }
+                });
+              } else {
+                legends[j] = null;
                 legendCount++;
 
                 if (legendCount === jpegCount) {
                   this.printPDF(jpegs, legends);
                 }
-              });
-            } else {
-              legends[j] = null;
-              legendCount++;
-
-              if (legendCount === jpegCount) {
-                this.printPDF(jpegs, legends);
               }
             }
+            this.props.exportButtonHandler();
           }
-          this.props.exportButtonHandler();
         }
       });
       this.Maps[i].getMap().renderSync();
@@ -335,16 +376,33 @@ class CompareViewer extends Component {
 
   printPDF(jpegs, legends) {
     const pdf = new jsPDF("landscape", undefined, "a4");
-    for (let k = 0; k < this.props.amountOfPlots; k++) {
-      pdf.addImage(jpegs[k], "JPEG", 0, 0, 297, 210);
-      if (legends[k] !== null) {
-        pdf.addImage(legends[k], "JPEG", 0, 0);
+    if (this.props.slideView) {
+      pdf.addImage(jpegs[0], "JPEG", 0, 0, 297, 210);
+      if (legends[0] !== null && legends[0] !== undefined) {
+        pdf.addImage(legends[0], "JPEG", 0, 0);
       }
-      if (k + 1 < this.props.amountOfPlots) {
-        pdf.addPage();
+      if (legends[1] !== null && legends[1] !== undefined) {
+        pdf.addImage(
+          legends[1].toDataURL("image/png"),
+          "JPEG",
+          210 - legends[1].width,
+          0
+        );
       }
+      pdf.save("map.pdf");
+    } else {
+      for (let i = 0; i < jpegs.length; i++) {
+        pdf.addImage(jpegs[i], "JPEG", 0, 0, 297, 210);
+
+        if (legends[i] !== null) {
+          pdf.addImage(legends[i], "JPEG", 0, 0);
+        }
+        if (i + 1 < this.props.amountOfPlots) {
+          pdf.addPage();
+        }
+      }
+      pdf.save("map.pdf");
     }
-    pdf.save("map.pdf");
   }
 
   setMapEOMap(map, isSlideLayer) {

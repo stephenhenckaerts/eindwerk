@@ -845,7 +845,6 @@ class OlMap {
       this.bodemscanTypes = [];
     }
     this.bodemscanTypes.push({ type, color });
-    console.log(this.bodemscanTypes);
   }
 
   getBodemscanTypes() {
