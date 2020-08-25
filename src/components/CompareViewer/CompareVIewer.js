@@ -385,7 +385,7 @@ class CompareViewer extends Component {
         pdf.addImage(
           legends[1].toDataURL("image/png"),
           "JPEG",
-          210 - legends[1].width,
+          297 - legends[1].width / 4,
           0
         );
       }
